@@ -16,7 +16,11 @@ builder.Services.ConfigureAutoMapper();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureValidationFilter();
 builder.Services.ConfigureServices();
-builder.Services.MigrateDatabase();
+
+// For authentication
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureAuthServices();
+builder.Services.ConfigureJwt(builder.Configuration);
 
 builder.Services.AddControllers(config =>
 {
@@ -40,6 +44,9 @@ var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILoggerManager>();
 app.ConfigureExceptionHandler(logger);
 
+builder.Services.MigrateDatabase();
+builder.Services.SeedDefaultData();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -59,6 +66,9 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseCors("CorsPolicy");
+
+// For authentication
+app.UseAuthentication();
 
 app.UseAuthorization();
 

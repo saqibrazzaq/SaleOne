@@ -25,7 +25,7 @@ namespace api.Extensions
                         {
                             NotFoundException => StatusCodes.Status404NotFound,
                             BadRequestException => StatusCodes.Status400BadRequest,
-                            //UnAuthorizedUserException => StatusCodes.Status401Unauthorized,
+                            UnAuthorizedUserException => StatusCodes.Status401Unauthorized,
                             _ => StatusCodes.Status500InternalServerError
                         };
                         logger.LogError($"Error: {contextFeature.Error}");

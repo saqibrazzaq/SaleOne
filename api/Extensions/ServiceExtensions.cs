@@ -1,10 +1,15 @@
 ﻿using api.ActionFilters;
 using api.Services;
 using data;
+using data.Entities;
 using data.Repository;
 using logger;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace api.Extensions
 {
@@ -72,6 +77,58 @@ namespace api.Extensions
         {
             var dbContext = services.BuildServiceProvider().GetRequiredService<AppDbContext>();
             dbContext.Database.Migrate();
+
+        }
+
+        public static void ConfigureAuthServices(this IServiceCollection services)
+        {
+            services.AddHttpContextAccessor();
+
+            services.AddScoped<IAuthDataSeedService, AuthDataSeedService>();
+            services.AddScoped<IUserService, UserService>();
+            //services.AddScoped<IEmailSender, EmailSender>();
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            services.AddIdentity<AppIdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<AppDbContext>();
+        }
+
+        public static void ConfigureJwt(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            // Adding Authentication  
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+            // Adding Jwt Bearer  
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = configuration["JWT:ValidAudience"],
+                    ValidIssuer = configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                        configuration["JWT:Secret"]))
+                };
+            });
+        }
+
+        public async static void SeedDefaultData(this IServiceCollection services)
+        {
+            var authDataSeeder = services.BuildServiceProvider().GetRequiredService<IAuthDataSeedService>();
+            await authDataSeeder.Seed();
+
 
         }
     }

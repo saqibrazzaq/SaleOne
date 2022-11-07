@@ -1,6 +1,8 @@
 ﻿using api.ActionFilters;
 using api.Services;
 using data.Dtos;
+using data.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,6 +49,7 @@ namespace api.Controllers
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Authorize(Roles = Constants.AllAdminRoles)]
         public IActionResult Create(CategoryReqEdit dto)
         {
             var res = _categoryService.Create(dto);
@@ -55,6 +58,7 @@ namespace api.Controllers
 
         [HttpPut("{categoryId}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Authorize(Roles = Constants.AllAdminRoles)]
         public IActionResult Update(int categoryId, CategoryReqEdit dto)
         {
             var res = _categoryService.Update(categoryId, dto);
@@ -62,6 +66,7 @@ namespace api.Controllers
         }
 
         [HttpDelete("{categoryId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
         public IActionResult Delete(int categoryId)
         {
             _categoryService.Delete(categoryId);
