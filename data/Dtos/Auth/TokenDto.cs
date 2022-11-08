@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -7,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace data.Dtos.Auth
 {
-    public class AuthenticationResponseDto
+    public class TokenDto
     {
-        public string? Email { get; set; }
-        public IEnumerable<string>? Roles { get; set; }
+        [Required(ErrorMessage = "Access token is required")]
         public string? AccessToken { get; set; }
-        public bool EmailConfirmed { get; set; } = false;
-        public Guid? AccountId { get; set; }
-
         //[JsonIgnore]
         public string? RefreshToken { get; set; }
     }

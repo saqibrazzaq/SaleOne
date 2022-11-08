@@ -1,3 +1,4 @@
+import authHeader from "./auth-header";
 import { api } from "./axiosconfig"
 import { defineCancelApiObject } from "./axiosUtils"
 
@@ -9,6 +10,17 @@ export const CategoryApi = {
       method: "GET",
       // retrieving the signal value by using the property name
       signal: cancel ? cancelApiObject[this.get.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
+  secureTest: async function (cancel = false) {
+    const response = await api.request({
+      url: `/categories/securetest`,
+      method: "GET",
+      // headers: authHeader(),
+      // retrieving the signal value by using the property name
+      signal: cancel ? cancelApiObject[this.secureTest.name].handleRequestCancellation().signal : undefined,
     })
 
     return response.data

@@ -26,6 +26,13 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("securetest")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult SecureTest()
+        {
+            return Ok("This method is secure");
+        }
+
         [HttpGet("search")]
         public IActionResult Search([FromQuery] CategoryReqSearch dto)
         {

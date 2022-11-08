@@ -33,6 +33,8 @@ import { useEffect, useState } from "react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
 import {CategoryApi} from "../api/categoryApi";
 import { CategoryRes } from "../dtos/Category";
+import { AuthApi } from "../api/authApi";
+import TokenService from "../api/token.service";
 
 interface NavItem {
   name: string;
@@ -47,9 +49,28 @@ const TopNavbar = () => {
   const [navItems, setNavItems] = useState<Array<NavItem>>([]);
 
   useEffect(() => {
+    // AuthApi.login({email: "saqibrazzaq@gmail.com", password: "Saqib123!"}).then(res => {
+    //   console.log(res);
+    //   let data = {
+    //     accessToken: TokenService.getLocalAccessToken(),
+    //     refreshToken: TokenService.getLocalRefreshToken()
+    //   };
+    //   // AuthApi.refreshToken(data).then(res => {
+    //   //   console.log(res)
+        
+    //   // });
+    // });
+    
     loadMenu();
     loadMenuFromCategories();
+    callPrivateMethod();
   }, []);
+
+  const callPrivateMethod = () => {
+    CategoryApi.secureTest().then(res => {
+      console.log(res)
+    })
+  }
 
   const loadMenuFromCategories = () => {
     CategoryApi.search().then(res => {
@@ -58,7 +79,7 @@ const TopNavbar = () => {
       categories.map(value => {
         categoryNavItems.push({name: value.name || "", href: value.categoryId+""})
       })
-      console.log(res);
+      console.log(res.pagedList);
       setNavItems(categoryNavItems);
     })
   }

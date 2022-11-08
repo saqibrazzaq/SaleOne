@@ -54,11 +54,68 @@ namespace api.Services
                 userEntity.RefreshToken = authRes.RefreshToken;
                 userEntity.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(
                     int.Parse(_configuration["JWT:RefreshTokenValidityInDays"]));
-                await _userManager.UpdateAsync(userEntity);
+                var result = await _userManager.UpdateAsync(userEntity);
 
                 return authRes;
             }
             else throw new UnAuthorizedUserException("Incorrect username/password");
+        }
+
+        public async Task<TokenDto> RefreshToken(TokenDto dto)
+        {
+            var principal = GetPrincipalFromExpiredToken(dto.AccessToken);
+            if (principal == null || principal.Identity == null)
+                throw new BadRequestException("Invalid access token or refresh token");
+
+            string? username = principal.Identity.Name;
+
+            var userEntity = await _userManager.FindByNameAsync(username);
+
+            if (userEntity == null || userEntity.RefreshToken != dto.RefreshToken
+                || userEntity.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                throw new BadRequestException("Invalid access token or refresh token");
+            }
+
+            var newAccessToken = CreateToken(principal.Claims.ToList());
+            var newRefreshToken = GenerateRefreshToken();
+
+            // Update user repository
+            userEntity.RefreshToken = newRefreshToken;
+            userEntity.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(
+                   int.Parse(_configuration["JWT:RefreshTokenValidityInDays"]));
+            var userResult = await _userManager.UpdateAsync(userEntity);
+            if (userResult.Succeeded == false)
+                throw new BadRequestException("Invalid token");
+
+            return new TokenDto
+            {
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                RefreshToken = newRefreshToken,
+            };
+        }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(
+                    SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+
         }
 
         private async Task<AppIdentityUser?> AuthenticateUser(string? email, string? password)
