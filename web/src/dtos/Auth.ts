@@ -15,3 +15,10 @@ export class UserLoginDto {
     this.password = password;
   }
 }
+
+export enum Roles {
+  Admin = "Admin",
+  Manager = "Manager",
+  User = "User",
+  Owner = "Owner",
+}

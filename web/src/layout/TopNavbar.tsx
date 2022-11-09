@@ -61,7 +61,7 @@ const TopNavbar = () => {
     //   // });
     // });
     
-    loadMenu();
+    // loadMenu();
     loadMenuFromCategories();
     callPrivateMethod();
   }, []);
@@ -79,7 +79,7 @@ const TopNavbar = () => {
       categories.map(value => {
         categoryNavItems.push({name: value.name || "", href: value.categoryId+""})
       })
-      console.log(res.pagedList);
+      // console.log(res.pagedList);
       setNavItems(categoryNavItems);
     })
   }
@@ -103,21 +103,21 @@ const TopNavbar = () => {
         // ],
       // },
       {
-        name: "Area",
-        href: "areas",
+        name: "Login",
+        href: "auth/login",
       },
       {
-        name: "City",
-        href: "cities",
+        name: "Admin",
+        href: "admin",
       },
       {
-        name: "State",
-        href: "states",
+        name: "Logout",
+        href: "auth/logout",
       },
-      {
-        name: "Country",
-        href: "countries",
-      },
+      // {
+      //   name: "Country",
+      //   href: "countries",
+      // },
     ];
     setNavItems(NAV_ITEMS);
   };

@@ -4,11 +4,11 @@ export default function authHeader() {
   if (userStr) user = JSON.parse(userStr);
 
   if (user && user.accessToken) {
-    console.log("Access token: " + user.accessToken);
+    // console.log("Access token: " + user.accessToken);
     //return { Authorization: 'Bearer ' + user.accessToken };
     return "Bearer " + user.accessToken;
   } else {
-    console.log("Access token: Not found");
+    // console.log("Access token: Not found");
     //return { Authorization: '' };
     return "";
   }

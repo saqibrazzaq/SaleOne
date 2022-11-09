@@ -19,14 +19,19 @@ export const AuthApi = {
 
     return response.data;
   },
-  refreshToken: async function (data, cancel = false) {
+  refreshToken: async function (cancel = false) {
+    let data = {
+          accessToken: TokenService.getLocalAccessToken(),
+          refreshToken: TokenService.getLocalRefreshToken(),
+        };
     const response = await api.request({
       url: `/auth/refresh-token`,
       method: "POST",
       data: data,
       signal: cancel ? cancelApiObject[this.refreshToken.name].handleRequestCancellation().signal : undefined,
     })
-    TokenService.updateLocalAccessToken(response.accessToken);
+    TokenService.updateLocalAccessToken(response.data.accessToken);
+    TokenService.updateLocalRefreshToken(response.data.refreshToken);
     return response.data
   },
   logout: async function () {
