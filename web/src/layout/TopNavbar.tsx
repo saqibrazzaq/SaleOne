@@ -35,6 +35,7 @@ import {CategoryApi} from "../api/categoryApi";
 import { CategoryRes } from "../dtos/Category";
 import { AuthApi } from "../api/authApi";
 import TokenService from "../api/token.service";
+import { AuthenticationResponseDto, Roles } from "../dtos/Auth";
 
 interface NavItem {
   name: string;
@@ -47,6 +48,7 @@ interface NavItem {
 const TopNavbar = () => {
   const { isOpen, onToggle } = useDisclosure();
   const [navItems, setNavItems] = useState<Array<NavItem>>([]);
+  const [userData, setUserData] = useState<AuthenticationResponseDto>();
 
   useEffect(() => {
     // AuthApi.login({email: "saqibrazzaq@gmail.com", password: "Saqib123!"}).then(res => {
@@ -64,7 +66,12 @@ const TopNavbar = () => {
     // loadMenu();
     loadMenuFromCategories();
     callPrivateMethod();
+    loadUserData();
   }, []);
+
+  const loadUserData = () => {
+    setUserData(TokenService.getUser());
+  }
 
   const callPrivateMethod = () => {
     CategoryApi.secureTest().then(res => {
@@ -128,6 +135,78 @@ const TopNavbar = () => {
     </>
   );
 
+  const showSignInMenu = () => (
+    <>{userData?.email ? showMenuForLoggedInUser() : showMenuForPublicUser()}</>
+  );
+
+  const showMenuForLoggedInUser = () => (
+    <Box>
+      <Menu>
+        <MenuButton
+          as={Button}
+          rounded={"full"}
+          variant={"link"}
+          cursor={"pointer"}
+          minW={0}
+        >
+          <Avatar size={"sm"} src={""} />
+        </MenuButton>
+        <MenuList>
+          {userData?.roles?.length && isAdmin() ? (
+            <MenuItem as={RouteLink} to="/admin">
+              Admin
+            </MenuItem>
+          ) : (
+            <></>
+          )}
+
+          <MenuItem as={RouteLink} to="/account">
+            My Account
+          </MenuItem>
+          <MenuDivider />
+          <MenuItem as={RouteLink} to="/auth/logout">
+            Logout
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    </Box>
+  );
+
+  function isAdmin() {
+    if (
+      userData?.roles?.indexOf(Roles.Admin) ||
+      userData?.roles?.indexOf(Roles.Manager) ||
+      userData?.roles?.indexOf(Roles.Owner)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  const showMenuForPublicUser = () => (
+    <>
+      <Button fontSize={"sm"} fontWeight={400} as={RouteLink} to="/auth/login">
+        Sign In
+      </Button>
+      <Button
+        display={{ base: "none", md: "inline-flex" }}
+        fontSize={"sm"}
+        fontWeight={600}
+        color={"white"}
+        bg={"pink.400"}
+        _hover={{
+          bg: "pink.300",
+        }}
+        as={RouteLink}
+        to="/auth/register"
+      >
+        Sign Up
+      </Button>
+    </>
+  );
+
+
   return (
     <Box>
       <Flex
@@ -178,6 +257,7 @@ const TopNavbar = () => {
           spacing={6}
         >
           {colorSwitcherMenu()}
+          {showSignInMenu()}
         </Stack>
       </Flex>
 

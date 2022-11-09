@@ -39,6 +39,7 @@ export default function Login() {
     setError("");
     AuthApi.login(values).then(res => {
       console.log(res);
+      window.location.href = "/";
     })
   };
 

@@ -6,6 +6,7 @@ const Logout = () => {
   useEffect(() => {
     AuthApi.logout().then(res => {
       // console.log(res);
+      window.location.href = "/";
     })
   }, []);
   return (
