@@ -71,6 +71,7 @@ namespace api.Extensions
         public static void ConfigureServices(this IServiceCollection services)
         {
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
         }
 
         public static void MigrateDatabase(this IServiceCollection services)

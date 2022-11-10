@@ -10,15 +10,19 @@ namespace data.Repository
     {
         private readonly AppDbContext _context;
         private readonly Lazy<ICategoryRepository> _categoryRepository;
+        private readonly Lazy<IProductRepository> _productRepository;
         public RepositoryManager(AppDbContext context)
         {
             _context = context;
 
             _categoryRepository = new Lazy<ICategoryRepository>(() =>
                 new CategoryRepository(context));
+            _productRepository = new Lazy<IProductRepository>(() =>
+                new ProductRepository(context));
         }
 
         public ICategoryRepository CategoryRepository => _categoryRepository.Value;
+        public IProductRepository ProductRepository => _productRepository.Value;
 
         public void Save()
         {
