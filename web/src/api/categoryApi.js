@@ -1,4 +1,3 @@
-import authHeader from "./auth-header";
 import { api } from "./axiosconfig"
 import { defineCancelApiObject } from "./axiosUtils"
 

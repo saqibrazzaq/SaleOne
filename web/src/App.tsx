@@ -4,6 +4,9 @@ import Categories from "./admin/category/Categories";
 import CategoryDelete from "./admin/category/CategoryDelete";
 import CategoryEdit from "./admin/category/CategoryEdit";
 import Home from "./admin/Home";
+import ProductDelete from "./admin/product/ProductDelete";
+import ProductEdit from "./admin/product/ProductEdit";
+import Products from "./admin/product/Products";
 import RequireAuth from "./api/require-auth";
 import Login from "./auth/Login";
 import Logout from "./auth/Logout";
@@ -30,11 +33,19 @@ export const App = () => {
             }
           >
             <Route path="admin" element={<AdminLayout />}>
+              {/* Categories */}
               <Route index element={<Home />} />
               <Route path="categories" element={<Categories />} />
               <Route path="categories/edit" element={<CategoryEdit />} />
               <Route path="categories/edit/:categoryId" element={<CategoryEdit />} />
               <Route path="categories/delete/:categoryId" element={<CategoryDelete />} />
+              {/* Products */}
+              <Route path="products" element={<Products />} />
+              <Route path="products/:categoryId" element={<Products />} />
+              <Route path="products/edit" element={<ProductEdit />} />
+              <Route path="products/edit/:categoryId" element={<ProductEdit />} />
+              <Route path="products/edit/:categoryId/:productId" element={<ProductEdit />} />
+              <Route path="products/delete/:categoryId/:productId" element={<ProductDelete />} />
             </Route>
           </Route>
         </Route>

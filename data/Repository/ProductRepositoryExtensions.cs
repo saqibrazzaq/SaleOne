@@ -20,11 +20,11 @@ namespace data.Repository
                 .Include(x => x.Category)
                 .AsQueryable();
 
-            //if (searchParams.StateId > 0)
-            //{
-            //    itemsToReturn = itemsToReturn.Where(
-            //        x => x.StateId == searchParams.StateId);
-            //}
+            if (searchParams.CategoryId > 0)
+            {
+                itemsToReturn = itemsToReturn.Where(
+                    x => x.CategoryId == searchParams.CategoryId);
+            }
 
             if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)
             {

@@ -1,8 +1,11 @@
 ﻿using api.ActionFilters;
 using api.Services;
 using data.Dtos;
+using data.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace api.Controllers
 {
@@ -39,6 +42,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.AllAdminRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Create(ProductReqEdit dto)
         {
@@ -47,6 +51,7 @@ namespace api.Controllers
         }
 
         [HttpPut("{productId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Update(int productId, ProductReqEdit dto)
         {
@@ -54,7 +59,8 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpDelete("productId")]
+        [HttpDelete("{productId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
         public IActionResult Delete(int productId)
         {
             _productService.Delete(productId);

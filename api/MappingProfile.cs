@@ -12,6 +12,10 @@ namespace api
             // Category
             CreateMap<Category, CategoryRes>();
             CreateMap<CategoryReqEdit, Category>();
+
+            // Product
+            CreateMap<Product, ProductRes>();
+            CreateMap<ProductReqEdit, Product>();
         }
     }
 }

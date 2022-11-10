@@ -42,10 +42,10 @@ api.interceptors.response.use(
         // }
         AuthApi.refreshToken()
           .then((res) => {
-            // console.log("Refresh token result: " + res);
+            console.log("Refresh token result: " + res.data);
           })
           .catch((err) => {
-            // console.log("Refresh token Error message: " + err?.response?.data?.Message);
+            console.log("Refresh token Error message: " + err?.response?.data?.Message);
           });
       }
     }
