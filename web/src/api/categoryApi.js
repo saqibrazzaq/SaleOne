@@ -4,15 +4,30 @@ import { defineCancelApiObject } from "./axiosUtils"
 
 export const CategoryApi = {
   get: async function (categoryId, cancel = false) {
-    if (!categoryId) return {};
-    const response = await api.request({
-      url: `/categories/` + categoryId,
-      method: "GET",
-      // retrieving the signal value by using the property name
-      signal: cancel ? cancelApiObject[this.get.name].handleRequestCancellation().signal : undefined,
-    })
-
-    return response.data
+    if (categoryId) {
+      const response = await api.request({
+        url: `/categories/` + categoryId,
+        method: "GET",
+        // retrieving the signal value by using the property name
+        signal: cancel ? cancelApiObject[this.get.name].handleRequestCancellation().signal : undefined,
+      })
+  
+      return response.data
+    }
+    
+  },
+  getCategoryDetail: async function (categoryId, cancel = false) {
+    if (categoryId) {
+      const response = await api.request({
+        url: `/categories/detail/` + categoryId,
+        method: "GET",
+        // retrieving the signal value by using the property name
+        signal: cancel ? cancelApiObject[this.getCategoryDetail.name].handleRequestCancellation().signal : undefined,
+      })
+  
+      return response.data
+    }
+    
   },
   secureTest: async function (cancel = false) {
     const response = await api.request({
@@ -33,7 +48,7 @@ export const CategoryApi = {
       params: searchParams,
       signal: cancel ? cancelApiObject[this.search.name].handleRequestCancellation().signal : undefined,
     })
-
+    // console.log(response.data)
     return response.data
   },
   searchWithProductsCount: async function (searchParams, cancel = false) {

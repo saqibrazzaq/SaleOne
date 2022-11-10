@@ -10,7 +10,8 @@ namespace api.Services
         ApiOkPagedResponse<IEnumerable<CategoryResWithProductsCount>, MetaData>
             SearchWithProductsCount(CategoryReqSearch dto);
         int Count();
-        CategoryRes GetById(int categoryId);
+        CategoryRes Get(int categoryId);
+        CategoryResWithProductsCount GetDetail(int categoryId);
         CategoryRes Create(CategoryReqEdit dto);
         CategoryRes Update(int categoryId, CategoryReqEdit dto);
         void Delete(int categoryId);

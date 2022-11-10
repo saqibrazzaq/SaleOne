@@ -14,6 +14,6 @@ namespace data.Repository
         PagedList<Category> Search(CategoryReqSearch dto, bool trackChanges);
         PagedList<CategoryResWithProductsCount> SearchWithProductsCount(
             CategoryReqSearch dto, bool trackChanges);
-
+        CategoryResWithProductsCount GetDetail(int categoryId);
     }
 }

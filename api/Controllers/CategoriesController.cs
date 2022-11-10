@@ -50,7 +50,14 @@ namespace api.Controllers
         [HttpGet("{categoryId}")]
         public IActionResult Get(int categoryId)
         {
-            var res = _categoryService.GetById(categoryId);
+            var res = _categoryService.Get(categoryId);
+            return Ok(res);
+        }
+
+        [HttpGet("detail/{categoryId}")]
+        public IActionResult GetDetail(int categoryId)
+        {
+            var res = _categoryService.GetDetail(categoryId);
             return Ok(res);
         }
 

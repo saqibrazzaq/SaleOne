@@ -1,5 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Categories from "./admin/category/Categories";
+import CategoryDelete from "./admin/category/CategoryDelete";
+import CategoryEdit from "./admin/category/CategoryEdit";
 import Home from "./admin/Home";
 import RequireAuth from "./api/require-auth";
 import Login from "./auth/Login";
@@ -28,6 +31,10 @@ export const App = () => {
           >
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<Home />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="categories/edit" element={<CategoryEdit />} />
+              <Route path="categories/edit/:categoryId" element={<CategoryEdit />} />
+              <Route path="categories/delete/:categoryId" element={<CategoryDelete />} />
             </Route>
           </Route>
         </Route>

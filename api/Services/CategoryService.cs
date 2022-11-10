@@ -50,10 +50,17 @@ namespace api.Services
             return entity;
         }
 
-        public CategoryRes GetById(int categoryId)
+        public CategoryRes Get(int categoryId)
         {
             var entity = FindCategoryIfExists(categoryId, false);
             return _mapper.Map<CategoryRes>(entity);
+        }
+
+        public CategoryResWithProductsCount GetDetail(int categoryId)
+        {
+            var entity = _repositoryManager.CategoryRepository.GetDetail(categoryId);
+            if (entity == null) throw new NotFoundException("No category found with id " + categoryId);
+            return entity;
         }
 
         public ApiOkPagedResponse<IEnumerable<CategoryRes>, MetaData> 

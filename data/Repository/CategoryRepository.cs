@@ -17,6 +17,26 @@ namespace data.Repository
             _db = context;
         }
 
+        public CategoryResWithProductsCount GetDetail(int categoryId)
+        {
+            var query = (
+                from category in _db.Categories
+                join product in _db.Products on category.CategoryId equals product.CategoryId into grouping
+                from p in grouping.DefaultIfEmpty()
+                group p by new { category.CategoryId, category.Name, category.Code, category.Description } into g
+                select new CategoryResWithProductsCount()
+                {
+                    CategoryId = g.Key.CategoryId,
+                    Name = g.Key.Name,
+                    Code = g.Key.Code,
+                    Description = g.Key.Description,
+                    ProductsCount = g.Count(x => x != null)
+                }
+                )
+                .Where(x => x.CategoryId == categoryId)
+                .FirstOrDefault();
+            return query;
+        }
         public PagedList<Category> Search(CategoryReqSearch dto, bool trackChanges)
         {
             var entities = FindAll(trackChanges)

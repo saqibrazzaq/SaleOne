@@ -35,12 +35,12 @@ namespace data.Repository
             string? orderBy)
         {
             if (string.IsNullOrWhiteSpace(orderBy))
-                return items.OrderBy(e => e.Name);
+                return items.OrderBy(e => e.Position);
 
             var orderQuery = OrderQueryBuilder.CreateOrderQuery<Category>(orderBy);
 
             if (string.IsNullOrWhiteSpace(orderQuery))
-                return items.OrderBy(e => e.Name);
+                return items.OrderBy(e => e.Position);
 
             return items.OrderBy(orderQuery);
         }

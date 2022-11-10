@@ -15,7 +15,10 @@ namespace data.Entities
         public int CategoryId { get; set; }
         [Required, MaxLength(255)]
         public string? Name { get; set; }
-        public string? Description { get; set; }
+        [Required, MaxLength(20)]
+        public string? Code { get; set; }
+        public string Description { get; set; } = "";
+        public int Position { get; set; } = 10;
 
         // Child tables
         public IEnumerable<Product>? Products { get; set; }

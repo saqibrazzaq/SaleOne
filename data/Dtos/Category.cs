@@ -12,6 +12,8 @@ namespace data.Dtos
     {
         public int CategoryId { get; set; }
         public string? Name { get; set; }
+        public string? Code { get; set; }
+        public int Position { get; set; }
         public string? Description { get; set; }
     }
 
@@ -23,6 +25,8 @@ namespace data.Dtos
     public class CategoryReqEdit
     {
         public string? Name { get; set; }
+        public string? Code { get; set; }
+        public int Position { get; set; }
         public string? Description { get; set; }
     }
 

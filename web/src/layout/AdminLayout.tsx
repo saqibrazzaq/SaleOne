@@ -8,10 +8,8 @@ import LeftSideMenu, { LinkItemProps } from "./LeftSideMenu";
 
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, href: "/admin" },
-  { name: "Company", icon: CgOrganisation, href: "/admin/company" },
+  { name: "Categories", icon: CgOrganisation, href: "/admin/categories" },
   { name: "Products", icon: CgOrganisation, href: "/admin/products" },
-  { name: "Users", icon: FiUsers, href: "/admin/users" },
-  { name: "Reset Data", icon: FiUsers, href: "/admin/reset-data" },
 ];
 
 const AdminLayout = () => {
