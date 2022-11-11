@@ -10,6 +10,11 @@ namespace data.Repository
     {
         ICategoryRepository CategoryRepository { get; }
         IProductRepository ProductRepository { get; }
+        IAddressRepository AddressRepository { get; }
+        IUserAddressRepository UserAddressRepository { get; }
+        ICityRepository CityRepository { get; }
+        IStateRepository StateRepository { get; }
+        ICountryRepository CountryRepository { get; }
         void Save();
     }
 }

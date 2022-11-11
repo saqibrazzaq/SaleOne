@@ -8,7 +8,7 @@ const RequireAuth = ({ allowedRoles }) => {
   // console.log(token);
 
   if (token?.roles?.find((role) => allowedRoles?.includes(role))) {
-    console.log("User logged in.");
+    // console.log("User logged in.");
     return <Outlet />;
   } else {
     if (token?.email) {
