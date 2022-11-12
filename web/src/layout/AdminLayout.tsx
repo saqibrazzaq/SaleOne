@@ -10,6 +10,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, href: "/admin" },
   { name: "Categories", icon: CgOrganisation, href: "/admin/categories" },
   { name: "Products", icon: CgOrganisation, href: "/admin/products" },
+  { name: "Countries", icon: CgOrganisation, href: "/admin/countries" },
 ];
 
 const AdminLayout = () => {

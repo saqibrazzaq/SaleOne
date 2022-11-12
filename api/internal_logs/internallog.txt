@@ -8196,3 +8196,12 @@
 2022-11-12 12:50:14.7624 Trace  Scanning Property LineEnding 'Default' NLog.Targets
 2022-11-12 12:50:14.7624 Trace FileTarget(Name=logfile) has 2 layouts
 2022-11-12 12:50:14.7624 Trace FileTarget(Name=logfile): Using appenderFactory: NLog.Internal.FileAppenders.SingleProcessFileAppender+Factory
+2022-11-12 12:57:39.5643 Debug Targets configured when LogLevel >= Debug for Logger: logger.LoggerManager
+2022-11-12 12:57:39.5643 Debug Logger logger.LoggerManager [Debug] => logfile
+2022-11-12 12:57:39.5643 Debug Logger logger.LoggerManager [Info] => logfile
+2022-11-12 12:57:39.5643 Debug Logger logger.LoggerManager [Warn] => logfile
+2022-11-12 12:57:39.5643 Debug Logger logger.LoggerManager [Error] => logfile
+2022-11-12 12:57:39.5643 Debug Logger logger.LoggerManager [Fatal] => logfile
+2022-11-12 12:57:39.5767 Debug FileTarget(Name=logfile): Preparing for new file 'C:\Data\Projects\Github\SaleOne\api\bin\Debug\net6.0\.\logs\2022-11-12_logfile.txt'
+2022-11-12 12:57:39.5767 Debug FileTarget(Name=logfile): Creating file appender: C:\Data\Projects\Github\SaleOne\api\bin\Debug\net6.0\.\logs\2022-11-12_logfile.txt
+2022-11-12 12:57:39.5767 Trace FileTarget(Name=logfile): Opening C:\Data\Projects\Github\SaleOne\api\bin\Debug\net6.0\.\logs\2022-11-12_logfile.txt with allowFileSharedWriting=False
