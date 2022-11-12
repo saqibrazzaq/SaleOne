@@ -16,6 +16,26 @@ namespace api
             // Product
             CreateMap<Product, ProductRes>();
             CreateMap<ProductReqEdit, Product>();
+
+            // Country
+            CreateMap<Country, CountryRes>();
+            CreateMap<CountryReqEdit, Country>();
+
+            // State
+            CreateMap<State, StateRes>();
+            CreateMap<StateReqEdit, State>();
+
+            // City
+            CreateMap<City, CityRes>();
+            CreateMap<CityReqEdit, City>();
+
+            // Address
+            CreateMap<Address, AddressRes>();
+            CreateMap<AddressReqEdit, Address>();
+
+            // User Address
+            CreateMap<UserAddress, UserAddressRes>();
+            CreateMap<UserAddressReqEdit, UserAddress>();
         }
     }
 }

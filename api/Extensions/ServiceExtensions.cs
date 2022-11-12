@@ -72,6 +72,11 @@ namespace api.Extensions
         {
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<IStateService, StateService>();
+            services.AddScoped<ICityService, CityService>();
+            //services.AddScoped<IAddressser>
         }
 
         public static void MigrateDatabase(this IServiceCollection services)

@@ -1,5 +1,6 @@
 ﻿using api.Exceptions;
 using AutoMapper;
+using data.Dtos;
 using data.Dtos.Auth;
 using data.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -172,6 +173,30 @@ namespace api.Services
                 );
 
             return token;
+        }
+
+        public async Task<UserRes> GetLoggedInUser()
+        {
+            var userEntity = await _userManager.FindByNameAsync(UserName);
+            if (userEntity == null)
+                throw new NotFoundException("User not found");
+
+            var userDto = _mapper.Map<UserRes>(userEntity);
+            userDto.Roles = await _userManager.GetRolesAsync(userEntity);
+            return userDto;
+        }
+
+        private string? UserName
+        {
+            get
+            {
+                if (_contextAccessor.HttpContext != null &&
+                    _contextAccessor.HttpContext.User.Identity != null &&
+                    string.IsNullOrWhiteSpace(_contextAccessor.HttpContext.User.Identity.Name) == false)
+                    return _contextAccessor.HttpContext.User.Identity.Name;
+                else
+                    throw new UnauthorizedAccessException("User not logged in");
+            }
         }
     }
 }

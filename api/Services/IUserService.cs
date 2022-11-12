@@ -1,4 +1,5 @@
-﻿using data.Dtos.Auth;
+﻿using data.Dtos;
+using data.Dtos.Auth;
 
 namespace api.Services
 {
@@ -6,5 +7,6 @@ namespace api.Services
     {
         Task<AuthenticationResponseDto> Login(LoginRequestDto dto);
         Task<TokenDto> RefreshToken(TokenDto dto);
+        Task<UserRes> GetLoggedInUser();
     }
 }

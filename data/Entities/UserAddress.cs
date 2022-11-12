@@ -17,13 +17,14 @@ namespace data.Entities
         public int AddressId { get; set; }
         [ForeignKey("AddressId")]
         public Address? Address { get; set; }
+        [Required]
+        public bool IsPrimary { get; set; } = false;
 
+        // Foreign keys
         [Required]
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
         public AppIdentityUser? User { get; set; }
 
-        [Required]
-        public bool IsPrimary { get; set; } = false;
     }
 }
