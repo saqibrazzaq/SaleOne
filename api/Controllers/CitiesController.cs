@@ -27,8 +27,8 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpGet("searchCitiesWithAreasCount")]
-        public IActionResult SearchCitiesWithAreasCount([FromQuery] CityReqSearch dto)
+        [HttpGet("searchCitiesWithAddressesCount")]
+        public IActionResult SearchCitiesWithAddressesCount([FromQuery] CityReqSearch dto)
         {
             var res = _cityService.SearchCitiesWithAddressesCount(dto);
             return Ok(res);

@@ -22,18 +22,11 @@ namespace data.Dtos
     public class CityReqEdit
     {
         [Required, MaxLength(255)]
-        public string? FirstName { get; set; }
-        [Required, MaxLength(255)]
-        public string? LastName { get; set; }
-        [Required, MaxLength(25)]
-        public string? PhoneNumber { get; set; }
-        [Required]
-        public string? Line1 { get; set; }
-        public string? Line2 { get; set; }
+        public string? Name { get; set; }
 
         // Foreign keys
         [Required]
-        public int CityId { get; set; }
+        public int StateId { get; set; }
     }
 
     public class CityReqSearch : PagedRequestDto

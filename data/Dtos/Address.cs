@@ -25,13 +25,18 @@ namespace data.Dtos
 
     public class AddressReqEdit
     {
+        [Required, MaxLength(255)]
         public string? FirstName { get; set; }
+        [Required, MaxLength(255)]
         public string? LastName { get; set; }
+        [Required, MaxLength(25)]
         public string? PhoneNumber { get; set; }
+        [Required]
         public string? Line1 { get; set; }
         public string? Line2 { get; set; }
 
         // Foreign keys
+        [Required]
         public int CityId { get; set; }
     }
 }

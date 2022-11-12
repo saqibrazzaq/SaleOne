@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AccountHome from "./account/AccountHome";
 import Categories from "./admin/category/Categories";
 import CategoryDelete from "./admin/category/CategoryDelete";
 import CategoryEdit from "./admin/category/CategoryEdit";
@@ -12,6 +13,7 @@ import Login from "./auth/Login";
 import Logout from "./auth/Logout";
 import UnAuthorized from "./auth/UnAuthorized";
 import { Roles } from "./dtos/Auth";
+import AccountLayout from "./layout/AccountLayout";
 import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
 
@@ -46,6 +48,9 @@ export const App = () => {
               <Route path="products/edit/:categoryId" element={<ProductEdit />} />
               <Route path="products/edit/:categoryId/:productId" element={<ProductEdit />} />
               <Route path="products/delete/:categoryId/:productId" element={<ProductDelete />} />
+            </Route>
+            <Route path="account" element={<AccountLayout />}>
+              <Route index element={<AccountHome />} />
             </Route>
           </Route>
         </Route>
