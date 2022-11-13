@@ -27,8 +27,7 @@ import DeleteIconButton from "../../components/DeleteIconButton";
 import PagedRes from "../../dtos/PagedRes";
 
 const Countries = () => {
-  const [pagedRes, setPagedRes] =
-    useState<PagedRes<CountryResWithStatesCount>>();
+  const [pagedRes, setPagedRes] = useState<PagedRes<CountryResWithStatesCount>>();
   const [searchText, setSearchText] = useState<string>("");
 
   useEffect(() => {

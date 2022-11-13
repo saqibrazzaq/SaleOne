@@ -24,8 +24,7 @@ const CountryEdit = () => {
   const params = useParams();
   const countryId = params.countryId;
   const updateText = countryId ? "Update Country" : "Add Country";
-  const [countryDto, setCountryDto] =
-    useState<CountryReqEdit>(new CountryReqEdit());
+  const [countryDto, setCountryDto] = useState<CountryReqEdit>(new CountryReqEdit());
   const toast = useToast();
   const navigate = useNavigate();
 

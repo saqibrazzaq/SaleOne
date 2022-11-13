@@ -1,6 +1,9 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AccountHome from "./account/AccountHome";
+import UserAddressDelete from "./account/address/UserAddressDelete";
+import UserAddressEdit from "./account/address/UserAddressEdit";
+import UserAddresses from "./account/address/UserAddresses";
 import Categories from "./admin/category/Categories";
 import CategoryDelete from "./admin/category/CategoryDelete";
 import CategoryEdit from "./admin/category/CategoryEdit";
@@ -87,6 +90,12 @@ export const App = () => {
             </Route>
             <Route path="account" element={<AccountLayout />}>
               <Route index element={<AccountHome />} />
+              <Route path="addresses">
+                <Route index element={<UserAddresses />} />
+                <Route path="edit" element={<UserAddressEdit />} />
+                <Route path="edit/:userAddressId" element={<UserAddressEdit />} />
+                <Route path="delete/:userAddressId" element={<UserAddressDelete />} />
+              </Route>
             </Route>
           </Route>
         </Route>

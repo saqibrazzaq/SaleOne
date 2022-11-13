@@ -42,7 +42,7 @@ namespace api.Services
             var entity = _repositoryManager.UserAddressRepository.FindByCondition(
                 x => x.UserAddressId == userAddressId,
                 trackChanges,
-                include: i => i.Include(x => x.Address)
+                include: i => i.Include(x => x.Address.City.State.Country)
                 ).FirstOrDefault();
             if (entity == null) throw new NotFoundException("No address found with id " + userAddressId);
 
@@ -60,7 +60,8 @@ namespace api.Services
             var userId = (await _userService.GetLoggedInUser()).Id;
             var entities = _repositoryManager.UserAddressRepository.FindByCondition(
                 x => x.UserId == userId,
-                false
+                false,
+                include: i => i.Include(x => x.Address.City.State.Country)
                 );
             return _mapper.Map<IEnumerable<UserAddressRes>>(entities);
         }

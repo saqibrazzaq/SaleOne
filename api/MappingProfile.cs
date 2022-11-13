@@ -36,6 +36,9 @@ namespace api
             // User Address
             CreateMap<UserAddress, UserAddressRes>();
             CreateMap<UserAddressReqEdit, UserAddress>();
+
+            // User
+            CreateMap<AppIdentityUser, UserRes>();
         }
     }
 }

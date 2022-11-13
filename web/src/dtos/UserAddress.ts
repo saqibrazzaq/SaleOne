@@ -9,6 +9,10 @@ export interface UserAddressRes {
 }
 
 export class UserAddressReqEdit {
-  isPrimary?: boolean;
+  isPrimary?: boolean = false;
   address?: AddressReqEdit;
+
+  constructor() {
+    this.address = new AddressReqEdit(0);
+  }
 }

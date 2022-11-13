@@ -22,6 +22,7 @@ namespace data.Dtos
 
     public class UserAddressReqEdit
     {
+        [Required]
         public AddressReqEdit? Address { get; set; }
         public bool IsPrimary { get; set; } = false;
     }
