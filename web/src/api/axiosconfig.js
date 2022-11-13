@@ -19,11 +19,13 @@ api.interceptors.response.use(
   },
   async (err) => {
     const originalConfig = err.config;
+    console.log("Log inside axiosconfig.js")
     console.log(err);
     if (originalConfig.url !== "/auth/login" && err.response) {
-      // Access Token was expired
-      console.log("Access token expired");
+      
       if (err.response.status === 401 && !originalConfig._retry) {
+        // Access Token was expired
+        console.log("Access token expired");
         originalConfig._retry = true;
         // console.log("calling refresh token");
         // try {
@@ -46,6 +48,7 @@ api.interceptors.response.use(
           })
           .catch((err) => {
             console.log("Refresh token Error message: " + err?.response?.data?.Message);
+            return Promise.reject(err);
           });
       }
     }

@@ -12,11 +12,14 @@ namespace api.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
+        private readonly ICityService _cityService;
         public StateService(IRepositoryManager repositoryManager,
-            IMapper mapper)
+            IMapper mapper,
+            ICityService cityService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _cityService = cityService;
         }
 
         public int Count()
@@ -44,8 +47,17 @@ namespace api.Services
         public void Delete(int stateId)
         {
             var entity = FindStateIfExists(stateId, true);
+            PerformValidationsForDelete(stateId);
             _repositoryManager.StateRepository.Delete(entity);
             _repositoryManager.Save();
+        }
+
+        private void PerformValidationsForDelete(int stateId)
+        {
+            var citiesCount = _cityService.Count(stateId);
+            if (citiesCount > 0)
+                throw new InvalidOperationException("Cannot delete state, It has " +
+                    citiesCount + " cities.");
         }
 
         private State FindStateIfExists(int stateId, bool trackChanges)

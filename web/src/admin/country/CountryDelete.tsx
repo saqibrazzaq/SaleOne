@@ -27,12 +27,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
+import { ErrorAlert } from "../../alertboxes/Alerts";
 import { CountryApi } from "../../api/countryApi";
 import { CountryResWithStatesCount } from "../../dtos/Country";
+import ErrorDetails from "../../dtos/ErrorDetails";
 
 const CountryDelete = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLAnchorElement>(null);
+  const [error, setError] = useState<ErrorDetails>();
 
   const [country, setCountry] = useState<CountryResWithStatesCount>();
   
@@ -51,6 +54,8 @@ const CountryDelete = () => {
         position: "top-right",
       });
       navigate("/admin/countries");
+    }).catch(error => {
+      setError(error.response.data);
     });
   };
 
@@ -140,6 +145,7 @@ const CountryDelete = () => {
         <Text fontSize="xl">
           Are you sure you want to delete the following Country?
         </Text>
+        {error && <ErrorAlert description={error.Message} />}
         {showCountryInfo()}
       </Stack>
       {showAlertDialog()}

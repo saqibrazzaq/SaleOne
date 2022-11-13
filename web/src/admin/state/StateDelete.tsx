@@ -27,7 +27,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
+import { ErrorAlert } from "../../alertboxes/Alerts";
 import { StateApi } from "../../api/stateApi";
+import ErrorDetails from "../../dtos/ErrorDetails";
 import { StateResWithCountryAndCitiesCount } from "../../dtos/State";
 
 const StateDelete = () => {
@@ -35,6 +37,7 @@ const StateDelete = () => {
   const cancelRef = React.useRef<HTMLAnchorElement>(null);
 
   const [state, setState] = useState<StateResWithCountryAndCitiesCount>();
+  const [error, setError] = useState<ErrorDetails>();
   
   const toast = useToast();
   const navigate = useNavigate();
@@ -52,6 +55,8 @@ const StateDelete = () => {
         position: "top-right",
       });
       navigate("/admin/states/" + countryId);
+    }).catch(error => {
+      setError(error.response.data);
     });
   };
 
@@ -142,6 +147,7 @@ const StateDelete = () => {
         <Text fontSize="xl">
           Are you sure you want to delete the following State?
         </Text>
+        {error && <ErrorAlert description={error.Message} />}
         {showStateInfo()}
       </Stack>
       {showAlertDialog()}

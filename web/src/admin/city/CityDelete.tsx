@@ -27,12 +27,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
+import { ErrorAlert } from "../../alertboxes/Alerts";
 import { CityApi } from "../../api/cityApi";
 import { CityResDetails } from "../../dtos/City";
+import ErrorDetails from "../../dtos/ErrorDetails";
 
 const CityDelete = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLAnchorElement>(null);
+  const [error, setError] = useState<ErrorDetails>();
 
   const [city, setCity] = useState<CityResDetails>();
   
@@ -52,6 +55,8 @@ const CityDelete = () => {
         position: "top-right",
       });
       navigate("/admin/cities/" + stateId);
+    }).catch(error => {
+      setError(error.response.data);
     });
   };
 
@@ -69,7 +74,7 @@ const CityDelete = () => {
               <Td>{city?.stateName + ", " + city?.countryName}</Td>
             </Tr>
             <Tr>
-              <Th>Areas</Th>
+              <Th>Addresses</Th>
               <Td>{city?.addressesCount}</Td>
             </Tr>
           </Tbody>
@@ -142,6 +147,7 @@ const CityDelete = () => {
         <Text fontSize="xl">
           Are you sure you want to delete the following City?
         </Text>
+        {error && <ErrorAlert description={error.Message} />}
         {showCityInfo()}
       </Stack>
       {showAlertDialog()}

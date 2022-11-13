@@ -12,6 +12,7 @@ namespace api.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
+        
         public CityService(IRepositoryManager repositoryManager,
             IMapper mapper)
         {
@@ -44,8 +45,20 @@ namespace api.Services
         public void Delete(int cityId)
         {
             var entity = FindCityIfExists(cityId, true);
+            PerformValidationsForDelete(cityId);
             _repositoryManager.CityRepository.Delete(entity);
             _repositoryManager.Save();
+        }
+
+        private void PerformValidationsForDelete(int cityId)
+        {
+            var addressesCount = _repositoryManager.AddressRepository.FindByCondition(
+                x => x.CityId == cityId,
+                false)
+                .Count();
+            if (addressesCount > 0)
+                throw new InvalidOperationException("Cannot delete city, It has " +
+                    addressesCount + " addresses.");
         }
 
         private City FindCityIfExists(int cityId, bool trackChanges)

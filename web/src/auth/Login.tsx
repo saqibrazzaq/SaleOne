@@ -20,7 +20,7 @@ import { Field, Formik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
-import ErrorDetails from "../dtos/Error";
+import ErrorDetails from "../dtos/ErrorDetails";
 import { AuthenticationResponseDto, UserLoginDto } from "../dtos/Auth";
 import { AuthApi } from "../api/authApi";
 import { Link as RouteLink, useNavigate } from "react-router-dom";

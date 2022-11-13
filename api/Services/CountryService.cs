@@ -11,10 +11,14 @@ namespace api.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public CountryService(IRepositoryManager repositoryManager, IMapper mapper)
+        private readonly IStateService _stateService;
+        public CountryService(IRepositoryManager repositoryManager, 
+            IMapper mapper, 
+            IStateService stateService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _stateService = stateService;
         }
 
         public int Count()
@@ -31,11 +35,20 @@ namespace api.Services
             return _mapper.Map<CountryRes>(entity);
         }
 
-        public void Delete(int id)
+        public void Delete(int countryId)
         {
-            var entity = FindCountryIfExists(id, true);
+            var entity = FindCountryIfExists(countryId, true);
+            PerformValidationsForDelete(countryId);
             _repositoryManager.CountryRepository.Delete(entity);
             _repositoryManager.Save();
+        }
+
+        private void PerformValidationsForDelete(int countryId)
+        {
+            var statesCount = _stateService.Count(countryId);
+            if (statesCount > 0)
+                throw new InvalidOperationException("Cannot delete country, It has " + 
+                    countryId + " states.");
         }
 
         private Country FindCountryIfExists(int id, bool trackChanges)
