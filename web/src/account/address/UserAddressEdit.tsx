@@ -35,11 +35,11 @@ const UserAddressEdit = () => {
   }, [userAddressId]);
 
   const loadUserAddress = () => {
-    console.log(userAddressDto);
+    // console.log(userAddressDto);
     if (userAddressId) {
       UserAddressApi.get(userAddressId).then(res => {
         setUserAddressDto(res);
-        console.log(res);
+        // console.log(res);
       })
     }
   }
@@ -96,17 +96,6 @@ const UserAddressEdit = () => {
     <Box p={0}>
       <Formik
         initialValues={userAddressDto}
-        // initialValues={{
-        //   isPrimary: false,
-        //   address: {
-        //     firstName: "",
-        //     lastName: "",
-        //     phoneNumber: "",
-        //     line1: "",
-        //     line2: "",
-        //     cityId: 0
-        //   }
-        // }}
         onSubmit={(values) => {
           submitForm(values);
         }}
@@ -159,44 +148,7 @@ const UserAddressEdit = () => {
                 />
                 <FormErrorMessage>{getIn(errors.address, "cityId")}</FormErrorMessage>
               </FormControl>
-              {/* <FormControl isInvalid={!!errors.address?.firstName && touched.address?.firstName}>
-                <FormLabel htmlFor="address.firstName">First Name</FormLabel>
-                <Field as={Input} id="address.firstName" name="address.firstName" type="text" />
-                <FormErrorMessage>{errors.address?.firstName}</FormErrorMessage>
-              </FormControl> */}
-              {/* <FormControl isInvalid={!!errors.address?.lastName && touched.address?.lastName}>
-                <FormLabel htmlFor="address.lastName">Last Name</FormLabel>
-                <Field as={Input} id="address.lastName" name="address.lastName" type="text" />
-                <FormErrorMessage>{errors.address?.lastName}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.address?.phoneNumber && touched.address?.phoneNumber}>
-                <FormLabel htmlFor="address.phoneNumber">Phone Number</FormLabel>
-                <Field as={Input} id="address.phoneNumber" name="address.phoneNumber" type="text" />
-                <FormErrorMessage>{errors.address?.phoneNumber}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.address?.line1 && touched.address?.line1}>
-                <FormLabel htmlFor="address.line1">Line 1</FormLabel>
-                <Field as={Input} id="address.line1" name="address.line1" type="text" />
-                <FormErrorMessage>{errors.address?.line1}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.address?.line2 && touched.address?.line2}>
-                <FormLabel htmlFor="address.line2">Line 2</FormLabel>
-                <Field as={Input} id="address.line2" name="address.line2" type="text" />
-                <FormErrorMessage>{errors.address?.line2}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.address?.cityId && touched.address?.cityId}>
-                <FormLabel htmlFor="address.cityId">City Id</FormLabel>
-                <Field as={Input} id="address.cityId" name="address.cityId" type="hidden" />
-                <CitySearchBox
-                  selectedCity={userAddressDto.address?.city}
-                  handleChange={(newValue?: CityRes) => {
-                    //setSelectedCity(newValue);
-                    setFieldValue("address.cityId", newValue?.cityId)
-                    // console.log(newValue)
-                  }}
-                />
-                <FormErrorMessage>{errors.address?.cityId}</FormErrorMessage>
-              </FormControl> */}
+              
               <Stack direction={"row"} spacing={6}>
                 <Button type="submit" colorScheme={"blue"}>{updateText}</Button>
               </Stack>
