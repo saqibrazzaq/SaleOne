@@ -65,7 +65,7 @@ const TopNavbar = () => {
     
     // loadMenu();
     loadMenuFromCategories();
-    callPrivateMethod();
+    // callPrivateMethod();
     loadUserData();
   }, []);
 

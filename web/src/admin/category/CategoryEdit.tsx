@@ -37,7 +37,7 @@ const CategoryEdit = () => {
     if (categoryId) {
       CategoryApi.get(categoryId).then(res => {
         setCategoryDto(res);
-        console.log(res);
+        // console.log(res);
       })
     }
     

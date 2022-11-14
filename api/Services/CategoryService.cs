@@ -11,11 +11,14 @@ namespace api.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public CategoryService(IRepositoryManager repositoryManager, 
-            IMapper mapper)
+        private readonly IProductService _productService;
+        public CategoryService(IRepositoryManager repositoryManager,
+            IMapper mapper,
+            IProductService productService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _productService = productService;
         }
 
         public int Count()
@@ -35,8 +38,17 @@ namespace api.Services
         public void Delete(int categoryId)
         {
             var entity = FindCategoryIfExists(categoryId, true);
+            PerformValidationsForDelete(categoryId);
             _repositoryManager.CategoryRepository.Delete(entity);
             _repositoryManager.Save();
+        }
+
+        private void PerformValidationsForDelete(int categoryId)
+        {
+            var productsCount = _productService.Count(categoryId);
+            if (productsCount > 0)
+                throw new InvalidOperationException("Cannot delete category, It has " +
+                    productsCount + " product(s).");
         }
 
         private Category FindCategoryIfExists(int categoryId, bool trackChanges)

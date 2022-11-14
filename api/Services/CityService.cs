@@ -58,7 +58,7 @@ namespace api.Services
                 .Count();
             if (addressesCount > 0)
                 throw new InvalidOperationException("Cannot delete city, It has " +
-                    addressesCount + " addresses.");
+                    addressesCount + " address(es).");
         }
 
         private City FindCityIfExists(int cityId, bool trackChanges)

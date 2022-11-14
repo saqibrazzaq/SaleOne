@@ -27,12 +27,15 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
+import { ErrorAlert } from "../../alertboxes/Alerts";
 import { CategoryApi } from "../../api/categoryApi";
 import { CategoryResWithProductsCount } from "../../dtos/Category";
+import ErrorDetails from "../../dtos/ErrorDetails";
 
 const CategoryDelete = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLAnchorElement>(null);
+  const [error, setError] = useState<ErrorDetails>();
 
   const [category, setCategory] = useState<CategoryResWithProductsCount>();
   
@@ -51,6 +54,8 @@ const CategoryDelete = () => {
         position: "top-right",
       });
       window.location.href = ("/admin/categories");
+    }).catch(error => {
+      setError(error.response.data);
     });
   };
 
@@ -148,6 +153,7 @@ const CategoryDelete = () => {
         <Text fontSize="xl">
           Are you sure you want to delete the following Category?
         </Text>
+        {error && <ErrorAlert description={error.Message} />}
         {showCategoryInfo()}
       </Stack>
       {showAlertDialog()}

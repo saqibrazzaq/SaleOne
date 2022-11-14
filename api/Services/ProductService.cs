@@ -24,6 +24,14 @@ namespace api.Services
                 .Count();
         }
 
+        public int Count(int categoryId)
+        {
+            return _repositoryManager.ProductRepository.FindByCondition(
+                x => x.CategoryId == categoryId,
+                false)
+                .Count();
+        }
+
         public ProductRes Create(ProductReqEdit dto)
         {
             var entity = _mapper.Map<Product>(dto);

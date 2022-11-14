@@ -48,7 +48,7 @@ namespace api.Services
             var statesCount = _stateService.Count(countryId);
             if (statesCount > 0)
                 throw new InvalidOperationException("Cannot delete country, It has " + 
-                    countryId + " states.");
+                    countryId + " state(s).");
         }
 
         private Country FindCountryIfExists(int id, bool trackChanges)
