@@ -38,5 +38,6 @@ namespace data.Dtos
     public class ProductReqSearch : PagedRequestDto
     {
         public int CategoryId { get; set; }
+        public string? CategoryCode { get; set; }
     }
 }

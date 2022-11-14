@@ -22,6 +22,8 @@ import { ProductApi } from "../../api/productApi";
 import CategorySearchBox from "../../searchboxes/CategorySearchBox";
 import { CategoryRes } from "../../dtos/Category";
 import { CategoryApi } from "../../api/categoryApi";
+import ErrorDetails from "../../dtos/ErrorDetails";
+import { ErrorAlert } from "../../alertboxes/Alerts";
 
 const ProductEdit = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryRes>();
@@ -29,6 +31,7 @@ const ProductEdit = () => {
   const categoryId = Number.parseInt(params.categoryId || "0");
   const productId = Number.parseInt(params.productId || "0");
   const updateText = productId ? "Update Product" : "Add Product";
+  const [error, setError] = useState<ErrorDetails>();
   const [productDto, setProductDto] = useState<ProductReqEdit>(new ProductReqEdit(categoryId));
   const toast = useToast();
   const navigate = useNavigate();
@@ -90,6 +93,8 @@ const ProductEdit = () => {
         position: "top-right",
       });
       navigate("/admin/products/" + categoryId);
+    }).catch(error => {
+      setError(error.response.data);
     });
   };
 
@@ -103,6 +108,8 @@ const ProductEdit = () => {
       });
       // navigate("/states/edit/" + res.stateId)
       navigate("/admin/products/" + categoryId);
+    }).catch(error => {
+      setError(error.response.data);
     });
   };
 
@@ -192,6 +199,7 @@ const ProductEdit = () => {
     <Box width={"100%"} p={4}>
       <Stack spacing={4} as={Container} maxW={"3xl"}>
         {displayHeading()}
+        {error && <ErrorAlert description={error.Message} />}
         {showUpdateForm()}
       </Stack>
     </Box>

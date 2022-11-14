@@ -26,6 +26,12 @@ namespace data.Repository
                     x => x.CategoryId == searchParams.CategoryId);
             }
 
+            if (!string.IsNullOrWhiteSpace(searchParams.CategoryCode))
+            {
+                itemsToReturn = itemsToReturn.Where(
+                    x => x.Category.Code == searchParams.CategoryCode);
+            }
+
             if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)
             {
                 string searchText = searchParams.SearchText.ToLower();

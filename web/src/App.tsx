@@ -28,17 +28,23 @@ import { Roles } from "./dtos/Auth";
 import AccountLayout from "./layout/AccountLayout";
 import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
+import ProductList from "./product/ProductList";
 
 export const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
+          {/* Public routes */}
+          {/* Authentication routes */}
           <Route path="auth">
             <Route path="login" element={<Login />} />
             <Route path="logout" element={<Logout />} />
             <Route path="unauthorized" element={<UnAuthorized />} />
           </Route>
+          <Route index element={<ProductList />} />
+          <Route path=":categoryCode" element={<ProductList />} />
+          {/* Private routes */}
           <Route
             element={
               <RequireAuth

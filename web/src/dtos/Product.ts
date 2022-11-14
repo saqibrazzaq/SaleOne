@@ -31,6 +31,7 @@ export class ProductReqEdit {
 
 export class ProductReqSearch extends PagedReq {
   categoryId?: number;
+  categoryCode?: string;
 
   constructor(
     {
@@ -39,7 +40,8 @@ export class ProductReqSearch extends PagedReq {
       orderBy,
       searchText = "",
     }: PagedReq,
-    categoryId = 0
+    {categoryId = 0,
+    categoryCode = ""}
   ) {
     super({
       pageNumber: pageNumber,
@@ -48,5 +50,6 @@ export class ProductReqSearch extends PagedReq {
       searchText: searchText,
     });
     this.categoryId = categoryId;
+    this.categoryCode = categoryCode;
   }
 }

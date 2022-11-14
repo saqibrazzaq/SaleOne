@@ -35,9 +35,20 @@ namespace api.Services
         public ProductRes Create(ProductReqEdit dto)
         {
             var entity = _mapper.Map<Product>(dto);
+            PerformValidationsForCreate(dto);
             _repositoryManager.ProductRepository.Create(entity);
             _repositoryManager.Save();
             return _mapper.Map<ProductRes>(entity);
+        }
+
+        private void PerformValidationsForCreate(ProductReqEdit dto)
+        {
+            var codeAlreadyExists = _repositoryManager.ProductRepository.FindByCondition(
+                x => x.Code == dto.Code,
+                false)
+                .Any();
+            if (codeAlreadyExists)
+                throw new InvalidOperationException("Product Code already exists.");
         }
 
         public void Delete(int productId)
@@ -78,9 +89,20 @@ namespace api.Services
         public ProductRes Update(int productId, ProductReqEdit dto)
         {
             var entity = FindProductIfExists(productId, true);
+            PerformValidationsForUpdate(productId, dto);
             _mapper.Map(dto, entity);
             _repositoryManager.Save();
             return _mapper.Map<ProductRes>(entity);
+        }
+
+        private void PerformValidationsForUpdate(int productId, ProductReqEdit dto)
+        {
+            var codeAlreadyExists = _repositoryManager.ProductRepository.FindByCondition(
+                x => x.Code == dto.Code && x.ProductId != productId,
+                false)
+                .Any();
+            if (codeAlreadyExists)
+                throw new InvalidOperationException("Product Code already exists.");
         }
     }
 }

@@ -84,7 +84,7 @@ const TopNavbar = () => {
       let categories: CategoryRes[] = res.pagedList;
       let categoryNavItems: Array<NavItem> = [];
       categories.map(value => {
-        categoryNavItems.push({name: value.name || "", href: value.categoryId+""})
+        categoryNavItems.push({name: value.name || "", href: value.code})
       })
       // console.log(res.pagedList);
       setNavItems(categoryNavItems);

@@ -41,7 +41,7 @@ const Products = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    searchProducts(new ProductReqSearch({}, categoryId));
+    searchProducts(new ProductReqSearch({}, {categoryId: categoryId}));
   }, [categoryId]);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const Products = () => {
         pageNumber: previousPageNumber,
         searchText: searchText,
       },
-      selectedCategory?.categoryId);
+      {categoryId: selectedCategory?.categoryId});
 
       searchProducts(searchParams);
     }
@@ -81,7 +81,7 @@ const Products = () => {
         pageNumber: nextPageNumber,
         searchText: searchText,
       },
-      selectedCategory?.categoryId);
+      {categoryId: selectedCategory?.categoryId});
 
       searchProducts(searchParams);
     }
@@ -182,7 +182,7 @@ const Products = () => {
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               searchProducts(new ProductReqSearch({ searchText: searchText },
-                selectedCategory?.categoryId));
+                {categoryId: selectedCategory?.categoryId}));
             }
           }}
         />
@@ -192,7 +192,7 @@ const Products = () => {
           colorScheme={"blue"}
           onClick={() => {
             searchProducts(new ProductReqSearch({ searchText: searchText },
-              selectedCategory?.categoryId));
+              {categoryId: selectedCategory?.categoryId}));
           }}
         >
           Search

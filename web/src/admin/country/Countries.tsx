@@ -31,7 +31,6 @@ const Countries = () => {
   const [searchText, setSearchText] = useState<string>("");
 
   useEffect(() => {
-    // console.log("URL: " + process.env.REACT_APP_API_BASE_URL)
     searchCountries(new CountryReqSearch({}));
   }, []);
 
