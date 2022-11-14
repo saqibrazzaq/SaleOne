@@ -17,6 +17,10 @@ namespace api
             CreateMap<Product, ProductRes>();
             CreateMap<ProductReqEdit, Product>();
 
+            // Product images
+            CreateMap<ProductImage, ProductImageRes>();
+            CreateMap<ProductImageReqEdit, ProductImage>();
+
             // Country
             CreateMap<Country, CountryRes>();
             CreateMap<CountryReqEdit, Country>();

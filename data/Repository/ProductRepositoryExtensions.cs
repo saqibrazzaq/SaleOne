@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,17 @@ namespace data.Repository
             {
                 itemsToReturn = itemsToReturn.Where(
                     x => x.Category.Code == searchParams.CategoryCode);
+            }
+
+            if (searchParams.StockStatus == ((int)StockStatus.OutOfStock))
+            {
+                itemsToReturn = itemsToReturn.Where(
+                    x => x.Quantity == 0);
+            }
+            else if (searchParams.StockStatus == ((int)StockStatus.InStock))
+            {
+                itemsToReturn = itemsToReturn.Where(
+                    x => x.Quantity > 0);
             }
 
             if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)

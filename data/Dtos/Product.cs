@@ -22,6 +22,7 @@ namespace data.Dtos
         public decimal Price { get; set; }
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
+        public IEnumerable<ProductImageRes>? ProductImages { get; set; }
     }
 
     public class ProductReqEdit
@@ -39,5 +40,13 @@ namespace data.Dtos
     {
         public int CategoryId { get; set; }
         public string? CategoryCode { get; set; }
+        public int StockStatus { get; set; } = -1;
+    }
+
+    public enum StockStatus
+    {
+        InStock = 1,
+        OutOfStock = 0,
+        AllProducts = -1
     }
 }

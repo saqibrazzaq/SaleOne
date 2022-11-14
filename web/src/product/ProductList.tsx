@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { ProductReqSearch, ProductRes } from "../dtos/Product";
+import { ProductReqSearch, ProductRes, StockStatus } from "../dtos/Product";
 import PagedRes from "../dtos/PagedRes";
 import { ProductApi } from "../api/productApi";
 
@@ -27,15 +27,13 @@ const ProductList = () => {
   const categoryCode = params.categoryCode;
 
   useEffect(() => {
-    searchProducts(
-      new ProductReqSearch(
-        { searchText: searchText },
-        { categoryCode: categoryCode }
-      )
-    );
+    searchProducts(new ProductReqSearch({}, {}));
   }, [categoryCode]);
 
   const searchProducts = (searchParams: ProductReqSearch) => {
+    // Modify params, which will be used everywhere
+    searchParams.stockStatus = StockStatus.InStock;
+    searchParams.categoryCode = categoryCode;
     ProductApi.search(searchParams).then((res) => {
       setPagedRes(res);
       // console.log(res);
@@ -48,9 +46,8 @@ const ProductList = () => {
       let searchParams = new ProductReqSearch(
         {
           pageNumber: previousPageNumber,
-          searchText: searchText,
         },
-        { categoryCode: categoryCode }
+        {}
       );
 
       searchProducts(searchParams);
@@ -63,9 +60,8 @@ const ProductList = () => {
       let searchParams = new ProductReqSearch(
         {
           pageNumber: nextPageNumber,
-          searchText: searchText,
         },
-        { categoryCode: categoryCode }
+        {}
       );
 
       searchProducts(searchParams);
@@ -83,67 +79,6 @@ const ProductList = () => {
   );
 
   const showProducts = () => (
-    // <TableContainer>
-    //   <Table variant="simple">
-    //     <Thead>
-    //       <Tr>
-    //         <Th>Code</Th>
-    //         <Th>Name</Th>
-    //         <Th>States</Th>
-    //         <Th></Th>
-    //       </Tr>
-    //     </Thead>
-    //     <Tbody>
-    //       {pagedRes?.pagedList?.map((item) => (
-    //         <Tr key={item.countryId}>
-    //           <Td>{item.code}</Td>
-    //           <Td>{item.name}</Td>
-    //           <Td>
-    //             <Link color={"blue"} mr={2} as={RouteLink} to={"/admin/states/" + item.countryId}>
-    //               {item.statesCount}
-    //             </Link>
-    //           </Td>
-    //           <Td>
-    //             <Link
-    //               mr={2}
-    //               as={RouteLink}
-    //               to={"/admin/countries/edit/" + item.countryId}
-    //             >
-    //               <UpdateIconButton />
-    //             </Link>
-    //             <Link as={RouteLink} to={"/admin/countries/delete/" + item.countryId}>
-    //               <DeleteIconButton />
-    //             </Link>
-    //           </Td>
-    //         </Tr>
-    //       ))}
-    //     </Tbody>
-    //     <Tfoot>
-    //       <Tr>
-    //         <Th colSpan={2} textAlign="center">
-    //           <Button
-    //             isDisabled={!pagedRes?.metaData?.hasPrevious}
-    //             variant="link"
-    //             mr={5}
-    //             onClick={previousPage}
-    //           >
-    //             Previous
-    //           </Button>
-    //           Page {pagedRes?.metaData?.currentPage} of{" "}
-    //           {pagedRes?.metaData?.totalPages}
-    //           <Button
-    //             isDisabled={!pagedRes?.metaData?.hasNext}
-    //             variant="link"
-    //             ml={5}
-    //             onClick={nextPage}
-    //           >
-    //             Next
-    //           </Button>
-    //         </Th>
-    //       </Tr>
-    //     </Tfoot>
-    //   </Table>
-    // </TableContainer>
     <Stack>
       <Center>
         <Wrap spacing={2} align={"center"} mb={2}>
@@ -200,12 +135,7 @@ const ProductList = () => {
           onChange={(e) => setSearchText(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              searchProducts(
-                new ProductReqSearch(
-                  { searchText: searchText },
-                  { categoryCode: categoryCode }
-                )
-              );
+              searchProducts(new ProductReqSearch({}, {}));
             }
           }}
         />
@@ -214,12 +144,7 @@ const ProductList = () => {
         <Button
           colorScheme={"blue"}
           onClick={() => {
-            searchProducts(
-              new ProductReqSearch(
-                { searchText: searchText },
-                { categoryCode: categoryCode }
-              )
-            );
+            searchProducts(new ProductReqSearch({}, {}));
           }}
         >
           Search

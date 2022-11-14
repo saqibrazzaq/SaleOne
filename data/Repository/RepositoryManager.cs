@@ -11,11 +11,13 @@ namespace data.Repository
         private readonly AppDbContext _context;
         private readonly Lazy<ICategoryRepository> _categoryRepository;
         private readonly Lazy<IProductRepository> _productRepository;
+        private readonly Lazy<IProductImageRepository> _productImageRepository;
         private readonly Lazy<IAddressRepository> _addressRepository;
         private readonly Lazy<IUserAddressRepository> _userAddressRepository;
         private readonly Lazy<ICityRepository> _cityRepository;
         private readonly Lazy<IStateRepository> _stateRepository;
         private readonly Lazy<ICountryRepository> _countryRepository;
+        
         public RepositoryManager(AppDbContext context)
         {
             _context = context;
@@ -24,6 +26,8 @@ namespace data.Repository
                 new CategoryRepository(context));
             _productRepository = new Lazy<IProductRepository>(() =>
                 new ProductRepository(context));
+            _productImageRepository = new Lazy<IProductImageRepository>(() =>
+                new ProductImageRepository(context));
             _addressRepository = new Lazy<IAddressRepository>(() =>
                 new AddressRepository(context));
             _userAddressRepository = new Lazy<IUserAddressRepository>(() =>
@@ -43,6 +47,8 @@ namespace data.Repository
         public ICityRepository CityRepository => _cityRepository.Value;
         public IStateRepository StateRepository => _stateRepository.Value;
         public ICountryRepository CountryRepository => _countryRepository.Value;
+        public IProductImageRepository ProductImageRepository => _productImageRepository.Value;
+
         public void Save()
         {
             _context.SaveChanges();

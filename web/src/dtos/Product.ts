@@ -29,9 +29,16 @@ export class ProductReqEdit {
   }
 }
 
+export enum StockStatus {
+  InStock = 1,
+  OutOfStock = 0,
+  AllProducts = -1
+}
+
 export class ProductReqSearch extends PagedReq {
   categoryId?: number;
   categoryCode?: string;
+  stockStatus?: number;
 
   constructor(
     {
@@ -40,8 +47,7 @@ export class ProductReqSearch extends PagedReq {
       orderBy,
       searchText = "",
     }: PagedReq,
-    {categoryId = 0,
-    categoryCode = ""}
+    { categoryId = 0, categoryCode = "", stockStatus = StockStatus.AllProducts }
   ) {
     super({
       pageNumber: pageNumber,
@@ -51,5 +57,6 @@ export class ProductReqSearch extends PagedReq {
     });
     this.categoryId = categoryId;
     this.categoryCode = categoryCode;
+    this.stockStatus = stockStatus;
   }
 }

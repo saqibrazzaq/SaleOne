@@ -29,5 +29,8 @@ namespace data.Entities
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Category? Category { get; set; }
+
+        // Child tables
+        public IEnumerable<ProductImage>? ProductImages { get; set; }
     }
 }
