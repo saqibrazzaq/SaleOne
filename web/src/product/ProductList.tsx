@@ -27,7 +27,12 @@ const ProductList = () => {
   const categoryCode = params.categoryCode;
 
   useEffect(() => {
-    searchProducts(new ProductReqSearch({}, {categoryCode: categoryCode}));
+    searchProducts(
+      new ProductReqSearch(
+        { searchText: searchText },
+        { categoryCode: categoryCode }
+      )
+    );
   }, [categoryCode]);
 
   const searchProducts = (searchParams: ProductReqSearch) => {
@@ -40,10 +45,13 @@ const ProductList = () => {
   const previousPage = () => {
     if (pagedRes?.metaData) {
       let previousPageNumber = (pagedRes?.metaData?.currentPage || 2) - 1;
-      let searchParams = new ProductReqSearch({
-        pageNumber: previousPageNumber,
-        searchText: searchText,
-      }, {});
+      let searchParams = new ProductReqSearch(
+        {
+          pageNumber: previousPageNumber,
+          searchText: searchText,
+        },
+        { categoryCode: categoryCode }
+      );
 
       searchProducts(searchParams);
     }
@@ -52,10 +60,13 @@ const ProductList = () => {
   const nextPage = () => {
     if (pagedRes?.metaData) {
       let nextPageNumber = (pagedRes?.metaData?.currentPage || 0) + 1;
-      let searchParams = new ProductReqSearch({
-        pageNumber: nextPageNumber,
-        searchText: searchText,
-      }, {});
+      let searchParams = new ProductReqSearch(
+        {
+          pageNumber: nextPageNumber,
+          searchText: searchText,
+        },
+        { categoryCode: categoryCode }
+      );
 
       searchProducts(searchParams);
     }
@@ -67,9 +78,7 @@ const ProductList = () => {
         <Heading fontSize={"xl"}>Products</Heading>
       </Box>
       <Spacer />
-      <Box>
-        
-      </Box>
+      <Box></Box>
     </Flex>
   );
 
@@ -135,24 +144,49 @@ const ProductList = () => {
     //     </Tfoot>
     //   </Table>
     // </TableContainer>
-    <Wrap spacing={2} align={"center"} mb={2}>
-      {pagedRes?.pagedList?.map((product) => (
-        <WrapItem key={product.productId}>
-          <Center py={2} px={2}>
-            <Box boxShadow={"md"}>
-              <Stack spacing={2} align={"center"} mb={2}>
-                {/* <Image
-                  borderRadius="lg"
-                  width={"200px"}
-                  src={product.productImages[0]?.imageUrl}
-                /> */}
-                <Text>{product.name}</Text>
-              </Stack>
-            </Box>
-          </Center>
-        </WrapItem>
-      ))}
-    </Wrap>
+    <Stack>
+      <Center>
+        <Wrap spacing={2} align={"center"} mb={2}>
+          {pagedRes?.pagedList?.map((product) => (
+            <WrapItem key={product.productId}>
+              <Center py={2} px={2}>
+                <Box boxShadow={"md"}>
+                  <Stack spacing={2} align={"center"} mb={2}>
+                    {/* <Image
+                    borderRadius="lg"
+                    width={"200px"}
+                    src={product.productImages[0]?.imageUrl}
+                  /> */}
+                    <Text>{product.name}</Text>
+                  </Stack>
+                </Box>
+              </Center>
+            </WrapItem>
+          ))}
+        </Wrap>
+      </Center>
+
+      <Center>
+        <Button
+          isDisabled={!pagedRes?.metaData?.hasPrevious}
+          variant="link"
+          mr={5}
+          onClick={previousPage}
+        >
+          Previous
+        </Button>
+        Page {pagedRes?.metaData?.currentPage} of{" "}
+        {pagedRes?.metaData?.totalPages}
+        <Button
+          isDisabled={!pagedRes?.metaData?.hasNext}
+          variant="link"
+          ml={5}
+          onClick={nextPage}
+        >
+          Next
+        </Button>
+      </Center>
+    </Stack>
   );
 
   const displaySearchBar = () => (
@@ -166,7 +200,12 @@ const ProductList = () => {
           onChange={(e) => setSearchText(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              searchProducts(new ProductReqSearch({ searchText: searchText }, {}));
+              searchProducts(
+                new ProductReqSearch(
+                  { searchText: searchText },
+                  { categoryCode: categoryCode }
+                )
+              );
             }
           }}
         />
@@ -175,7 +214,12 @@ const ProductList = () => {
         <Button
           colorScheme={"blue"}
           onClick={() => {
-            searchProducts(new ProductReqSearch({ searchText: searchText }, {}));
+            searchProducts(
+              new ProductReqSearch(
+                { searchText: searchText },
+                { categoryCode: categoryCode }
+              )
+            );
           }}
         >
           Search
@@ -193,6 +237,6 @@ const ProductList = () => {
       </Stack>
     </Box>
   );
-}
+};
 
-export default ProductList
+export default ProductList;
