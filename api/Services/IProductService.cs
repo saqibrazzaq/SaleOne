@@ -13,5 +13,11 @@ namespace api.Services
         ProductRes Create(ProductReqEdit dto);
         ProductRes Update(int productId, ProductReqEdit dto);
         void Delete(int productId);
+
+        // Images
+        int CountImages(int productId);
+        ProductImageRes GetImage(int productImageId);
+        ProductImageRes CreateImage(ProductImageReqEdit dto, IFormFile file, string tempFolderPath);
+        void DeleteImage(int productImageId);
     }
 }

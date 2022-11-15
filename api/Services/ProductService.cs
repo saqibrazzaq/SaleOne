@@ -5,6 +5,7 @@ using data.Entities;
 using data.Repository;
 using data.Utility.Paging;
 using Microsoft.EntityFrameworkCore;
+using storage;
 
 namespace api.Services
 {
@@ -12,10 +13,14 @@ namespace api.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public ProductService(IRepositoryManager repositoryManager, IMapper mapper)
+        private readonly ICloudinaryService _cloudinaryService;
+        public ProductService(IRepositoryManager repositoryManager, 
+            IMapper mapper, 
+            ICloudinaryService cloudinaryService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _cloudinaryService = cloudinaryService;
         }
 
         public int Count()
@@ -63,7 +68,9 @@ namespace api.Services
             var entity = _repositoryManager.ProductRepository.FindByCondition(
                 x => x.ProductId == productId,
                 trackChanges,
-                include: i => i.Include(x => x.Category)
+                include: i => i
+                .Include(x => x.Category)
+                .Include(x => x.ProductImages)
                 )
                 .FirstOrDefault();
             if (entity == null) throw new NotFoundException("No product found with id " + productId);
@@ -103,6 +110,51 @@ namespace api.Services
                 .Any();
             if (codeAlreadyExists)
                 throw new InvalidOperationException("Product Code already exists.");
+        }
+
+        public int CountImages(int productId)
+        {
+            return _repositoryManager.ProductImageRepository.FindByCondition(
+                x => x.ProductId == productId,
+                false)
+                .Count();
+        }
+
+        public ProductImageRes GetImage(int productImageId)
+        {
+            var entity = FindProductImageIfExists(productImageId, false);
+            return _mapper.Map<ProductImageRes>(entity);
+        }
+
+        public ProductImageRes CreateImage(ProductImageReqEdit dto, IFormFile file, string tempFolderPath)
+        {
+            var uploadResult = _cloudinaryService.UploadProductImage(file, tempFolderPath);
+            dto.CloudinaryId = uploadResult.PublicId;
+            dto.ImageUrl = uploadResult.SecureUrl;
+
+            var entity = _mapper.Map<ProductImage>(dto);
+            _repositoryManager.ProductImageRepository.Create(entity);
+            _repositoryManager.Save();
+            return _mapper.Map<ProductImageRes>(entity);
+        }
+
+        public void DeleteImage(int productImageId)
+        {
+            var entity = FindProductImageIfExists(productImageId, true);
+            _repositoryManager.ProductImageRepository.Delete(entity);
+            _repositoryManager.Save();
+        }
+
+        private ProductImage FindProductImageIfExists(int productImageId, bool trackChanges)
+        {
+            var entity = _repositoryManager.ProductImageRepository.FindByCondition(
+                x => x.ProductImageId == productImageId,
+                trackChanges
+                )
+                .FirstOrDefault();
+            if (entity == null) throw new NotFoundException("No image found with id " + productImageId);
+
+            return entity;
         }
     }
 }

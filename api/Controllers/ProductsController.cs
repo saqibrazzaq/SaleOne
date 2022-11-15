@@ -14,10 +14,12 @@ namespace api.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
-
-        public ProductsController(IProductService productService)
+        private readonly IWebHostEnvironment _environment;
+        public ProductsController(IProductService productService, 
+            IWebHostEnvironment environment)
         {
             _productService = productService;
+            _environment = environment;
         }
 
         [HttpGet]
@@ -32,6 +34,45 @@ namespace api.Controllers
         {
             var res = _productService.Search(dto);
             return Ok(res);
+        }
+
+        [HttpGet("images/count/{productId}")]
+        public IActionResult GetImagesCount(int productId)
+        {
+            var res = _productService.CountImages(productId);
+            return Ok(res);
+        }
+
+        [HttpGet("images/{productImageId}")]
+        public IActionResult GetImage(int productImageId)
+        {
+            var res = _productService.GetImage(productImageId);
+            return Ok(res);
+        }
+
+        [HttpPost("images")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult CreateImage(ProductImageReqEdit dto)
+        {
+            var res = _productService.CreateImage(dto, Request.Form.Files[0], TempFolderPath);
+            return Ok(res);
+        }
+
+        public string TempFolderPath
+        {
+            get
+            {
+                return Path.Combine(_environment.WebRootPath, Constants.TempFolderName);
+            }
+        }
+
+        [HttpDelete("images/{productImageId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult DeleteImage(int productImageId)
+        {
+            _productService.DeleteImage(productImageId);
+            return NoContent();
         }
 
         [HttpGet("{productId}")]

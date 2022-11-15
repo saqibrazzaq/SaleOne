@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace data.Dtos
 {
@@ -22,12 +23,12 @@ namespace data.Dtos
 
     public class ProductImageReqEdit
     {
-        [Required]
+        [JsonIgnore]
         public string? ImageUrl { get; set; }
-        [Required]
+        [JsonIgnore]
         public string? CloudinaryId { get; set; }
+        
         public bool IsMainImage { get; set; } = false;
-
         [Required]
         public int ProductId { get; set; }
     }

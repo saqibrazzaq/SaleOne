@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\data\data.csproj" />
     <ProjectReference Include="..\logger\logger.csproj" />
+    <ProjectReference Include="..\storage\storage.csproj" />
   </ItemGroup>
 
 </Project>
