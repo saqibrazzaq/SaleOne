@@ -50,12 +50,11 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpPost("images")]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [HttpPost("images/{productId}")]
         [Authorize(Roles = Constants.AllAdminRoles)]
-        public IActionResult CreateImage(ProductImageReqEdit dto)
+        public IActionResult CreateImage(int productId)
         {
-            var res = _productService.CreateImage(dto, Request.Form.Files[0], TempFolderPath);
+            var res = _productService.CreateImage(productId, Request.Form.Files[0], TempFolderPath);
             return Ok(res);
         }
 

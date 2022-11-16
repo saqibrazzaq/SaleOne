@@ -126,11 +126,13 @@ namespace api.Services
             return _mapper.Map<ProductImageRes>(entity);
         }
 
-        public ProductImageRes CreateImage(ProductImageReqEdit dto, IFormFile file, string tempFolderPath)
+        public ProductImageRes CreateImage(int productId, IFormFile file, string tempFolderPath)
         {
             var uploadResult = _cloudinaryService.UploadProductImage(file, tempFolderPath);
+            var dto = new ProductImageReqEdit();
             dto.CloudinaryId = uploadResult.PublicId;
             dto.ImageUrl = uploadResult.SecureUrl;
+            dto.ProductId = productId;
 
             var entity = _mapper.Map<ProductImage>(dto);
             _repositoryManager.ProductImageRepository.Create(entity);

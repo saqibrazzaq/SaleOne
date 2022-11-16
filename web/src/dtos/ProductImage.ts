@@ -13,8 +13,10 @@ export interface ProductImageRes {
 export class ProductImageReqEdit {
   isMainImage?: boolean = false;
   productId?: number = 0;
+  formData?: FormData;
 
-  constructor(productId?: number) {
+  constructor(productId?: number, formData?: FormData) {
     this.productId = productId;
+    this.formData = formData;
   }
 }

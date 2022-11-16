@@ -156,7 +156,7 @@ const ProductImages = () => {
   const deleteProductImage = () => {
     onDeleteClose();
     // console.log("Deleting " + deleteImageId);
-    ProductApi.deleteImage(productId)
+    ProductApi.deleteImage(deleteImageId)
       .then((res) => {
         toast({
           title: "Product image deleted",

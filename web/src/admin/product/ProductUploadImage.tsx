@@ -16,7 +16,8 @@ import { useEffect, useState } from "react";
 import { ProductApi } from "../../api/productApi";
 import { ProductImageReqEdit } from "../../dtos/ProductImage";
 import { number } from "yup/lib/locale";
-//import { useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
+import ProductsNavbar from "../../layout/products-navbar";
 
 const ProductUploadImage = () => {
   const [error, setError] = useState("");
@@ -44,11 +45,11 @@ const ProductUploadImage = () => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    ProductApi.createImage(new ProductImageReqEdit(productId))
+    ProductApi.createImage(productId, fd, config)
       .then((res) => {
         // console.log(res.data);
         successToast();
-        navigate("/admin/products/product-images/" + productId);
+        navigate("/admin/products/edit/images/" + productId);
         //acceptedFiles.splice(0);
       })
       .catch((err) => {
@@ -68,21 +69,21 @@ const ProductUploadImage = () => {
   const config = { headers: { "Content-Type": "multipart/form-data" } };
   let fd = new FormData();
 
-  // const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-  // const files = acceptedFiles.map((file) => (
-  //   <li key={file.name}>
-  //     {file.name} - {file.size} bytes
-  //   </li>
-  // ));
+  const files = acceptedFiles.map((file) => (
+    <li key={file.name}>
+      {file.name} - {file.size} bytes
+    </li>
+  ));
 
-  // acceptedFiles.map((file) => {
-  //   fd.append("File[]", file);
-  // });
+  acceptedFiles.map((file) => {
+    fd.append("File[]", file);
+  });
 
   const showUploadForm = () => (
     <form method="post" onSubmit={handleSubmit} encType="multipart/form-data">
-      {/* <FormControl>
+      <FormControl>
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
           <Center width={500} height={200} backgroundColor={"gray.200"}>
@@ -95,15 +96,15 @@ const ProductUploadImage = () => {
         </aside>
       </FormControl>
       <Stack spacing={6}>
-        <Button colorScheme={"blue"}>Upload Product Image</Button>
-      </Stack> */}
+        <Button type="submit" colorScheme={"blue"}>Upload Product Image</Button>
+      </Stack>
     </form>
   );
 
   return (
     <Box p={4}>
       <Stack spacing={4} as={Container} maxW={"3xl"}>
-        {/* {productId && <ProductsNavbar productId={productId} />} */}
+        {productId && <ProductsNavbar productId={productId} />}
         {displayHeading()}
         {showUploadForm()}
       </Stack>

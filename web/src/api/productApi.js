@@ -84,13 +84,13 @@ export const ProductApi = {
       return response.data
     }
   },
-  createImage: async function (productImage, cancel = false) {
+  createImage: async function (productId, fd, config, cancel = false) {
     const response = await api.request({
-      url: `/products/images`,
+      url: `/products/images/` + productId,
       method: "POST",
-      data: productImage,
+      data: fd,
       signal: cancel ? cancelApiObject[this.createImage.name].handleRequestCancellation().signal : undefined,
-    })
+    }, config)
 
     return response.data
   },
