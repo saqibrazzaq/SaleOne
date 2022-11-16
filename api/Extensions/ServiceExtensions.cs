@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using storage;
 using System.Text;
 
 namespace api.Extensions
@@ -70,6 +71,8 @@ namespace api.Extensions
 
         public static void ConfigureServices(this IServiceCollection services)
         {
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
+
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
 

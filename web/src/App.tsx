@@ -16,6 +16,7 @@ import CountryEdit from "./admin/country/CountryEdit";
 import Home from "./admin/Home";
 import ProductDelete from "./admin/product/ProductDelete";
 import ProductEdit from "./admin/product/ProductEdit";
+import ProductImages from "./admin/product/ProductImages";
 import Products from "./admin/product/Products";
 import StateDelete from "./admin/state/StateDelete";
 import StateEdit from "./admin/state/StateEdit";
@@ -68,6 +69,8 @@ export const App = () => {
                 <Route path="edit" element={<ProductEdit />} />
                 <Route path="edit/:categoryId" element={<ProductEdit />} />
                 <Route path="edit/:categoryId/:productId" element={<ProductEdit />} />
+                <Route path="edit/images/:productId" element={<ProductImages />} />
+                <Route path="edit/images/upload/:productId" element={<ProductImages />} />
                 <Route path="delete/:categoryId/:productId" element={<ProductDelete />} />
               </Route>
               {/* Countries */}

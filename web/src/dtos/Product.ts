@@ -1,6 +1,7 @@
 import Common from "../utility/Common";
 import { CategoryRes } from "./Category";
 import { PagedReq } from "./PagedReq";
+import { ProductImageRes } from "./ProductImage";
 
 export interface ProductRes {
   productId?: number;
@@ -13,6 +14,8 @@ export interface ProductRes {
   categoryId?: number;
 
   category?: CategoryRes;
+
+  productImages?: ProductImageRes[];
 }
 
 export class ProductReqEdit {

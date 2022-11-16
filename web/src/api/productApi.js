@@ -63,7 +63,47 @@ export const ProductApi = {
 
     return response.data
   },
+  countImages: async function (productId, cancel = false) {
+    const response = await api.request({
+      url: "/products/images/count/" + productId,
+      method: "GET",
+      signal: cancel ? cancelApiObject[this.countImages.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
+  getImage: async function (productImageId, cancel = false) {
+    if (productImageId) {
+      const response = await api.request({
+        url: `/products/images/` + productImageId,
+        method: "GET",
+        // retrieving the signal value by using the property name
+        signal: cancel ? cancelApiObject[this.getImage.name].handleRequestCancellation().signal : undefined,
+      })
   
+      return response.data
+    }
+  },
+  createImage: async function (productImage, cancel = false) {
+    const response = await api.request({
+      url: `/products/images`,
+      method: "POST",
+      data: productImage,
+      signal: cancel ? cancelApiObject[this.createImage.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
+  deleteImage: async function (productImageId, cancel = false) {
+    const response = await api.request({
+      url: `/products/images/` + productImageId,
+      method: "DELETE",
+      // retrieving the signal value by using the property name
+      signal: cancel ? cancelApiObject[this.deleteImage.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
 }
 
 // defining the cancel API object for ProductAPI

@@ -24,6 +24,7 @@ import { CategoryRes } from "../../dtos/Category";
 import { CategoryApi } from "../../api/categoryApi";
 import ErrorDetails from "../../dtos/ErrorDetails";
 import { ErrorAlert } from "../../alertboxes/Alerts";
+import ProductsNavbar from "../../layout/products-navbar";
 
 const ProductEdit = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryRes>();
@@ -198,6 +199,7 @@ const ProductEdit = () => {
   return (
     <Box width={"100%"} p={4}>
       <Stack spacing={4} as={Container} maxW={"3xl"}>
+        {productId && <ProductsNavbar productId={productId} />}
         {displayHeading()}
         {error && <ErrorAlert description={error.Message} />}
         {showUpdateForm()}
