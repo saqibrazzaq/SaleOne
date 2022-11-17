@@ -19,6 +19,7 @@ namespace data.Repository
         {
             var itemsToReturn = items
                 .Include(x => x.Category)
+                .Include(x => x.ProductImages.Where(x => x.IsMainImage == true))
                 .AsQueryable();
 
             if (searchParams.CategoryId > 0)

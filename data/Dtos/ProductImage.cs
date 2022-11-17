@@ -33,4 +33,12 @@ namespace data.Dtos
         [Required]
         public int ProductId { get; set; }
     }
+
+    public class ProductImageReqEditMainImage
+    {
+        [Required]
+        public int? ProductImageId { get; set; }
+        [Required]
+        public bool? IsMainImage { get; set; }
+    }
 }

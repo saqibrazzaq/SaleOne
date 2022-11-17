@@ -19,5 +19,6 @@ namespace api.Services
         ProductImageRes GetImage(int productImageId);
         ProductImageRes CreateImage(int productId, IFormFile file, string tempFolderPath);
         void DeleteImage(int productImageId);
+        void UpdateMainImage(ProductImageReqEditMainImage dto);
     }
 }

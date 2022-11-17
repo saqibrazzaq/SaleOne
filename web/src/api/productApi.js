@@ -104,6 +104,15 @@ export const ProductApi = {
 
     return response.data
   },
+  updateMainImage: async function (dto, cancel = false) {
+    console.log("inside update")
+    await api.request({
+      url: `/products/images/mainImage`,
+      method: "PUT",
+      data: dto,
+      signal: cancel ? cancelApiObject[this.updateMainImage.name].handleRequestCancellation().signal : undefined,
+    })
+  },
 }
 
 // defining the cancel API object for ProductAPI

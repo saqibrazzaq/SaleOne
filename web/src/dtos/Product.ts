@@ -35,7 +35,7 @@ export class ProductReqEdit {
 export enum StockStatus {
   InStock = 1,
   OutOfStock = 0,
-  AllProducts = -1
+  AllProducts = -1,
 }
 
 export class ProductReqSearch extends PagedReq {

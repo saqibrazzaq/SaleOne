@@ -129,10 +129,15 @@ namespace api.Services
         public ProductImageRes CreateImage(int productId, IFormFile file, string tempFolderPath)
         {
             var uploadResult = _cloudinaryService.UploadProductImage(file, tempFolderPath);
+
             var dto = new ProductImageReqEdit();
             dto.CloudinaryId = uploadResult.PublicId;
             dto.ImageUrl = uploadResult.SecureUrl;
             dto.ProductId = productId;
+
+            var imagesCount = CountImages(productId);
+            if (imagesCount == 0)
+                dto.IsMainImage = true;
 
             var entity = _mapper.Map<ProductImage>(dto);
             _repositoryManager.ProductImageRepository.Create(entity);
@@ -157,6 +162,41 @@ namespace api.Services
             if (entity == null) throw new NotFoundException("No image found with id " + productImageId);
 
             return entity;
+        }
+
+        public void UpdateMainImage(ProductImageReqEditMainImage dto)
+        {
+            // Get productid
+            var productId = _repositoryManager.ProductImageRepository.FindByCondition(
+                x => x.ProductImageId == dto.ProductImageId,
+                false
+                ).Select(x => x.ProductId)
+                .FirstOrDefault();
+            if (productId == 0) throw new NotFoundException("No product found");
+
+            // Set all images of the product to false
+            var entities = _repositoryManager.ProductImageRepository.FindByCondition(
+                x => x.ProductId == productId,
+                true
+                );
+            foreach(var entity in entities)
+            {
+                entity.IsMainImage = false;
+            }
+
+            // Set specific image to true
+            if (dto.IsMainImage == true)
+            {
+                var entity = _repositoryManager.ProductImageRepository.FindByCondition(
+                    x => x.ProductImageId == dto.ProductImageId,
+                    true
+                    )
+                    .FirstOrDefault();
+                if (entity == null) throw new NotFoundException("No product found");
+                entity.IsMainImage = true;
+            }
+
+            _repositoryManager.Save();
         }
     }
 }

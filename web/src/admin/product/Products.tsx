@@ -7,6 +7,7 @@ import {
   Container,
   Flex,
   Heading,
+  Image,
   Input,
   Link,
   Spacer,
@@ -106,16 +107,24 @@ const Products = () => {
       <Table variant="simple">
         <Thead>
           <Tr>
+            <Th></Th>
             <Th>Name</Th>
             <Th>Code</Th>
+            <Th>Price</Th>
+            <Th>Stock</Th>
             <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
           {pagedRes?.pagedList?.map((item) => (
             <Tr key={item.productId}>
+              <Td>
+                <Image borderRadius="lg" height={"50px"} src={item.productImages?.at(0)?.imageUrl} />
+              </Td>
               <Td>{item.name}</Td>
               <Td>{item.code}</Td>
+              <Td>{item.price}</Td>
+              <Td>{item.quantity}</Td>
               <Td>
                 <Link
                   mr={2}

@@ -87,11 +87,11 @@ const ProductList = () => {
               <Center py={2} px={2}>
                 <Box boxShadow={"md"}>
                   <Stack spacing={2} align={"center"} mb={2}>
-                    {/* <Image
+                    <Image
                     borderRadius="lg"
-                    width={"200px"}
-                    src={product.productImages[0]?.imageUrl}
-                  /> */}
+                    height={"150px"}
+                    src={product.productImages?.at(0)?.imageUrl}
+                  />
                     <Text>{product.name}</Text>
                   </Stack>
                 </Box>

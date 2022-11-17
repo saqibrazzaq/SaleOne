@@ -20,3 +20,13 @@ export class ProductImageReqEdit {
     this.formData = formData;
   }
 }
+
+export class ProductImageReqEditMainImage {
+  productImageId?: number;
+  isMainImage?: boolean;
+
+  constructor(productImageId?: number, isMainImage?:boolean) {
+    this.productImageId = productImageId;
+    this.isMainImage = isMainImage;
+  }
+}

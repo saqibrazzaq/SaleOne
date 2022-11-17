@@ -58,6 +58,14 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpPut("images/mainImage")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult UpdateMainImage(ProductImageReqEditMainImage dto)
+        {
+            _productService.UpdateMainImage(dto);
+            return NoContent();
+        }
+
         public string TempFolderPath
         {
             get

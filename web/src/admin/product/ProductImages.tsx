@@ -34,9 +34,11 @@ import { ProductRes } from "../../dtos/Product";
 import { ProductApi } from "../../api/productApi";
 import ProductsNavbar from "../../layout/products-navbar";
 import { number } from "yup/lib/locale";
+import { ProductImageReqEditMainImage } from "../../dtos/ProductImage";
+import { ErrorAlert } from "../../alertboxes/Alerts";
 
 const ProductImages = () => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState<ErrorDetails>();
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
   const params = useParams();
@@ -61,7 +63,7 @@ const ProductImages = () => {
 
   const loadProduct = () => {
     if (productId) {
-      setError("");
+      setError(undefined);
       setSuccess("");
       ProductApi.get(productId)
         .then((res) => {
@@ -113,6 +115,9 @@ const ProductImages = () => {
                 >
                   <Button colorScheme={"red"}>Delete</Button>
                 </Link>
+                <Button onClick={() => 
+                  updateMainImage(productImage.productImageId, productImage.isMainImage)}
+                  >Main Image - {productImage.isMainImage + ""}</Button>
               </Stack>
             </Box>
           </Center>
@@ -120,6 +125,17 @@ const ProductImages = () => {
       ))}
     </Wrap>
   );
+
+  const updateMainImage = (productImageId?:number, isMainImage?:boolean) => {
+    console.log("id: " + productImageId);
+    console.log("set to main: " + !isMainImage);
+    let dto = new ProductImageReqEditMainImage(productImageId, !isMainImage);
+    ProductApi.updateMainImage(dto).then(res => {
+      loadProduct();
+    }).catch(error => {
+      setError(error.response.data);
+    });
+  }
 
   const showDeleteAlertDialog = () => (
     <AlertDialog
@@ -176,6 +192,7 @@ const ProductImages = () => {
       <Stack spacing={4} as={Container} maxW={"3xl"}>
         {productId && <ProductsNavbar productId={productId} />}
         {displayHeading()}
+        {error && <ErrorAlert description={error.Message} />}
         {showImages()}
       </Stack>
       {showDeleteAlertDialog()}
