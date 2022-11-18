@@ -19,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import { ProductReqSearch, ProductRes, StockStatus } from "../dtos/Product";
 import PagedRes from "../dtos/PagedRes";
 import { ProductApi } from "../api/productApi";
+import { NumericFormat } from "react-number-format";
 
 const ProductList = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<ProductRes>>();
@@ -34,6 +35,7 @@ const ProductList = () => {
     // Modify params, which will be used everywhere
     searchParams.stockStatus = StockStatus.InStock;
     searchParams.categoryCode = categoryCode;
+    searchParams.pageSize = 10;
     ProductApi.search(searchParams).then((res) => {
       setPagedRes(res);
       // console.log(res);
@@ -86,13 +88,22 @@ const ProductList = () => {
             <WrapItem key={product.productId}>
               <Center py={2} px={2}>
                 <Box boxShadow={"md"}>
-                  <Stack spacing={2} align={"center"} mb={2}>
+                  <Stack align={"center"} spacing={1} mb={2} ml={2}>
                     <Image
-                    borderRadius="lg"
-                    height={"150px"}
-                    src={product.productImages?.at(0)?.imageUrl}
-                  />
+                      borderRadius="lg"
+                      boxSize={"150px"}
+                      src={product.productImages?.at(0)?.imageUrl}
+                      
+                    />
                     <Text>{product.name}</Text>
+                    <Text fontSize={"lg"}>
+                      <NumericFormat
+                        value={product.price}
+                        prefix="Rs. "
+                        thousandSeparator=","
+                        displayType="text"
+                      />
+                    </Text>
                   </Stack>
                 </Box>
               </Center>
@@ -155,7 +166,7 @@ const ProductList = () => {
 
   return (
     <Box width={"100%"} p={4}>
-      <Stack spacing={4} as={Container} maxW={"3xl"}>
+      <Stack spacing={4} as={Container} maxW={"6xl"}>
         {showHeading()}
         {displaySearchBar()}
         {showProducts()}

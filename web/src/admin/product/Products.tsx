@@ -42,7 +42,7 @@ const Products = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    searchProducts(new ProductReqSearch({}, {categoryId: categoryId}));
+    searchProducts(new ProductReqSearch({}, { categoryId: categoryId }));
   }, [categoryId]);
 
   useEffect(() => {
@@ -65,11 +65,13 @@ const Products = () => {
   const previousPage = () => {
     if (pagedRes?.metaData) {
       let previousPageNumber = (pagedRes?.metaData?.currentPage || 2) - 1;
-      let searchParams = new ProductReqSearch({
-        pageNumber: previousPageNumber,
-        searchText: searchText,
-      },
-      {categoryId: selectedCategory?.categoryId});
+      let searchParams = new ProductReqSearch(
+        {
+          pageNumber: previousPageNumber,
+          searchText: searchText,
+        },
+        { categoryId: selectedCategory?.categoryId }
+      );
 
       searchProducts(searchParams);
     }
@@ -78,11 +80,13 @@ const Products = () => {
   const nextPage = () => {
     if (pagedRes?.metaData) {
       let nextPageNumber = (pagedRes?.metaData?.currentPage || 0) + 1;
-      let searchParams = new ProductReqSearch({
-        pageNumber: nextPageNumber,
-        searchText: searchText,
-      },
-      {categoryId: selectedCategory?.categoryId});
+      let searchParams = new ProductReqSearch(
+        {
+          pageNumber: nextPageNumber,
+          searchText: searchText,
+        },
+        { categoryId: selectedCategory?.categoryId }
+      );
 
       searchProducts(searchParams);
     }
@@ -119,7 +123,11 @@ const Products = () => {
           {pagedRes?.pagedList?.map((item) => (
             <Tr key={item.productId}>
               <Td>
-                <Image borderRadius="lg" height={"50px"} src={item.productImages?.at(0)?.imageUrl} />
+                <Image
+                  borderRadius="lg"
+                  boxSize={"70px"}
+                  src={item.productImages?.at(0)?.imageUrl}
+                />
               </Td>
               <Td>{item.name}</Td>
               <Td>{item.code}</Td>
@@ -129,11 +137,24 @@ const Products = () => {
                 <Link
                   mr={2}
                   as={RouteLink}
-                  to={"/admin/products/edit/" + item.categoryId + "/" + item.productId}
+                  to={
+                    "/admin/products/edit/" +
+                    item.categoryId +
+                    "/" +
+                    item.productId
+                  }
                 >
                   <UpdateIconButton />
                 </Link>
-                <Link as={RouteLink} to={"/admin/products/delete/" + item.categoryId + "/" + item.productId}>
+                <Link
+                  as={RouteLink}
+                  to={
+                    "/admin/products/delete/" +
+                    item.categoryId +
+                    "/" +
+                    item.productId
+                  }
+                >
                   <DeleteIconButton />
                 </Link>
               </Td>
@@ -190,8 +211,12 @@ const Products = () => {
           onChange={(e) => setSearchText(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              searchProducts(new ProductReqSearch({ searchText: searchText },
-                {categoryId: selectedCategory?.categoryId}));
+              searchProducts(
+                new ProductReqSearch(
+                  { searchText: searchText },
+                  { categoryId: selectedCategory?.categoryId }
+                )
+              );
             }
           }}
         />
@@ -200,8 +225,12 @@ const Products = () => {
         <Button
           colorScheme={"blue"}
           onClick={() => {
-            searchProducts(new ProductReqSearch({ searchText: searchText },
-              {categoryId: selectedCategory?.categoryId}));
+            searchProducts(
+              new ProductReqSearch(
+                { searchText: searchText },
+                { categoryId: selectedCategory?.categoryId }
+              )
+            );
           }}
         >
           Search
@@ -212,13 +241,13 @@ const Products = () => {
 
   return (
     <Box width={"100%"} p={4}>
-      <Stack spacing={4} as={Container} maxW={"3xl"}>
+      <Stack spacing={4} as={Container} maxW={"6xl"}>
         {showHeading()}
         {displaySearchBar()}
         {showProducts()}
       </Stack>
     </Box>
   );
-}
+};
 
-export default Products
+export default Products;

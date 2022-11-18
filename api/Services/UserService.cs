@@ -3,6 +3,7 @@ using AutoMapper;
 using data.Dtos;
 using data.Dtos.Auth;
 using data.Entities;
+using data.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -60,6 +61,66 @@ namespace api.Services
                 return authRes;
             }
             else throw new UnAuthorizedUserException("Incorrect username/password");
+        }
+
+        public async Task<AuthenticationResponseDto> Register(RegisterRequestDto dto)
+        {
+            await CheckExistingEmailAndUsername(dto);
+
+            // Create the user
+            var userEntity = new AppIdentityUser
+            {
+                UserName = dto.Username,
+                Email = dto.Email,
+            };
+            var result = await _userManager.CreateAsync(userEntity, dto.Password);
+
+            if (result.Succeeded == false)
+                throw new BadRequestException(GetFirstErrorFromIdentityResult(
+                    result, nameof(Register)));
+
+            // Add this user in User role
+            var roleResult = await _userManager.AddToRoleAsync(
+                userEntity, Constants.OwnerRole);
+            if (roleResult.Succeeded == false)
+                throw new BadRequestException(GetFirstErrorFromIdentityResult(
+                    roleResult, nameof(Register)));
+
+            //await SendVerificationEmailToUser(userEntity);
+
+            return await Login(new LoginRequestDto { Email = dto.Email, Password = dto.Password });
+        }
+
+        private async Task CheckExistingEmailAndUsername(RegisterRequestDto dto)
+        {
+            // Email and username must not already exist
+            if ((await checkIfEmailAlreadyExists(dto.Email)) == true)
+                throw new BadRequestException($"Email {dto.Email} is already registered. Use Forgot password if you own this account.");
+            if ((await checkIfUsernameAlreadyTaken(dto.Username)) == true)
+                throw new BadRequestException($"Username {dto.Username} is already taken.");
+        }
+
+        private async Task<bool> checkIfEmailAlreadyExists(string? email)
+        {
+            var userEntity = await _userManager.FindByEmailAsync(email);
+            // If email already exists, return true
+            return userEntity != null ? true : false;
+        }
+
+        private async Task<bool> checkIfUsernameAlreadyTaken(string? username)
+        {
+            var userEntity = await _userManager.FindByNameAsync(username);
+            // If username found, return true
+            return userEntity != null ? true : false;
+        }
+
+        private string GetFirstErrorFromIdentityResult(IdentityResult result, string methodName)
+        {
+            var firstError = result.Errors.FirstOrDefault();
+            if (firstError != null)
+                return firstError.Description;
+            else
+                return methodName + " method failed";
         }
 
         public async Task<TokenDto> RefreshToken(TokenDto dto)

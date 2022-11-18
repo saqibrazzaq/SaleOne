@@ -19,6 +19,18 @@ export const AuthApi = {
 
     return response.data;
   },
+  register: async function (data, cancel = false) {
+    const response = await api.request({
+      url: `/auth/register`,
+      method: "POST",
+      data: data,
+      signal: cancel
+        ? cancelApiObject[this.register.name].handleRequestCancellation().signal
+        : undefined,
+    });
+
+    return response.data;
+  },
   refreshToken: async function (cancel = false) {
     let data = {
           accessToken: TokenService.getLocalAccessToken(),

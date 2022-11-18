@@ -41,6 +41,15 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpPost("register")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> Register(
+            [FromBody] RegisterRequestDto dto)
+        {
+            var res = await _userService.Register(dto);
+            return Ok(res);
+        }
+
         private void setRefreshTokenCookie(string? refreshToken)
         {
             var cookieOptions = new CookieOptions

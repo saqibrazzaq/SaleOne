@@ -25,6 +25,7 @@ import States from "./admin/state/States";
 import RequireAuth from "./api/require-auth";
 import Login from "./auth/Login";
 import Logout from "./auth/Logout";
+import Register from "./auth/Register";
 import UnAuthorized from "./auth/UnAuthorized";
 import { Roles } from "./dtos/Auth";
 import AccountLayout from "./layout/AccountLayout";
@@ -41,6 +42,7 @@ export const App = () => {
           {/* Authentication routes */}
           <Route path="auth">
             <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
             <Route path="logout" element={<Logout />} />
             <Route path="unauthorized" element={<UnAuthorized />} />
           </Route>
