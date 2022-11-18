@@ -4,6 +4,7 @@ using data.Dtos;
 using data.Dtos.Auth;
 using data.Entities;
 using data.Utility;
+using mailer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,7 +22,14 @@ namespace api.Services
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IWebHostEnvironment _environment;
-        public UserService(UserManager<AppIdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IMapper mapper, IHttpContextAccessor contextAccessor, IWebHostEnvironment environment)
+        private readonly IEmailSender _emailSender;
+        public UserService(UserManager<AppIdentityUser> userManager, 
+            RoleManager<IdentityRole> roleManager, 
+            IConfiguration configuration, 
+            IMapper mapper, 
+            IHttpContextAccessor contextAccessor, 
+            IWebHostEnvironment environment, 
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -29,6 +37,7 @@ namespace api.Services
             _mapper = mapper;
             _contextAccessor = contextAccessor;
             _environment = environment;
+            _emailSender = emailSender;
         }
 
 
@@ -44,6 +53,7 @@ namespace api.Services
                 var authRes = new AuthenticationResponseDto
                 {
                     Email = userEntity.Email,
+                    DisplayName = userEntity.UserName,
                     Roles = await _userManager.GetRolesAsync(userEntity),
                     EmailConfirmed = userEntity.EmailConfirmed,
                     AccountId = Guid.Parse(userEntity.Id)
@@ -155,6 +165,31 @@ namespace api.Services
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
                 RefreshToken = newRefreshToken,
             };
+        }
+
+        public async Task SendForgotPasswordEmail(SendForgotPasswordEmailRequestDto dto)
+        {
+            // Verify email address
+            var userEntity = await _userManager.FindByEmailAsync(dto.Email);
+            if (userEntity == null)
+                throw new NotFoundException("Email address not found.");
+
+            // Create a token
+            var forgotPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(
+                userEntity);
+            // Generate forgot password email text
+            string emailText = GenerateForgotPasswordEmailText(
+                forgotPasswordToken);
+            _emailSender.SendEmail(userEntity.Email,
+                "Reset your password", emailText);
+        }
+
+        private string GenerateForgotPasswordEmailText(
+            string token)
+        {
+            string emailText = $"Please use the token below for password reset. <br />" +
+                $"{token} <br />";
+            return emailText;
         }
 
         private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)

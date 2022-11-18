@@ -9,6 +9,7 @@ namespace data.Dtos.Auth
 {
     public class AuthenticationResponseDto
     {
+        public string? DisplayName { get; set; }
         public string? Email { get; set; }
         public IEnumerable<string>? Roles { get; set; }
         public string? AccessToken { get; set; }

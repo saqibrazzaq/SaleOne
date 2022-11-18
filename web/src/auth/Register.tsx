@@ -22,7 +22,7 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 import { ErrorAlert, SuccessAlert } from "../alertboxes/Alerts";
 import { AuthApi } from "../api/authApi";
-import RegisterUserDto, { AuthenticationResponseDto, UserLoginDto } from "../dtos/Auth";
+import { AuthenticationResponseDto, RegisterUserDto, UserLoginDto } from "../dtos/Auth";
 import ErrorDetails from "../dtos/ErrorDetails";
 
 YupPassword(Yup); // extend yup

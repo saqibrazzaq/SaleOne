@@ -24,11 +24,12 @@ import ErrorDetails from "../dtos/ErrorDetails";
 import { AuthenticationResponseDto, UserLoginDto } from "../dtos/Auth";
 import { AuthApi } from "../api/authApi";
 import { Link as RouteLink, useNavigate } from "react-router-dom";
+import { ErrorAlert } from "../alertboxes/Alerts";
 
 YupPassword(Yup); // extend yup
 
 export default function Login() {
-  const [error, setError] = useState("");
+  const [error, setError] = useState<ErrorDetails>();
 
   const navigate = useNavigate();
 
@@ -36,10 +37,12 @@ export default function Login() {
   // let loginData = new UserLoginDto("", "");
 
   const submitForm = (values: UserLoginDto) => {
-    setError("");
+    setError(undefined);
     AuthApi.login(values).then(res => {
       console.log(res);
       window.location.href = "/";
+    }).catch(error => {
+      setError(error.response.data);
     })
   };
 
@@ -70,13 +73,7 @@ export default function Login() {
           {({ handleSubmit, errors, touched }) => (
             <form onSubmit={handleSubmit}>
                 <Heading fontSize={"2xl"}>Sign in to your account</Heading>
-                {error && (
-                  <Alert status="error">
-                    <AlertIcon />
-                    <AlertTitle>Login failed</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
+                {error && <ErrorAlert description={error.Message} />}
                 <FormControl isInvalid={!!errors.email && touched.email}>
                   <FormLabel htmlFor="email">Email address</FormLabel>
                   <Field as={Input} id="email" name="email" type="email" />
@@ -101,7 +98,7 @@ export default function Login() {
                     <Checkbox>Remember me</Checkbox>
                     <Link
                       as={RouteLink}
-                      to="/forgot-password"
+                      to="/auth/forgot-password"
                       color={"blue.500"}
                     >
                       Forgot password?
@@ -115,7 +112,7 @@ export default function Login() {
                     <Text>Don't have an account?</Text>
                     <Link
                       as={RouteLink}
-                      to="/register"
+                      to="/auth/register"
                       color={"blue.500"}
                     >
                       Create Account

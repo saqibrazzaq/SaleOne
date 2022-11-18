@@ -50,6 +50,15 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("send-forgot-password-email")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> SendForgotPasswordEmail(
+            [FromQuery] SendForgotPasswordEmailRequestDto dto)
+        {
+            await _userService.SendForgotPasswordEmail(dto);
+            return Ok();
+        }
+
         private void setRefreshTokenCookie(string? refreshToken)
         {
             var cookieOptions = new CookieOptions

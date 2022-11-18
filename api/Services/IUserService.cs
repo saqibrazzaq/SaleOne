@@ -9,5 +9,6 @@ namespace api.Services
         Task<AuthenticationResponseDto> Register(RegisterRequestDto dto);
         Task<TokenDto> RefreshToken(TokenDto dto);
         Task<UserRes> GetLoggedInUser();
+        Task SendForgotPasswordEmail(SendForgotPasswordEmailRequestDto dto);
     }
 }

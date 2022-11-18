@@ -4,6 +4,7 @@ using data;
 using data.Entities;
 using data.Repository;
 using logger;
+using mailer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -95,7 +96,7 @@ namespace api.Extensions
 
             services.AddScoped<IAuthDataSeedService, AuthDataSeedService>();
             services.AddScoped<IUserService, UserService>();
-            //services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IEmailSender, EmailSender>();
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)

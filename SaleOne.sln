@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "logger", "logger\logger.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "data", "data\data.csproj", "{5BCCA57D-6ACA-441C-BFBA-F27B29BADAD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "storage", "storage\storage.csproj", "{ED4E42C7-AAE8-4CA1-8843-A6583BB52B18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "storage", "storage\storage.csproj", "{ED4E42C7-AAE8-4CA1-8843-A6583BB52B18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mailer", "mailer\mailer.csproj", "{44DAA350-7D2D-4343-8093-5D47B9B6CDFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{ED4E42C7-AAE8-4CA1-8843-A6583BB52B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED4E42C7-AAE8-4CA1-8843-A6583BB52B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED4E42C7-AAE8-4CA1-8843-A6583BB52B18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44DAA350-7D2D-4343-8093-5D47B9B6CDFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44DAA350-7D2D-4343-8093-5D47B9B6CDFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44DAA350-7D2D-4343-8093-5D47B9B6CDFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44DAA350-7D2D-4343-8093-5D47B9B6CDFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

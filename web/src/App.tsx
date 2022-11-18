@@ -23,6 +23,7 @@ import StateDelete from "./admin/state/StateDelete";
 import StateEdit from "./admin/state/StateEdit";
 import States from "./admin/state/States";
 import RequireAuth from "./api/require-auth";
+import ForgotPassword from "./auth/ForgotPassword";
 import Login from "./auth/Login";
 import Logout from "./auth/Logout";
 import Register from "./auth/Register";
@@ -44,6 +45,7 @@ export const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="logout" element={<Logout />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="unauthorized" element={<UnAuthorized />} />
           </Route>
           <Route index element={<ProductList />} />

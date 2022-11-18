@@ -31,7 +31,7 @@ import {
 import { Link as RouteLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import {CategoryApi} from "../api/categoryApi";
+import { CategoryApi } from "../api/categoryApi";
 import { CategoryRes } from "../dtos/Category";
 import { AuthApi } from "../api/authApi";
 import TokenService from "../api/token.service";
@@ -59,10 +59,10 @@ const TopNavbar = () => {
     //   };
     //   // AuthApi.refreshToken(data).then(res => {
     //   //   console.log(res)
-        
+
     //   // });
     // });
-    
+
     // loadMenu();
     loadMenuFromCategories();
     // callPrivateMethod();
@@ -71,43 +71,43 @@ const TopNavbar = () => {
 
   const loadUserData = () => {
     setUserData(TokenService.getUser());
-  }
+  };
 
   const callPrivateMethod = () => {
-    CategoryApi.secureTest().then(res => {
-      console.log(res)
-    })
-  }
+    CategoryApi.secureTest().then((res) => {
+      console.log(res);
+    });
+  };
 
   const loadMenuFromCategories = () => {
-    CategoryApi.search().then(res => {
+    CategoryApi.search().then((res) => {
       let categories: CategoryRes[] = res.pagedList;
       let categoryNavItems: Array<NavItem> = [];
-      categories.map(value => {
-        categoryNavItems.push({name: value.name || "", href: value.code})
-      })
+      categories.map((value) => {
+        categoryNavItems.push({ name: value.name || "", href: value.code });
+      });
       // console.log(res.pagedList);
       setNavItems(categoryNavItems);
-    })
-  }
+    });
+  };
 
   const loadMenu = () => {
     const NAV_ITEMS: Array<NavItem> = [
       // {
-        // name: "Home",
-        // href: "",
-        // children: [
-        //   {
-        //     name: "Register Admin",
-        //     subLabel: "Create a new Admin user",
-        //     href: "/admin/register-admin",
-        //   },
-        //   {
-        //     name: "New & Noteworthy",
-        //     subLabel: "Up-and-coming Designers",
-        //     href: "#",
-        //   },
-        // ],
+      // name: "Home",
+      // href: "",
+      // children: [
+      //   {
+      //     name: "Register Admin",
+      //     subLabel: "Create a new Admin user",
+      //     href: "/admin/register-admin",
+      //   },
+      //   {
+      //     name: "New & Noteworthy",
+      //     subLabel: "Up-and-coming Designers",
+      //     href: "#",
+      //   },
+      // ],
       // },
       {
         name: "Login",
@@ -152,6 +152,12 @@ const TopNavbar = () => {
           <Avatar size={"sm"} src={""} />
         </MenuButton>
         <MenuList>
+          <MenuItem as={RouteLink} to="/account">
+            Welcome
+            <br />
+            {userData?.email}
+          </MenuItem>
+          <MenuDivider />
           {userData?.roles?.length && isAdmin() ? (
             <MenuItem as={RouteLink} to="/admin">
               Admin
@@ -205,7 +211,6 @@ const TopNavbar = () => {
       </Button>
     </>
   );
-
 
   return (
     <Box>

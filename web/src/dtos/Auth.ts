@@ -16,7 +16,7 @@ export class UserLoginDto {
   }
 }
 
-export default class RegisterUserDto {
+export class RegisterUserDto {
   username?: string = "";
   email?: string = "";
   password?: string = "";
@@ -30,6 +30,13 @@ export default class RegisterUserDto {
   }
 }
 
+export class ForgotPasswordDto {
+  email?: string;
+
+  constructor(email?: string) {
+    this.email = email;
+  }
+}
 
 export enum Roles {
   Admin = "Admin",

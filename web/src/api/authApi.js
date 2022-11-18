@@ -61,6 +61,17 @@ export const AuthApi = {
 
     return null;
   },
+  sendForgotPasswordEmail: async function (data, cancel = false) {
+    // console.log("search countries ")
+    const response = await api.request({
+      url: "/auth/send-forgot-password-email",
+      method: "GET",
+      params: data,
+      signal: cancel ? cancelApiObject[this.sendForgotPasswordEmail.name].handleRequestCancellation().signal : undefined,
+    })
+    // console.log(response.data)
+    return response.data
+  },
 };
 
 // defining the cancel API object for ProductAPI
