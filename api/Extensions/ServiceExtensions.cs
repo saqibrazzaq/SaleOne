@@ -1,5 +1,6 @@
 ﻿using api.ActionFilters;
 using api.Services;
+using common;
 using data;
 using data.Entities;
 using data.Repository;
@@ -43,6 +44,11 @@ namespace api.Extensions
             services.AddSingleton<ILoggerManager, LoggerManager>();
         }
 
+        public static void ConfigureEnvironmentVariables(this IServiceCollection services)
+        {
+            DotNetEnv.Env.Load("saqib.laptop.env");
+        }
+
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfile));
@@ -52,7 +58,7 @@ namespace api.Extensions
             IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(x => x.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection")));
+                SecretUtility.SqlServer));
         }
 
         public static void ConfigureRepositoryManager(this IServiceCollection services)
@@ -126,10 +132,10 @@ namespace api.Extensions
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidAudience = configuration["JWT:ValidAudience"],
-                    ValidIssuer = configuration["JWT:ValidIssuer"],
+                    ValidAudience = SecretUtility.JwtValidAudience,
+                    ValidIssuer = SecretUtility.JwtValidIssuer,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                        configuration["JWT:Secret"]))
+                        SecretUtility.JWTSecret))
                 };
             });
         }

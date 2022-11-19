@@ -27,6 +27,7 @@ import ForgotPassword from "./auth/ForgotPassword";
 import Login from "./auth/Login";
 import Logout from "./auth/Logout";
 import Register from "./auth/Register";
+import ResetPassword from "./auth/ResetPassword";
 import UnAuthorized from "./auth/UnAuthorized";
 import { Roles } from "./dtos/Auth";
 import AccountLayout from "./layout/AccountLayout";
@@ -46,6 +47,7 @@ export const App = () => {
             <Route path="register" element={<Register />} />
             <Route path="logout" element={<Logout />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
             <Route path="unauthorized" element={<UnAuthorized />} />
           </Route>
           <Route index element={<ProductList />} />

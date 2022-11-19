@@ -72,6 +72,18 @@ export const AuthApi = {
     // console.log(response.data)
     return response.data
   },
+  resetPassword: async function (data, cancel = false) {
+    const response = await api.request({
+      url: `/auth/reset-password`,
+      method: "POST",
+      data: data,
+      signal: cancel
+        ? cancelApiObject[this.resetPassword.name].handleRequestCancellation().signal
+        : undefined,
+    });
+
+    return response.data;
+  },
 };
 
 // defining the cancel API object for ProductAPI

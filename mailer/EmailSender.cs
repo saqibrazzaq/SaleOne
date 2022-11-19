@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Mailjet.Client.Resources;
+using common;
 
 namespace mailer
 {
@@ -21,8 +22,8 @@ namespace mailer
 
         public void SendEmail(string email, string subject, string htmlMessage)
         {
-            MailjetClient client = new MailjetClient(_configuration["MailJet:ApiKey"],
-                _configuration["MailJet:SecretKey"]);
+            MailjetClient client = new MailjetClient(SecretUtility.MailJetApiKey,
+                SecretUtility.MailJetSecretKey);
             MailjetRequest request = new MailjetRequest
             {
                 Resource = Send.Resource
@@ -30,8 +31,8 @@ namespace mailer
 
             // Create email
             var emailBuilder = new TransactionalEmailBuilder()
-                .WithFrom(new SendContact(_configuration["MailJet:SenderEmail"],
-                    _configuration["MailJet:SenderName"]))
+                .WithFrom(new SendContact(SecretUtility.MailJetSenderEmail,
+                    SecretUtility.MailJetSenderName))
                 .WithSubject(subject)
                 .WithHtmlPart(htmlMessage)
                 .WithTo(new SendContact(email))

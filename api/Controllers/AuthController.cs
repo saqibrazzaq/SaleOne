@@ -1,5 +1,6 @@
 ﻿using api.ActionFilters;
 using api.Services;
+using common;
 using data.Dtos.Auth;
 using data.Utility;
 using Microsoft.AspNetCore.Http;
@@ -59,13 +60,22 @@ namespace api.Controllers
             return Ok();
         }
 
+        [HttpPost("reset-password")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> ResetPassword
+            ([FromBody] ResetPasswordRequestDto dto)
+        {
+            await _userService.ResetPassword(dto);
+            return Ok();
+        }
+
         private void setRefreshTokenCookie(string? refreshToken)
         {
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = DateTimeOffset.UtcNow.AddDays(int.Parse(
-                    _configuration["JWT:RefreshTokenValidityInDays"])),
+                    SecretUtility.JWTRefreshTokenValidityInDays)),
                 SameSite = SameSiteMode.None,
                 Secure = true
             };

@@ -1,5 +1,6 @@
 ﻿using api.Exceptions;
 using AutoMapper;
+using common;
 using data.Dtos;
 using data.Dtos.Auth;
 using data.Entities;
@@ -65,7 +66,7 @@ namespace api.Services
                 // Update user
                 userEntity.RefreshToken = authRes.RefreshToken;
                 userEntity.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(
-                    int.Parse(_configuration["JWT:RefreshTokenValidityInDays"]));
+                    int.Parse(SecretUtility.JWTRefreshTokenValidityInDays));
                 var result = await _userManager.UpdateAsync(userEntity);
 
                 return authRes;
@@ -155,7 +156,7 @@ namespace api.Services
             // Update user repository
             userEntity.RefreshToken = newRefreshToken;
             userEntity.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(
-                   int.Parse(_configuration["JWT:RefreshTokenValidityInDays"]));
+                   int.Parse(SecretUtility.JWTRefreshTokenValidityInDays));
             var userResult = await _userManager.UpdateAsync(userEntity);
             if (userResult.Succeeded == false)
                 throw new BadRequestException("Invalid token");
@@ -199,7 +200,7 @@ namespace api.Services
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretUtility.JWTSecret)),
                 ValidateLifetime = false
             };
 
@@ -213,6 +214,22 @@ namespace api.Services
 
             return principal;
 
+        }
+
+        public async Task ResetPassword(ResetPasswordRequestDto dto)
+        {
+            // Verify email address
+            var userEntity = await _userManager.FindByEmailAsync(dto.Email);
+            if (userEntity == null)
+                throw new NotFoundException("Email address not found.");
+
+            // Update password
+            var result = await _userManager.ResetPasswordAsync(
+                userEntity, dto.ForgotPasswordToken, dto.Password);
+
+            if (result.Succeeded == false)
+                throw new BadRequestException(GetFirstErrorFromIdentityResult(
+                    result, nameof(ResetPassword)));
         }
 
         private async Task<AppIdentityUser?> AuthenticateUser(string? email, string? password)
@@ -257,12 +274,12 @@ namespace api.Services
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-            _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretUtility.JWTSecret));
+            _ = int.TryParse(SecretUtility.JWTTokenValidityInMinutes, out int tokenValidityInMinutes);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
+                issuer: SecretUtility.JwtValidIssuer,
+                audience: SecretUtility.JwtValidAudience,
                 expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)

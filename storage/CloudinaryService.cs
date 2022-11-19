@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using storage.Dtos;
 using Microsoft.Extensions.Configuration;
+using common;
 
 namespace storage
 {
@@ -21,7 +22,7 @@ namespace storage
 
         public void DeleteImage(string? cloudinaryId)
         {
-            Cloudinary cloudinary = new Cloudinary(_configuration["CLOUDINARY_URL"]);
+            Cloudinary cloudinary = new Cloudinary(CloudinaryUrl);
             if (string.IsNullOrWhiteSpace(cloudinaryId) == false)
             {
                 try
@@ -34,6 +35,8 @@ namespace storage
                 }
             }
         }
+
+        public string? CloudinaryUrl { get { return SecretUtility.CloudinaryUrl; } }
 
         public CloudinaryUploadResultRes UploadProfilePictureThumbnail(IFormFile file,
             string tempFolderPath)
@@ -48,7 +51,7 @@ namespace storage
                     new EagerTransformation().Width(200).Height(200).Gravity("faces").Crop("thumb")
                 }
             };
-            Cloudinary cloudinary = new Cloudinary(_configuration["CLOUDINARY_URL"]);
+            Cloudinary cloudinary = new Cloudinary(CloudinaryUrl);
             var result = cloudinary.Upload(uploadParams);
 
             File.Delete(imagePath);
@@ -68,7 +71,7 @@ namespace storage
                 File = new FileDescription(imagePath),
                 Folder = CloudinaryFolders.Taxon
             };
-            Cloudinary cloudinary = new Cloudinary(_configuration["CLOUDINARY_URL"]);
+            Cloudinary cloudinary = new Cloudinary(CloudinaryUrl);
             var result = cloudinary.Upload(uploadParams);
 
             File.Delete(imagePath);
@@ -88,7 +91,7 @@ namespace storage
                 File = new FileDescription(imagePath),
                 Folder = CloudinaryFolders.Product
             };
-            Cloudinary cloudinary = new Cloudinary(_configuration["CLOUDINARY_URL"]);
+            Cloudinary cloudinary = new Cloudinary(CloudinaryUrl);
             var result = cloudinary.Upload(uploadParams);
 
             File.Delete(imagePath);
