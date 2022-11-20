@@ -3,6 +3,7 @@ using api.Services;
 using common;
 using data.Dtos.Auth;
 using data.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,6 +68,30 @@ namespace api.Controllers
         {
             await _userService.ResetPassword(dto);
             return Ok();
+        }
+
+        [HttpGet("send-verification-email")]
+        [Authorize(Roles = Constants.AllRoles)]
+        public async Task<IActionResult> SendVerificationEmail()
+        {
+            await _userService.SendVerificationEmail();
+            return Ok("Verification email sent.");
+        }
+
+        [HttpPost("verify-email")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequestDto dto)
+        {
+            await _userService.VerifyEmail(dto);
+            return Ok();
+        }
+
+        [HttpGet("info")]
+        [Authorize(Roles = Constants.AllRoles)]
+        public async Task<IActionResult> GetUser()
+        {
+            var res = await _userService.GetLoggedInUser();
+            return Ok(res);
         }
 
         private void setRefreshTokenCookie(string? refreshToken)

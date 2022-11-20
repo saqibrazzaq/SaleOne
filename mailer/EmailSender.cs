@@ -20,7 +20,7 @@ namespace mailer
             _configuration = configuration;
         }
 
-        public void SendEmail(string email, string subject, string htmlMessage)
+        public async Task SendEmail(string email, string subject, string htmlMessage)
         {
             MailjetClient client = new MailjetClient(SecretUtility.MailJetApiKey,
                 SecretUtility.MailJetSecretKey);
@@ -39,7 +39,16 @@ namespace mailer
                 .Build();
 
             // Send email
-            client.SendTransactionalEmailAsync(emailBuilder);
+            var res = await client.SendTransactionalEmailAsync(emailBuilder);
+            if (res.Messages != null && res.Messages.Count() == 0)
+            {
+                throw new Exception("No response from email server.");
+            }
+            var result = res.Messages[0];
+            if (result != null && result.Errors != null && result.Errors.Count() > 0)
+            {
+                throw new Exception(result.Errors[0].ErrorMessage);
+            }
         }
     }
 }

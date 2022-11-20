@@ -4,6 +4,8 @@ import AccountHome from "./account/AccountHome";
 import UserAddressDelete from "./account/address/UserAddressDelete";
 import UserAddressEdit from "./account/address/UserAddressEdit";
 import UserAddresses from "./account/address/UserAddresses";
+import EmailPin from "./account/verification/EmailPin";
+import EmailVerificationStatus from "./account/verification/EmailVerificationStatus";
 import Categories from "./admin/category/Categories";
 import CategoryDelete from "./admin/category/CategoryDelete";
 import CategoryEdit from "./admin/category/CategoryEdit";
@@ -111,6 +113,10 @@ export const App = () => {
                 <Route path="edit" element={<UserAddressEdit />} />
                 <Route path="edit/:userAddressId" element={<UserAddressEdit />} />
                 <Route path="delete/:userAddressId" element={<UserAddressDelete />} />
+              </Route>
+              <Route path="status">
+                <Route path="email" element={<EmailVerificationStatus />} />
+                <Route path="emailpin" element={<EmailPin />} />
               </Route>
             </Route>
           </Route>

@@ -11,5 +11,7 @@ namespace api.Services
         Task<UserRes> GetLoggedInUser();
         Task SendForgotPasswordEmail(SendForgotPasswordEmailRequestDto dto);
         Task ResetPassword(ResetPasswordRequestDto dto);
+        Task SendVerificationEmail();
+        Task VerifyEmail(VerifyEmailRequestDto dto);
     }
 }

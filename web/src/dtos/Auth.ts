@@ -1,3 +1,5 @@
+import Common from "../utility/Common";
+
 export class AuthenticationResponseDto {
   email?: string;
   roles?: string[];
@@ -52,6 +54,7 @@ export class ResetPasswordDto {
       this.confirmPassword = confirmPassword;
     }
 }
+
 
 export enum Roles {
   Admin = "Admin",

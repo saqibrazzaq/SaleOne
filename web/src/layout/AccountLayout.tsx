@@ -8,6 +8,7 @@ import LeftSideMenu, { LinkItemProps } from "./LeftSideMenu";
 
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, href: "/account" },
+  { name: "Account Status", icon: CgOrganisation, href: "/account/status/email" },
   { name: "Addresses", icon: CgOrganisation, href: "/account/addresses" },
 ];
 

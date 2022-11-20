@@ -181,7 +181,7 @@ namespace api.Services
             // Generate forgot password email text
             string emailText = GenerateForgotPasswordEmailText(
                 forgotPasswordToken);
-            _emailSender.SendEmail(userEntity.Email,
+            await _emailSender.SendEmail(userEntity.Email,
                 "Reset your password", emailText);
         }
 
@@ -310,6 +310,80 @@ namespace api.Services
                 else
                     throw new UnauthorizedAccessException("User not logged in");
             }
+        }
+
+        public async Task SendVerificationEmail()
+        {
+            // Verify email address
+            var userEntity = await _userManager.FindByNameAsync(UserName);
+            if (userEntity == null)
+                throw new NotFoundException("User not found.");
+
+            await SendVerificationEmailToUser(userEntity);
+        }
+
+        private async Task SendVerificationEmailToUser(AppIdentityUser userEntity)
+        {
+            // Check if email is already verified
+            if (userEntity.EmailConfirmed == true)
+                throw new BadRequestException("Email address already verified");
+
+            // Create a token
+            var pinCode = GeneratePinCode();
+            var minutes = int.Parse(SecretUtility.JWTEmailVerificationTokenValidityInMinutes);
+
+            // Update email verification token in repository
+            userEntity.EmailVerificationToken = pinCode;
+            userEntity.EmailVerificationTokenExpiryTime = DateTime.UtcNow.AddMinutes(minutes);
+            await _userManager.UpdateAsync(userEntity);
+
+            var emailVerificationText = GeneratePinCodeVerificationText(pinCode, minutes);
+            await _emailSender.SendEmail(userEntity.Email, "Email Verification",
+                emailVerificationText);
+        }
+
+        private static string GeneratePinCode()
+        {
+            int _min = 1000;
+            int _max = 9999;
+            Random _rdm = new Random();
+            return _rdm.Next(_min, _max).ToString();
+        }
+
+        private string GeneratePinCodeVerificationText(string pinCode, int minutes)
+        {
+            string text = $"Pin Code to verify your email address" +
+                $"<br />{pinCode}<br />" +
+                $"This pin code will expire in {minutes} minutes.";
+            return text;
+        }
+
+        public async Task VerifyEmail(VerifyEmailRequestDto dto)
+        {
+            // Verify email address
+            var userEntity = await _userManager.FindByNameAsync(UserName);
+            if (userEntity == null)
+                throw new NotFoundException("Email address not found.");
+
+            // Check if email is already verified
+            if (userEntity.EmailConfirmed == true)
+                throw new BadRequestException("Email address already verified");
+
+            // Check verification token expiry
+            if (userEntity.EmailVerificationTokenExpiryTime == null ||
+                userEntity.EmailVerificationTokenExpiryTime < DateTime.UtcNow)
+                throw new BadRequestException("Pin Code expired");
+
+            // Check pin code
+            if (string.IsNullOrWhiteSpace(userEntity.EmailVerificationToken) == false &&
+                userEntity.EmailVerificationToken.Equals(dto.PinCode) == false)
+                throw new BadRequestException("Incorrect pin code");
+
+            // All checks complete, Verify email address
+            userEntity.EmailConfirmed = true;
+            userEntity.EmailVerificationToken = null;
+            userEntity.EmailVerificationTokenExpiryTime = null;
+            await _userManager.UpdateAsync(userEntity);
         }
     }
 }
