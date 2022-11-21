@@ -99,7 +99,7 @@ const Users = () => {
               <Td>{item.email}</Td>
               <Td>
                 {item.roles?.map(role => {
-                  return <Text>{role}</Text>
+                  return role + ", "
                 })}
               </Td>
               <Td>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using data.Dtos;
 using data.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.Runtime.CompilerServices;
 
 namespace api
@@ -43,6 +44,9 @@ namespace api
 
             // User
             CreateMap<AppIdentityUser, UserRes>();
+
+            // Role
+            CreateMap<IdentityRole, RoleRes>();
         }
     }
 }

@@ -12,6 +12,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Products", icon: CgOrganisation, href: "/admin/products" },
   { name: "Countries", icon: CgOrganisation, href: "/admin/countries" },
   { name: "Users", icon: CgOrganisation, href: "/admin/users" },
+  { name: "Roles", icon: CgOrganisation, href: "/admin/roles" },
 ];
 
 const AdminLayout = () => {

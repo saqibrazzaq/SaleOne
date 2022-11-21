@@ -22,6 +22,9 @@ import ProductEdit from "./admin/product/ProductEdit";
 import ProductImages from "./admin/product/ProductImages";
 import Products from "./admin/product/Products";
 import ProductUploadImage from "./admin/product/ProductUploadImage";
+import RoleDelete from "./admin/role/RoleDelete";
+import RoleEdit from "./admin/role/RoleEdit";
+import RolesList from "./admin/role/Roles";
 import StateDelete from "./admin/state/StateDelete";
 import StateEdit from "./admin/state/StateEdit";
 import States from "./admin/state/States";
@@ -138,6 +141,13 @@ export const App = () => {
               <Route path="users">
                 <Route index element={<Users />} />
                 <Route path="delete/:email" element={<UserDelete />} />
+              </Route>
+              <Route path="roles">
+                <Route index element={<RolesList />} />
+                <Route path="edit" element={<RoleEdit />} />
+                <Route path="edit/:roleId" element={<RoleEdit />} />
+                <Route path="delete" element={<RoleDelete />} />
+                <Route path="delete/:roleId" element={<RoleDelete />} />
               </Route>
             </Route>
             
