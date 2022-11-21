@@ -43,6 +43,27 @@ export const UserApi = {
 
     return response.data;
   },
+  search: async function (searchParams, cancel = false) {
+    // console.log("search countries ")
+    const response = await api.request({
+      url: "/users/search",
+      method: "GET",
+      params: searchParams,
+      signal: cancel ? cancelApiObject[this.search.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
+  delete: async function (email, cancel = false) {
+    const response = await api.request({
+      url: `/users/` + email,
+      method: "DELETE",
+      // retrieving the signal value by using the property name
+      signal: cancel ? cancelApiObject[this.delete.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   
 };
 

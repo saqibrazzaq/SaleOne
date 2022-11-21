@@ -1,6 +1,7 @@
 ﻿using data.Dtos;
 using data.Entities;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
 namespace data.Repository

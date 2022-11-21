@@ -25,6 +25,8 @@ import ProductUploadImage from "./admin/product/ProductUploadImage";
 import StateDelete from "./admin/state/StateDelete";
 import StateEdit from "./admin/state/StateEdit";
 import States from "./admin/state/States";
+import UserDelete from "./admin/user/UserDelete";
+import Users from "./admin/user/Users";
 import RequireAuth from "./api/require-auth";
 import ForgotPassword from "./auth/ForgotPassword";
 import Login from "./auth/Login";
@@ -132,6 +134,10 @@ export const App = () => {
                 <Route path="edit/:stateId" element={<CityEdit />} />
                 <Route path="edit/:stateId/:cityId" element={<CityEdit />} />
                 <Route path="delete/:stateId/:cityId" element={<CityDelete />} />
+              </Route>
+              <Route path="users">
+                <Route index element={<Users />} />
+                <Route path="delete/:email" element={<UserDelete />} />
               </Route>
             </Route>
             

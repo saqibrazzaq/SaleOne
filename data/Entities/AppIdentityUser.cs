@@ -15,7 +15,5 @@ namespace data.Entities
         public DateTime? EmailVerificationTokenExpiryTime { get; set; }
         public string? ProfilePictureUrl { get; set; }
         public string? ProfilePictureCloudinaryId { get; set; }
-
-
     }
 }

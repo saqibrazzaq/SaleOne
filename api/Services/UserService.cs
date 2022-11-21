@@ -6,6 +6,7 @@ using data.Dtos.Auth;
 using data.Entities;
 using data.Repository;
 using data.Utility;
+using data.Utility.Paging;
 using mailer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -420,6 +421,39 @@ namespace api.Services
             {
                 throw new BadRequestException(GetFirstErrorFromIdentityResult(
                     result, nameof(ChangePassword)));
+            }
+        }
+
+        public async Task<ApiOkPagedResponse<IEnumerable<UserRes>, MetaData>> SearchUsers(
+            UserReqSearch dto, bool trackChanges)
+        {
+            var usersWithMetadata = _repositoryManager.UserRepository.SearchUsers(
+                dto, trackChanges);
+            var usersDto = _mapper.Map<IList<UserRes>>(usersWithMetadata);
+            for (int i = 0; i < usersDto.Count(); i++)
+            {
+                var userEntity = await _userManager.FindByEmailAsync(usersDto[i].Email);
+                if (userEntity == null)
+                    throw new NotFoundException("User not found");
+                usersDto[i].Roles = await _userManager.GetRolesAsync(userEntity);
+            }
+            return new ApiOkPagedResponse<IEnumerable<UserRes>, MetaData>(
+                usersDto, usersWithMetadata.MetaData);
+        }
+
+        public async Task<UserRes> Get(string? email)
+        {
+            var entity = await _userManager.FindByEmailAsync(email);
+            return _mapper.Map<UserRes>(entity);
+        }
+
+        public async Task Delete(string? email)
+        {
+            var entity = await _userManager.FindByEmailAsync(email);
+            var result = await _userManager.DeleteAsync(entity);
+            if (result.Succeeded == false)
+            {
+                throw new BadRequestException(result.Errors.FirstOrDefault().Description);
             }
         }
     }

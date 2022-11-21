@@ -1,5 +1,6 @@
 ﻿using api.ActionFilters;
 using api.Services;
+using data.Dtos;
 using data.Dtos.Auth;
 using data.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -49,6 +50,33 @@ namespace api.Controllers
         {
             await _userService.ChangePassword(dto);
             return Ok();
+        }
+
+        [HttpGet("search")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> SearchUsers(
+            [FromQuery] UserReqSearch dto)
+        {
+            var res = await _userService.SearchUsers(
+                dto, trackChanges: false);
+            return Ok(res);
+        }
+
+        [HttpDelete("{email}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public async Task<IActionResult> DeleteUser(string? email)
+        {
+            await _userService.Delete(email);
+            return Ok();
+        }
+
+        [HttpGet("{email}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public async Task<IActionResult> Get(string? email)
+        {
+            var res = await _userService.Get(email);
+            return Ok(res);
         }
 
     }

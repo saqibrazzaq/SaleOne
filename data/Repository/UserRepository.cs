@@ -11,8 +11,10 @@ namespace data.Repository
 {
     public class UserRepository : RepositoryBase<AppIdentityUser>, IUserRepository
     {
+        private readonly AppDbContext _appDbContext;
         public UserRepository(AppDbContext context) : base(context)
         {
+            _appDbContext = context;
         }
 
         public PagedList<AppIdentityUser> SearchUsers(UserReqSearch dto, bool trackChanges)

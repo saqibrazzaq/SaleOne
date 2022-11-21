@@ -14,7 +14,7 @@ namespace data.Dtos
         public string? Email { get; set; }
         public bool EmailConfirmed { get; set; }
         public string? ProfilePictureUrl { get; set; }
-        public IEnumerable<string>? Roles { get; set; }
+        public ICollection<string>? Roles { get; set; }
     }
 
     public class UserReqSearch : PagedRequestDto
