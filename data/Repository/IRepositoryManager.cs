@@ -16,6 +16,7 @@ namespace data.Repository
         ICityRepository CityRepository { get; }
         IStateRepository StateRepository { get; }
         ICountryRepository CountryRepository { get; }
+        IUserRepository UserRepository { get; }
         void Save();
     }
 }

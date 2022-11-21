@@ -10,7 +10,7 @@ namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = Constants.AllAdminRoles)]
+    [Authorize(Roles = Constants.AllRoles)]
     public class UserAddressesController : ControllerBase
     {
         private readonly IUserAddressService _userAddressService;

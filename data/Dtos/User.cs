@@ -1,4 +1,5 @@
-﻿using System;
+﻿using data.Utility.Paging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,10 @@ namespace data.Dtos
         public bool EmailConfirmed { get; set; }
         public string? ProfilePictureUrl { get; set; }
         public IEnumerable<string>? Roles { get; set; }
+    }
+
+    public class UserReqSearch : PagedRequestDto
+    {
+
     }
 }

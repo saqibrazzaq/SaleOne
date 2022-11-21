@@ -54,7 +54,31 @@ export const App = () => {
           </Route>
           <Route index element={<ProductList />} />
           <Route path=":categoryCode" element={<ProductList />} />
-          {/* Private routes */}
+
+          {/* Private routes for User */}
+          <Route
+            element={
+              <RequireAuth
+                allowedRoles={[Roles.User]}
+              />
+            }
+          >
+          <Route path="account" element={<AccountLayout />}>
+              <Route index element={<AccountHome />} />
+              <Route path="addresses">
+                <Route index element={<UserAddresses />} />
+                <Route path="edit" element={<UserAddressEdit />} />
+                <Route path="edit/:userAddressId" element={<UserAddressEdit />} />
+                <Route path="delete/:userAddressId" element={<UserAddressDelete />} />
+              </Route>
+              <Route path="status">
+                <Route path="email" element={<EmailVerificationStatus />} />
+                <Route path="emailpin" element={<EmailPin />} />
+              </Route>
+            </Route>
+            </Route>
+
+          {/* Private routes for Admin */}
           <Route
             element={
               <RequireAuth
@@ -106,19 +130,7 @@ export const App = () => {
                 <Route path="delete/:stateId/:cityId" element={<CityDelete />} />
               </Route>
             </Route>
-            <Route path="account" element={<AccountLayout />}>
-              <Route index element={<AccountHome />} />
-              <Route path="addresses">
-                <Route index element={<UserAddresses />} />
-                <Route path="edit" element={<UserAddressEdit />} />
-                <Route path="edit/:userAddressId" element={<UserAddressEdit />} />
-                <Route path="delete/:userAddressId" element={<UserAddressDelete />} />
-              </Route>
-              <Route path="status">
-                <Route path="email" element={<EmailVerificationStatus />} />
-                <Route path="emailpin" element={<EmailPin />} />
-              </Route>
-            </Route>
+            
           </Route>
         </Route>
       </Routes>

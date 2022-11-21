@@ -13,5 +13,6 @@ namespace api.Services
         Task ResetPassword(ResetPasswordRequestDto dto);
         Task SendVerificationEmail();
         Task VerifyEmail(VerifyEmailRequestDto dto);
+        int Count();
     }
 }

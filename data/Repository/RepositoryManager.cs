@@ -17,6 +17,7 @@ namespace data.Repository
         private readonly Lazy<ICityRepository> _cityRepository;
         private readonly Lazy<IStateRepository> _stateRepository;
         private readonly Lazy<ICountryRepository> _countryRepository;
+        private readonly Lazy<IUserRepository> _userRepository;
         
         public RepositoryManager(AppDbContext context)
         {
@@ -38,6 +39,8 @@ namespace data.Repository
                 new StateRepository(context));
             _countryRepository = new Lazy<ICountryRepository>(() =>
                 new CountryRepository(context));
+            _userRepository = new Lazy<IUserRepository>(() =>
+                new UserRepository(context));
         }
 
         public ICategoryRepository CategoryRepository => _categoryRepository.Value;
@@ -48,6 +51,7 @@ namespace data.Repository
         public IStateRepository StateRepository => _stateRepository.Value;
         public ICountryRepository CountryRepository => _countryRepository.Value;
         public IProductImageRepository ProductImageRepository => _productImageRepository.Value;
+        public IUserRepository UserRepository => _userRepository.Value;
 
         public void Save()
         {

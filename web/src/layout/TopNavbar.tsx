@@ -180,9 +180,9 @@ const TopNavbar = () => {
 
   function isAdmin() {
     if (
-      userData?.roles?.indexOf(Roles.Admin) ||
-      userData?.roles?.indexOf(Roles.Manager) ||
-      userData?.roles?.indexOf(Roles.Owner)
+      userData?.roles?.indexOf(Roles.Admin) != -1 ||
+      userData?.roles?.indexOf(Roles.Manager) != -1 ||
+      userData?.roles?.indexOf(Roles.Owner) != -1
     ) {
       return true;
     }

@@ -4,6 +4,7 @@ using common;
 using data.Dtos;
 using data.Dtos.Auth;
 using data.Entities;
+using data.Repository;
 using data.Utility;
 using mailer;
 using Microsoft.AspNetCore.Identity;
@@ -24,13 +25,15 @@ namespace api.Services
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IWebHostEnvironment _environment;
         private readonly IEmailSender _emailSender;
-        public UserService(UserManager<AppIdentityUser> userManager, 
-            RoleManager<IdentityRole> roleManager, 
-            IConfiguration configuration, 
-            IMapper mapper, 
-            IHttpContextAccessor contextAccessor, 
-            IWebHostEnvironment environment, 
-            IEmailSender emailSender)
+        private readonly IRepositoryManager _repositoryManager;
+        public UserService(UserManager<AppIdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration,
+            IMapper mapper,
+            IHttpContextAccessor contextAccessor,
+            IWebHostEnvironment environment,
+            IEmailSender emailSender,
+            IRepositoryManager repositoryManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -39,6 +42,7 @@ namespace api.Services
             _contextAccessor = contextAccessor;
             _environment = environment;
             _emailSender = emailSender;
+            _repositoryManager = repositoryManager;
         }
 
 
@@ -92,14 +96,29 @@ namespace api.Services
 
             // Add this user in User role
             var roleResult = await _userManager.AddToRoleAsync(
-                userEntity, Constants.OwnerRole);
+                userEntity, Constants.UserRole);
             if (roleResult.Succeeded == false)
                 throw new BadRequestException(GetFirstErrorFromIdentityResult(
                     roleResult, nameof(Register)));
-
-            //await SendVerificationEmailToUser(userEntity);
+            // If this is the first user, add it as owner
+            if (Count() == 0)
+            {
+                roleResult = await _userManager.AddToRoleAsync(
+                    userEntity, Constants.OwnerRole);
+                if (roleResult.Succeeded == false)
+                    throw new BadRequestException(GetFirstErrorFromIdentityResult(
+                        roleResult, nameof(Register)));
+            }
+            
+            await SendVerificationEmailToUser(userEntity);
 
             return await Login(new LoginRequestDto { Email = dto.Email, Password = dto.Password });
+        }
+
+        public int Count()
+        {
+            return _repositoryManager.UserRepository.FindAll(false)
+                .Count();
         }
 
         private async Task CheckExistingEmailAndUsername(RegisterRequestDto dto)
