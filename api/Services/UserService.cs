@@ -432,10 +432,7 @@ namespace api.Services
             var usersDto = _mapper.Map<IList<UserRes>>(usersWithMetadata);
             for (int i = 0; i < usersDto.Count(); i++)
             {
-                var userEntity = await _userManager.FindByEmailAsync(usersDto[i].Email);
-                if (userEntity == null)
-                    throw new NotFoundException("User not found");
-                usersDto[i].Roles = await _userManager.GetRolesAsync(userEntity);
+                usersDto[i].Roles = await GetRolesByEmail(usersDto[i].Email);
             }
             return new ApiOkPagedResponse<IEnumerable<UserRes>, MetaData>(
                 usersDto, usersWithMetadata.MetaData);
@@ -444,12 +441,28 @@ namespace api.Services
         public async Task<UserRes> Get(string? email)
         {
             var entity = await _userManager.FindByEmailAsync(email);
-            return _mapper.Map<UserRes>(entity);
+            var dto = _mapper.Map<UserRes>(entity);
+            dto.Roles = await GetRolesByEmail(email);
+            return dto;
+        }
+
+        private async Task<ICollection<string>>? GetRolesByEmail(string? email)
+        {
+            var userEntity = await _userManager.FindByEmailAsync(email);
+            if (userEntity == null)
+                throw new NotFoundException("User not found");
+            var roles = await _userManager.GetRolesAsync(userEntity);
+            return roles;
         }
 
         public async Task Delete(string? email)
         {
             var entity = await _userManager.FindByEmailAsync(email);
+            var roles = await GetRolesByEmail(email);
+            if (roles != null && roles.Contains(Constants.OwnerRole) == true)
+            {
+                throw new BadRequestException("Owner role cannot be deleted.");
+            }
             var result = await _userManager.DeleteAsync(entity);
             if (result.Succeeded == false)
             {

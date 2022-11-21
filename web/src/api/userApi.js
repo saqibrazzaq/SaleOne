@@ -54,6 +54,16 @@ export const UserApi = {
 
     return response.data
   },
+  get: async function (email, cancel = false) {
+    // console.log("search countries ")
+    const response = await api.request({
+      url: "/users/" + email,
+      method: "GET",
+      signal: cancel ? cancelApiObject[this.get.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   delete: async function (email, cancel = false) {
     const response = await api.request({
       url: `/users/` + email,
