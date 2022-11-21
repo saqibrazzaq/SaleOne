@@ -404,5 +404,23 @@ namespace api.Services
             userEntity.EmailVerificationTokenExpiryTime = null;
             await _userManager.UpdateAsync(userEntity);
         }
+
+        public async Task ChangePassword(ChangePasswordRequestDto dto)
+        {
+            // Verify email address
+            var userEntity = await _userManager.FindByEmailAsync(dto.Email);
+            if (userEntity == null)
+                throw new NotFoundException("No email address found " + dto.Email);
+
+            // Reset password
+            var result = await _userManager.ChangePasswordAsync(
+                userEntity, dto.CurrentPassword, dto.NewPassword);
+
+            if (result.Succeeded == false)
+            {
+                throw new BadRequestException(GetFirstErrorFromIdentityResult(
+                    result, nameof(ChangePassword)));
+            }
+        }
     }
 }

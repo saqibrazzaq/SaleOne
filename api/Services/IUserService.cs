@@ -14,5 +14,6 @@ namespace api.Services
         Task SendVerificationEmail();
         Task VerifyEmail(VerifyEmailRequestDto dto);
         int Count();
+        Task ChangePassword(ChangePasswordRequestDto dto);
     }
 }

@@ -4,6 +4,7 @@ import AccountHome from "./account/AccountHome";
 import UserAddressDelete from "./account/address/UserAddressDelete";
 import UserAddressEdit from "./account/address/UserAddressEdit";
 import UserAddresses from "./account/address/UserAddresses";
+import ChangePassword from "./account/profile/ChangePassword";
 import EmailPin from "./account/verification/EmailPin";
 import EmailVerificationStatus from "./account/verification/EmailVerificationStatus";
 import Categories from "./admin/category/Categories";
@@ -59,7 +60,7 @@ export const App = () => {
           <Route
             element={
               <RequireAuth
-                allowedRoles={[Roles.User]}
+                allowedRoles={[Roles.Owner, Roles.Admin, Roles.Manager, Roles.User]}
               />
             }
           >
@@ -74,6 +75,9 @@ export const App = () => {
               <Route path="status">
                 <Route path="email" element={<EmailVerificationStatus />} />
                 <Route path="emailpin" element={<EmailPin />} />
+              </Route>
+              <Route path="profile">
+                <Route path="change-password" element={<ChangePassword />} />
               </Route>
             </Route>
             </Route>

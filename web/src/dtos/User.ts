@@ -15,3 +15,10 @@ export class UserRes {
   profilePictureUrl?: string = Common.DEFAULT_PROFILE_PICTURE;
   roles?: string[];
 }
+
+export class ChangePasswordRequestDto {
+  email?: string = "";
+  currentPassword?: string = "";
+  newPassword?: string = "";
+  confirmNewPassword?: string = "";
+}
