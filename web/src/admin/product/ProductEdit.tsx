@@ -72,7 +72,7 @@ const ProductEdit = () => {
     description: Yup.string(),
     position: Yup.number(),
     quantity: Yup.number().min(0),
-    price: Yup.number().min(0),
+    rate: Yup.number().min(0),
     categoryId: Yup.number().required().min(1, "Please select category"),
   });
 
@@ -156,8 +156,8 @@ const ProductEdit = () => {
                 <FormErrorMessage>{errors.quantity}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!errors.rate && touched.rate}>
-                <FormLabel htmlFor="price">Price</FormLabel>
-                <Field as={Input} id="price" name="price" type="text" />
+                <FormLabel htmlFor="rate">Rate</FormLabel>
+                <Field as={Input} id="rate" name="rate" type="text" />
                 <FormErrorMessage>{errors.rate}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!errors.position && touched.position}>

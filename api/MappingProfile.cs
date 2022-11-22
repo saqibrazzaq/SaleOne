@@ -18,6 +18,10 @@ namespace api
             CreateMap<Product, ProductRes>();
             CreateMap<ProductReqEdit, Product>();
 
+            // Unit
+            CreateMap<Unit, UnitRes>();
+            CreateMap<UnitReqEdit, Unit>();
+
             // Product images
             CreateMap<ProductImage, ProductImageRes>();
             CreateMap<ProductImageReqEdit, ProductImage>();

@@ -11,6 +11,7 @@ namespace data.Repository
         ICategoryRepository CategoryRepository { get; }
         IProductRepository ProductRepository { get; }
         IProductImageRepository ProductImageRepository { get; }
+        IUnitRepository UnitRepository { get; }
         IAddressRepository AddressRepository { get; }
         IUserAddressRepository UserAddressRepository { get; }
         ICityRepository CityRepository { get; }
