@@ -155,10 +155,10 @@ const ProductEdit = () => {
                 <Field as={Input} id="quantity" name="quantity" type="text" />
                 <FormErrorMessage>{errors.quantity}</FormErrorMessage>
               </FormControl>
-              <FormControl isInvalid={!!errors.price && touched.price}>
+              <FormControl isInvalid={!!errors.rate && touched.rate}>
                 <FormLabel htmlFor="price">Price</FormLabel>
                 <Field as={Input} id="price" name="price" type="text" />
-                <FormErrorMessage>{errors.price}</FormErrorMessage>
+                <FormErrorMessage>{errors.rate}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!errors.position && touched.position}>
                 <FormLabel htmlFor="position">Position</FormLabel>

@@ -131,7 +131,7 @@ const Products = () => {
               </Td>
               <Td>{item.name}</Td>
               <Td>{item.code}</Td>
-              <Td>{item.price}</Td>
+              <Td>{item.rate}</Td>
               <Td>{item.quantity}</Td>
               <Td>
                 <Link

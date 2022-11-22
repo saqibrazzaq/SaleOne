@@ -21,9 +21,16 @@ namespace data.Entities
         public string? Code { get; set; }
         public string? Description { get; set; }
         public int Position { get; set; } = 10;
-        public int Quantity { get; set; }
+
         [Column(TypeName = "decimal(12, 2)")]
-        public decimal Price { get; set; }
+        public decimal Quantity { get; set; }
+
+        [Column(TypeName = "decimal(12, 2)")]
+        public decimal Rate { get; set; }
+
+        public int? UnitId { get; set; }
+        [ForeignKey("UnitId")]
+        public Unit? Unit { get; set; }
 
         // Foreign keys
         public int CategoryId { get; set; }
@@ -32,5 +39,6 @@ namespace data.Entities
 
         // Child tables
         public IEnumerable<ProductImage>? ProductImages { get; set; }
+        public IEnumerable<CartItem>? CartItems { get; set; }
     }
 }

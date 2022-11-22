@@ -29,6 +29,7 @@ import StateDelete from "./admin/state/StateDelete";
 import StateEdit from "./admin/state/StateEdit";
 import States from "./admin/state/States";
 import UserDelete from "./admin/user/UserDelete";
+import UserEdit from "./admin/user/UserEdit";
 import Users from "./admin/user/Users";
 import RequireAuth from "./api/require-auth";
 import ForgotPassword from "./auth/ForgotPassword";
@@ -141,6 +142,7 @@ export const App = () => {
               <Route path="users">
                 <Route index element={<Users />} />
                 <Route path="delete/:email" element={<UserDelete />} />
+                <Route path="edit/:email" element={<UserEdit />} />
               </Route>
               <Route path="roles">
                 <Route index element={<RolesList />} />

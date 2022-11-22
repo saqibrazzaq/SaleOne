@@ -10,8 +10,9 @@ export interface ProductRes {
   description?: string;
   position?: number;
   quantity?: number;
-  price?: number;
+  rate?: number;
   categoryId?: number;
+  unitId?: number;
 
   category?: CategoryRes;
 
@@ -24,8 +25,9 @@ export class ProductReqEdit {
   description?: string = "";
   position?: number = 10;
   quantity?: number = 0;
-  price?: number = 0;
+  rate?: number = 0;
   categoryId?: number = 0;
+  unitId?: number = 0;
 
   constructor(categoryId?: number) {
     this.categoryId = categoryId;

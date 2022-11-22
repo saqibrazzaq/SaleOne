@@ -98,7 +98,7 @@ const ProductList = () => {
                     <Text>{product.name}</Text>
                     <Text fontSize={"lg"}>
                       <NumericFormat
-                        value={product.price}
+                        value={product.rate}
                         prefix="Rs. "
                         thousandSeparator=","
                         displayType="text"

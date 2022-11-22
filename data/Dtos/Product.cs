@@ -18,8 +18,10 @@ namespace data.Dtos
         public string? Code { get; set; }
         public string? Description { get; set; }
         public int Position { get; set; } = 10;
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal Rate { get; set; }
+        public int? UnitId { get; set; }
+        public Unit? Unit { get; set; }
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
         public IEnumerable<ProductImageRes>? ProductImages { get; set; }
@@ -31,8 +33,9 @@ namespace data.Dtos
         public string? Code { get; set; }
         public string? Description { get; set; }
         public int Position { get; set; } = 10;
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal Rate { get; set; }
+        public int? UnitId { get; set; }
         public int CategoryId { get; set; }
     }
 

@@ -75,7 +75,7 @@ const RolesList = () => {
               <Td>{item.id}</Td>
               <Td>{item.name}</Td>
               <Td>
-                <Link
+                {/* <Link
                   mr={2}
                   as={RouteLink}
                   to={"/admin/roles/edit/" + item.id}
@@ -84,7 +84,7 @@ const RolesList = () => {
                 </Link>
                 <Link as={RouteLink} to={"/admin/roles/delete/" + item.id}>
                   <DeleteIconButton />
-                </Link>
+                </Link> */}
               </Td>
             </Tr>
           ))}
