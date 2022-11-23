@@ -28,6 +28,9 @@ import RolesList from "./admin/role/Roles";
 import StateDelete from "./admin/state/StateDelete";
 import StateEdit from "./admin/state/StateEdit";
 import States from "./admin/state/States";
+import UnitDelete from "./admin/unit/UnitDelete";
+import UnitEdit from "./admin/unit/UnitEdit";
+import Units from "./admin/unit/Units";
 import UserDelete from "./admin/user/UserDelete";
 import UserEdit from "./admin/user/UserEdit";
 import Users from "./admin/user/Users";
@@ -115,6 +118,14 @@ export const App = () => {
                 <Route path="edit/images/:productId" element={<ProductImages />} />
                 <Route path="edit/images/upload/:productId" element={<ProductUploadImage />} />
                 <Route path="delete/:categoryId/:productId" element={<ProductDelete />} />
+              </Route>
+              {/* Units */}
+              <Route path="units">
+                <Route index element={<Units />} />
+                <Route path="edit" element={<UnitEdit />} />
+                <Route path="edit/:unitId" element={<UnitEdit />} />
+                <Route path="delete" element={<UnitDelete />} />
+                <Route path="delete/:unitId" element={<UnitDelete />} />
               </Route>
               {/* Countries */}
               <Route path="countries">

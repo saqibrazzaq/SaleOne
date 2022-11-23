@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using data;
 
@@ -11,9 +12,10 @@ using data;
 namespace data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221123111749_cart-name")]
+    partial class cartname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,13 +75,13 @@ namespace data.Migrations
                     b.Property<decimal>("BaseSubTotal")
                         .HasColumnType("decimal(12,2)");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CartId");
 
-                    b.HasIndex("Username")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Cart");

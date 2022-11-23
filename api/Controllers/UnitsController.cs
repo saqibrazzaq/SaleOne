@@ -33,6 +33,13 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("{unitId}")]
+        public IActionResult Get(int unitId)
+        {
+            var res = _unitService.Get(unitId);
+            return Ok(res);
+        }
+
         [HttpGet("count")]
         public IActionResult Count()
         {

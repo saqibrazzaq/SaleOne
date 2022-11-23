@@ -51,6 +51,10 @@ namespace api
 
             // Role
             CreateMap<IdentityRole, RoleRes>();
+
+            // Cart
+            CreateMap<Cart, CartRes>();
+            CreateMap<CartItem, CartItemRes>();
         }
     }
 }

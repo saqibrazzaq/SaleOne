@@ -10,6 +10,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, href: "/admin" },
   { name: "Categories", icon: CgOrganisation, href: "/admin/categories" },
   { name: "Products", icon: CgOrganisation, href: "/admin/products" },
+  { name: "Units", icon: CgOrganisation, href: "/admin/units" },
   { name: "Countries", icon: CgOrganisation, href: "/admin/countries" },
   { name: "Users", icon: CgOrganisation, href: "/admin/users" },
   { name: "Roles", icon: CgOrganisation, href: "/admin/roles" },

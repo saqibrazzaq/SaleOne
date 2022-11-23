@@ -10,6 +10,8 @@ namespace data.Repository
     {
         ICategoryRepository CategoryRepository { get; }
         IProductRepository ProductRepository { get; }
+        ICartRepository CartRepository { get; }
+        ICartItemRepository CartItemRepository { get; }
         IProductImageRepository ProductImageRepository { get; }
         IUnitRepository UnitRepository { get; }
         IAddressRepository AddressRepository { get; }

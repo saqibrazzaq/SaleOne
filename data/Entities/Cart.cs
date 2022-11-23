@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace data.Entities
 {
     [Table("Cart")]
-    [Index(nameof(Email), IsUnique = true)]
+    [Index(nameof(Username), IsUnique = true)]
     public class Cart
     {
         [Key]
         public int CartId { get; set; }
         [Required]
-        public string? Email { get; set; }
+        public string? Username { get; set; }
         [Column(TypeName = "decimal(12, 2)")]
         public decimal BaseSubTotal { get; set; }
 

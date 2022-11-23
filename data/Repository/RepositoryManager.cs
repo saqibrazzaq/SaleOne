@@ -11,6 +11,8 @@ namespace data.Repository
         private readonly AppDbContext _context;
         private readonly Lazy<ICategoryRepository> _categoryRepository;
         private readonly Lazy<IProductRepository> _productRepository;
+        private readonly Lazy<ICartRepository> _cartRepository;
+        private readonly Lazy<ICartItemRepository> _cartItemRepository;
         private readonly Lazy<IProductImageRepository> _productImageRepository;
         private readonly Lazy<IAddressRepository> _addressRepository;
         private readonly Lazy<IUserAddressRepository> _userAddressRepository;
@@ -44,6 +46,10 @@ namespace data.Repository
                 new UserRepository(context));
             _unitRepository = new Lazy<IUnitRepository>(() =>
                 new UnitRepository(context));
+            _cartRepository = new Lazy<ICartRepository>(() =>
+                new CartRepository(context));
+            _cartItemRepository = new Lazy<ICartItemRepository>(() =>
+                new CartItemRepository(context));
         }
 
         public ICategoryRepository CategoryRepository => _categoryRepository.Value;
@@ -56,6 +62,8 @@ namespace data.Repository
         public IProductImageRepository ProductImageRepository => _productImageRepository.Value;
         public IUserRepository UserRepository => _userRepository.Value;
         public IUnitRepository UnitRepository => _unitRepository.Value;
+        public ICartRepository CartRepository => _cartRepository.Value;
+        public ICartItemRepository CartItemRepository => _cartItemRepository.Value;
 
         public void Save()
         {
