@@ -81,34 +81,19 @@ namespace api.Services
         public CartRes AddToCart(CartItemReqAddToCart dto)
         {
             var cart = FindCartIfExists(true);
+            
+            cart = AddItemToCart(cart, dto.ProductId);
+
             var product = _productService.Get(dto.ProductId);
-            var item = new CartItem()
-            {
-                CartId = cart.CartId,
-                ProductId = dto.ProductId,
-                Quantity = dto.Quantity,
-                Rate = product.Rate,
-                BasePrice = product.Rate * dto.Quantity,
-                UnitId = product.UnitId
-            };
-            cart.CartItems.Add(item);
-
-            cart = CalculateTotals(cart);
-
-            _repositoryManager.Save();
-
-            return _mapper.Map<CartRes>(cart);
-        }
-
-        public CartRes UpdateItem(int cartItemId, CartItemReqEdit dto)
-        {
-            var cart = FindCartIfExists(true);
-            var cartItem = FindCartItemIfExists(cart, cartItemId);
-            var product = _productService.Get(cartItem.ProductId);
-            cartItem.Quantity = dto.Quantity;
-            cartItem.Rate = product.Rate;
-            cartItem.BasePrice = product.Rate * dto.Quantity;
-
+            var item = cart.CartItems.Where(x => x.ProductId == dto.ProductId)
+                .FirstOrDefault();
+            item.CartId = cart.CartId;
+            item.ProductId = dto.ProductId;
+            item.Quantity = dto.Quantity;
+            item.Rate = product.Rate;
+            item.BasePrice = product.Rate * dto.Quantity;
+            item.UnitId = product.UnitId;
+            
             cart = CalculateTotals(cart);
 
             _repositoryManager.Save();
@@ -123,24 +108,29 @@ namespace api.Services
             return cart;
         }
 
-        private CartItem FindCartItemIfExists(Cart cart, int cartItemId)
+        private Cart AddItemToCart(Cart cart, int productId)
         {
             var cartItem = cart.CartItems
-                .Where(x => x.CartItemId == cartItemId)
+                .Where(x => x.ProductId == productId)
                 .FirstOrDefault();
-            if (cartItem == null) throw new NotFoundException("No item found with id " + cartItemId);
+            if (cartItem == null) cart.CartItems.Add(new CartItem()
+            {
+                ProductId = productId,
+            });
 
-            return cartItem;
+            return cart;
         }
 
-        public CartRes DeleteItem(int cartItemId)
+        public CartRes DeleteItem(int productId)
         {
             var cart = FindCartIfExists(true);
-            var cartItem = FindCartItemIfExists(cart, cartItemId);
-
-            cart.CartItems.Remove(cartItem);
-
-            cart = CalculateTotals(cart);
+            var cartItem = cart.CartItems.Where(x => x.ProductId == productId)
+                .FirstOrDefault();
+            if (cartItem != null)
+            {
+                cart.CartItems.Remove(cartItem);
+                cart = CalculateTotals(cart);
+            }
 
             return _mapper.Map<CartRes>(cart);
         }

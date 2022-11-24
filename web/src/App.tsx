@@ -41,6 +41,7 @@ import Logout from "./auth/Logout";
 import Register from "./auth/Register";
 import ResetPassword from "./auth/ResetPassword";
 import UnAuthorized from "./auth/UnAuthorized";
+import Cart from "./cart/Cart";
 import { Roles } from "./dtos/Auth";
 import AccountLayout from "./layout/AccountLayout";
 import AdminLayout from "./layout/AdminLayout";
@@ -69,17 +70,28 @@ export const App = () => {
           <Route
             element={
               <RequireAuth
-                allowedRoles={[Roles.Owner, Roles.Admin, Roles.Manager, Roles.User]}
+                allowedRoles={[
+                  Roles.Owner,
+                  Roles.Admin,
+                  Roles.Manager,
+                  Roles.User,
+                ]}
               />
             }
           >
-          <Route path="account" element={<AccountLayout />}>
+            <Route path="account" element={<AccountLayout />}>
               <Route index element={<AccountHome />} />
               <Route path="addresses">
                 <Route index element={<UserAddresses />} />
                 <Route path="edit" element={<UserAddressEdit />} />
-                <Route path="edit/:userAddressId" element={<UserAddressEdit />} />
-                <Route path="delete/:userAddressId" element={<UserAddressDelete />} />
+                <Route
+                  path="edit/:userAddressId"
+                  element={<UserAddressEdit />}
+                />
+                <Route
+                  path="delete/:userAddressId"
+                  element={<UserAddressDelete />}
+                />
               </Route>
               <Route path="status">
                 <Route path="email" element={<EmailVerificationStatus />} />
@@ -89,7 +101,10 @@ export const App = () => {
                 <Route path="change-password" element={<ChangePassword />} />
               </Route>
             </Route>
+            <Route path="cart">
+              <Route index element={<Cart />} />
             </Route>
+          </Route>
 
           {/* Private routes for Admin */}
           <Route
@@ -114,10 +129,22 @@ export const App = () => {
                 <Route path=":categoryId" element={<Products />} />
                 <Route path="edit" element={<ProductEdit />} />
                 <Route path="edit/:categoryId" element={<ProductEdit />} />
-                <Route path="edit/:categoryId/:productId" element={<ProductEdit />} />
-                <Route path="edit/images/:productId" element={<ProductImages />} />
-                <Route path="edit/images/upload/:productId" element={<ProductUploadImage />} />
-                <Route path="delete/:categoryId/:productId" element={<ProductDelete />} />
+                <Route
+                  path="edit/:categoryId/:productId"
+                  element={<ProductEdit />}
+                />
+                <Route
+                  path="edit/images/:productId"
+                  element={<ProductImages />}
+                />
+                <Route
+                  path="edit/images/upload/:productId"
+                  element={<ProductUploadImage />}
+                />
+                <Route
+                  path="delete/:categoryId/:productId"
+                  element={<ProductDelete />}
+                />
               </Route>
               {/* Units */}
               <Route path="units">
@@ -139,8 +166,14 @@ export const App = () => {
                 <Route path=":countryId" element={<States />} />
                 <Route path="edit" element={<StateEdit />} />
                 <Route path="edit/:countryId" element={<StateEdit />} />
-                <Route path="edit/:countryId/:stateId" element={<StateEdit />} />
-                <Route path="delete/:countryId/:stateId" element={<StateDelete />} />
+                <Route
+                  path="edit/:countryId/:stateId"
+                  element={<StateEdit />}
+                />
+                <Route
+                  path="delete/:countryId/:stateId"
+                  element={<StateDelete />}
+                />
               </Route>
               <Route path="cities">
                 <Route index element={<Cities />} />
@@ -148,7 +181,10 @@ export const App = () => {
                 <Route path="edit" element={<CityEdit />} />
                 <Route path="edit/:stateId" element={<CityEdit />} />
                 <Route path="edit/:stateId/:cityId" element={<CityEdit />} />
-                <Route path="delete/:stateId/:cityId" element={<CityDelete />} />
+                <Route
+                  path="delete/:stateId/:cityId"
+                  element={<CityDelete />}
+                />
               </Route>
               <Route path="users">
                 <Route index element={<Users />} />
@@ -163,7 +199,6 @@ export const App = () => {
                 <Route path="delete/:roleId" element={<RoleDelete />} />
               </Route>
             </Route>
-            
           </Route>
         </Route>
       </Routes>

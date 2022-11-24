@@ -13,7 +13,6 @@ namespace data.Dtos
     public class CartRes
     {
         public int CartId { get; set; }
-        public string? Name { get; set; }
         public decimal BaseSubTotal { get; set; }
 
         // Child tables

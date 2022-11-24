@@ -25,9 +25,13 @@ import { CategoryApi } from "../../api/categoryApi";
 import ErrorDetails from "../../dtos/ErrorDetails";
 import { ErrorAlert } from "../../alertboxes/Alerts";
 import ProductsNavbar from "../../layout/products-navbar";
+import UnitSearchBox from "../../searchboxes/UnitSearchBox";
+import { UnitRes } from "../../dtos/Unit";
+import { UnitApi } from "../../api/unitApi";
 
 const ProductEdit = () => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryRes>();
+  const [selectedUnit, setSelectedUnit] = useState<UnitRes>();
   const params = useParams();
   const categoryId = Number.parseInt(params.categoryId || "0");
   const productId = Number.parseInt(params.productId || "0");
@@ -48,6 +52,16 @@ const ProductEdit = () => {
   useEffect(() => {
     loadCategory(categoryId);
   }, [categoryId]);
+
+  useEffect(() => {
+    loadUnit(productDto.unitId);
+  }, [productDto.unitId]);
+
+  const loadUnit = (id?: number) => {
+    UnitApi.get(id).then(res => {
+      setSelectedUnit(res);
+    })
+  }
 
   const loadCategory = (id?:number) => {
     // console.log("load country " + cid)
@@ -72,6 +86,7 @@ const ProductEdit = () => {
     description: Yup.string(),
     position: Yup.number(),
     quantity: Yup.number().min(0),
+    unitId: Yup.number().required().min(1, "Please select unit"),
     rate: Yup.number().min(0),
     categoryId: Yup.number().required().min(1, "Please select category"),
   });
@@ -154,6 +169,18 @@ const ProductEdit = () => {
                 <FormLabel htmlFor="quantity">Quantity</FormLabel>
                 <Field as={Input} id="quantity" name="quantity" type="text" />
                 <FormErrorMessage>{errors.quantity}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.unitId && touched.unitId}>
+                <FormLabel htmlFor="unitId">Unit Id</FormLabel>
+                <Field as={Input} id="unitId" name="unitId" type="hidden" />
+                <UnitSearchBox
+                  selectedUnit={selectedUnit}
+                  handleChange={(newValue?: UnitRes) => {
+                    setSelectedUnit(newValue);
+                    setFieldValue("unitId", newValue?.unitId);
+                  }}
+                />
+                <FormErrorMessage>{errors.unitId}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!errors.rate && touched.rate}>
                 <FormLabel htmlFor="rate">Rate</FormLabel>

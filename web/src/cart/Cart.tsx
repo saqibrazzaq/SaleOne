@@ -20,35 +20,32 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { Link as RouteLink, useParams } from "react-router-dom";
-import { RoleRes } from "../../dtos/Role";
-import { RoleApi } from "../../api/roleApi";
+import { CartRes } from "../dtos/Cart";
+import { CartApi } from "../api/cartApi";
+import UpdateIconButton from "../components/UpdateIconButton";
+import DeleteIconButton from "../components/DeleteIconButton";
 
-const RolesList = () => {
-  const [roles, setRoles] = useState<RoleRes[]>();
-  const [searchText, setSearchText] = useState<string>("");
-
+const Cart = () => {
+  const [cart, setCart] = useState<CartRes>();
+  
   useEffect(() => {
-    loadRoles();
+    loadCart();
   }, []);
 
-  const loadRoles = () => {
-    RoleApi.getAll().then((res) => {
-      setRoles(res);
-      // console.log(res);
+  const loadCart = () => {
+    CartApi.get().then((res) => {
+      setCart(res);
+      console.log(res);
     });
   };
 
   const showHeading = () => (
     <Flex>
       <Box>
-        <Heading fontSize={"xl"}>Roles</Heading>
+        <Heading fontSize={"xl"}>Cart</Heading>
       </Box>
       <Spacer />
-      <Box>
-        <Link ml={2} as={RouteLink} to={"/admin/roles/edit"}>
-          <Button colorScheme={"blue"}>Add Role</Button>
-        </Link>
-      </Box>
+      
     </Flex>
   );
 
@@ -57,27 +54,31 @@ const RolesList = () => {
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>Id</Th>
-            <Th>Name</Th>
+            <Th>Product</Th>
+            <Th>Quantity</Th>
+            <Th>Unit Price</Th>
+            <Th>Price</Th>
             <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
-          {roles?.map((item) => (
-            <Tr key={item.id}>
-              <Td>{item.id}</Td>
-              <Td>{item.name}</Td>
+          {cart?.cartItems?.map((item) => (
+            <Tr key={item.cartItemId}>
+              <Td>{item.product?.name}</Td>
+              <Td>{item.quantity}</Td>
+              <Td>{item.rate}</Td>
+              <Td>{item.basePrice}</Td>
               <Td>
-                {/* <Link
+                <Link
                   mr={2}
                   as={RouteLink}
-                  to={"/admin/roles/edit/" + item.id}
+                  to={"/admin/roles/edit/" + item.cartItemId}
                 >
                   <UpdateIconButton />
                 </Link>
-                <Link as={RouteLink} to={"/admin/roles/delete/" + item.id}>
+                <Link as={RouteLink} to={"/admin/roles/delete/" + item.cartItemId}>
                   <DeleteIconButton />
-                </Link> */}
+                </Link>
               </Td>
             </Tr>
           ))}
@@ -97,4 +98,4 @@ const RolesList = () => {
   );
 }
 
-export default RolesList
+export default Cart

@@ -5,12 +5,16 @@ import {
   Container,
   Flex,
   Heading,
+  HStack,
+  IconButton,
   Image,
   Input,
   Link,
   Spacer,
   Stack,
   Text,
+  Tooltip,
+  useToast,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
@@ -20,12 +24,16 @@ import { ProductReqSearch, ProductRes, StockStatus } from "../dtos/Product";
 import PagedRes from "../dtos/PagedRes";
 import { ProductApi } from "../api/productApi";
 import { NumericFormat } from "react-number-format";
+import { FaShoppingBag } from "react-icons/fa";
+import { CartApi } from "../api/cartApi";
+import { CartItemReqAddToCart } from "../dtos/CartItem";
 
 const ProductList = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<ProductRes>>();
   const [searchText, setSearchText] = useState<string>("");
   const params = useParams();
   const categoryCode = params.categoryCode;
+  const toast = useToast();
 
   useEffect(() => {
     searchProducts(new ProductReqSearch({}, {}));
@@ -80,6 +88,25 @@ const ProductList = () => {
     </Flex>
   );
 
+  const addToCart = (product?: ProductRes) => {
+    // console.log("Add to cart. product: " + productId + ". Quantity: " + quantity);
+    CartApi.addToCart(new CartItemReqAddToCart(product?.productId, 1)).then(res => {
+      toast({
+        title: "Success",
+        description: product?.name + " added to cart successfully.",
+        status: "success",
+        position: "top-right",
+      });
+    }).catch(error => {
+      toast({
+        title: "Product was not added to cart",
+        description: error.response.data.Message,
+        status: "error",
+        position: "top-right",
+      });
+    });
+  }
+
   const showProducts = () => (
     <Stack>
       <Center>
@@ -93,17 +120,31 @@ const ProductList = () => {
                       borderRadius="lg"
                       boxSize={"150px"}
                       src={product.productImages?.at(0)?.imageUrl}
-                      
                     />
                     <Text>{product.name}</Text>
-                    <Text fontSize={"lg"}>
-                      <NumericFormat
-                        value={product.rate}
-                        prefix="Rs. "
-                        thousandSeparator=","
-                        displayType="text"
+                    <Center border={"0px"} width="100%">
+                    <HStack >
+                      <Text fontSize={"lg"}>
+                        <NumericFormat
+                          value={product.rate}
+                          prefix="Rs. "
+                          thousandSeparator=","
+                          displayType="text"
+                        />
+                      </Text>
+                      <Tooltip label="Add to Cart">
+                      <IconButton
+                        variant="outline"
+                        size="sm"
+                        colorScheme={"blue"}
+                        fontSize="18px"
+                        icon={<FaShoppingBag />}
+                        aria-label="Add to Cart"
+                        onClick={() => addToCart(product)}
                       />
-                    </Text>
+                      </Tooltip>
+                    </HStack>
+                    </Center>
                   </Stack>
                 </Box>
               </Center>

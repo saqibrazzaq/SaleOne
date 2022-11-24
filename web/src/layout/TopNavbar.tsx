@@ -21,6 +21,7 @@ import {
   MenuItem,
   MenuDivider,
   Image,
+  HStack,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -36,6 +37,9 @@ import { CategoryRes } from "../dtos/Category";
 import { AuthApi } from "../api/authApi";
 import TokenService from "../api/token.service";
 import { AuthenticationResponseDto, Roles } from "../dtos/Auth";
+import { FiShoppingCart } from "react-icons/fi";
+import { NumericFormat } from "react-number-format";
+import { FaShoppingBag } from "react-icons/fa";
 
 interface NavItem {
   name: string;
@@ -133,6 +137,17 @@ const TopNavbar = () => {
     <>
       <ColorModeSwitcher justifySelf="flex-end" />
     </>
+  );
+
+  const showCartMenu = () => (
+    <Link mr={2} as={RouteLink} to={"/cart"}>
+      <IconButton
+        variant="outline"
+        size={"md"}
+        icon={<FaShoppingBag />}
+        aria-label="Delete"
+      />
+    </Link>
   );
 
   const showSignInMenu = () => (
@@ -263,6 +278,7 @@ const TopNavbar = () => {
         >
           {colorSwitcherMenu()}
           {showSignInMenu()}
+          {showCartMenu()}
         </Stack>
       </Flex>
 

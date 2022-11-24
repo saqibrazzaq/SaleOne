@@ -36,10 +36,4 @@ namespace data.Dtos
         [Required, Range(0.01, double.MaxValue)]
         public decimal Quantity { get; set; }
     }
-
-    public class CartItemReqEdit
-    {
-        [Required, Range(0.01, double.MaxValue)]
-        public decimal Quantity { get; set; }
-    }
 }
