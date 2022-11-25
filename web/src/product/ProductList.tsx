@@ -95,14 +95,14 @@ const ProductList = () => {
         title: "Success",
         description: product?.name + " added to cart successfully.",
         status: "success",
-        position: "top-right",
+        position: "bottom-right",
       });
     }).catch(error => {
       toast({
         title: "Product was not added to cart",
         description: error.response.data.Message,
         status: "error",
-        position: "top-right",
+        position: "bottom-right",
       });
     });
   }

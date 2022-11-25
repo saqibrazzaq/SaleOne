@@ -8,11 +8,14 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
+  Center,
   Container,
   Flex,
   Heading,
   Input,
   Link,
+  Select,
+  SimpleGrid,
   Spacer,
   Stack,
   Table,
@@ -26,6 +29,9 @@ import {
   Tr,
   useDisclosure,
   useToast,
+  VStack,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { Link as RouteLink, useParams } from "react-router-dom";
 import { CartRes } from "../dtos/Cart";
@@ -34,7 +40,7 @@ import UpdateIconButton from "../components/UpdateIconButton";
 import RemoveIconButton from "../components/RemoveIconButton";
 import ErrorDetails from "../dtos/ErrorDetails";
 import { ProductRes } from "../dtos/Product";
-import { CartItemRes } from "../dtos/CartItem";
+import { CartItemReqAddToCart, CartItemRes } from "../dtos/CartItem";
 import { NumericFormat } from "react-number-format";
 
 const Cart = () => {
@@ -44,6 +50,7 @@ const Cart = () => {
   const toast = useToast();
   const [error, setError] = useState<ErrorDetails>();
   const [cartItemToRemove, setCartItemToRemove] = useState<CartItemRes>();
+  const arrQuantity = [1, 2, 3, 4];
 
   useEffect(() => {
     loadCart();
@@ -52,7 +59,7 @@ const Cart = () => {
   const loadCart = () => {
     CartApi.get().then((res) => {
       setCart(res);
-      console.log(res);
+      // console.log(res);
     });
   };
 
@@ -64,7 +71,7 @@ const Cart = () => {
           title: "Success",
           description: cartItemToRemove?.product?.name + " removed from cart.",
           status: "success",
-          position: "top-right",
+          position: "bottom-right",
         });
         //navigate("/admin/countries");
         loadCart();
@@ -74,66 +81,91 @@ const Cart = () => {
       });
   };
 
-  const showHeading = () => (
-    <Flex>
-      <Box>
-        <Heading fontSize={"xl"}>Cart</Heading>
-      </Box>
-      <Spacer />
-    </Flex>
-  );
+  const addToCart = (productId?: number, quantity?: number) => {
+    CartApi.addToCart(new CartItemReqAddToCart(productId, quantity)).then(res => {
+      loadCart();
+      toast({
+        title: "Success",
+        description: "Quantity updated successfully.",
+        status: "success",
+        position: "bottom-right",
+      });
+    }).catch(error => {
+      toast({
+        title: "Quantity was not updated",
+        description: error.response.data.Message,
+        status: "error",
+        position: "bottom-right",
+      });
+    });
+  }
 
-  const showRoles = () => (
-    <TableContainer>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Product</Th>
-            <Th>Quantity</Th>
-            <Th>Unit Price</Th>
-            <Th>Price</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {cart?.cartItems?.map((item) => (
-            <Tr key={item.cartItemId}>
-              <Td>{item.product?.name}</Td>
-              <Td>{item.quantity}</Td>
-              <Td><NumericFormat
-                          value={item?.rate}
-                          prefix="Rs. "
-                          thousandSeparator=","
-                          displayType="text"
-                        /></Td>
-              <Td><NumericFormat
-                          value={item?.basePrice}
-                          prefix="Rs. "
-                          thousandSeparator=","
-                          displayType="text"
-                        /></Td>
-              <Td>
-                <Link
-                  mr={2}
-                  as={RouteLink}
-                  to={"/admin/roles/edit/" + item.cartItemId}
-                >
-                  <UpdateIconButton />
-                </Link>
-                <Link
-                  onClick={() => {
-                    onOpen();
-                    setCartItemToRemove(item);
-                  }}
-                >
-                  <RemoveIconButton />
-                </Link>
-              </Td>
+  const showCartItems = () => (
+    <VStack>
+      <Heading fontSize={"3xl"}>Shopping Cart</Heading>
+      <TableContainer>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Product</Th>
+              <Th>Quantity</Th>
+              <Th>Unit Price</Th>
+              <Th>Price</Th>
+              <Th></Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+          </Thead>
+          <Tbody>
+            {cart?.cartItems?.map((item) => (
+              <Tr key={item.cartItemId}>
+                <Td>{item.product?.name}</Td>
+                <Td>
+                  <Select value={item.quantity} onChange={(e) => {
+                          // console.log("value: " + e.target.value);
+                          addToCart(item.productId, parseInt(e.target.value));
+                        }}>
+                    {arrQuantity.map((qtyOption) => (
+                      <option
+                        key={qtyOption}
+                        value={qtyOption}
+                        
+                      >
+                        {qtyOption}
+                      </option>
+                    ))}
+                  </Select>
+                </Td>
+                <Td>
+                  <NumericFormat
+                    value={item?.rate}
+                    prefix="Rs. "
+                    thousandSeparator=","
+                    displayType="text"
+                  />
+                </Td>
+                <Td>
+                  <NumericFormat
+                    value={item?.basePrice}
+                    prefix="Rs. "
+                    thousandSeparator=","
+                    displayType="text"
+                  />
+                </Td>
+                <Td>
+                  <Link
+                    onClick={() => {
+                      onOpen();
+                      setCartItemToRemove(item);
+                    }}
+                  >
+                    <RemoveIconButton />
+                  </Link>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </VStack>
   );
 
   const showAlertDialog = () => (
@@ -207,12 +239,40 @@ const Cart = () => {
     </AlertDialog>
   );
 
+  const showCartSummary = () => (
+    <Box boxShadow={"md"} mt={"4"} p={"4"}>
+      <VStack>
+        <Heading fontSize={"xl"}>Order Summary</Heading>
+        <TableContainer>
+          <Table variant="unstyled">
+            <Tbody>
+              <Tr>
+                <Th>Subtotal</Th>
+                <td>
+                  <NumericFormat
+                    value={cart?.baseSubTotal}
+                    prefix="Rs. "
+                    thousandSeparator=","
+                    displayType="text"
+                  />
+                </td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </VStack>
+    </Box>
+  );
+
   return (
     <Box width={"100%"} p={4}>
-      <Stack spacing={4} as={Container} maxW={"3xl"}>
-        {showHeading()}
-        {showRoles()}
-      </Stack>
+      <Center>
+        <Wrap spacing={4} maxW={"6xl"}>
+          <WrapItem>{showCartItems()}</WrapItem>
+          <WrapItem>{showCartSummary()}</WrapItem>
+        </Wrap>
+      </Center>
+
       {showAlertDialog()}
     </Box>
   );
