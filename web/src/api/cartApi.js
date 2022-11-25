@@ -30,12 +30,12 @@ export const CartApi = {
       signal: cancel ? cancelApiObject[this.updateItem.name].handleRequestCancellation().signal : undefined,
     })
   },
-  deleteItem: async function (cartItemId, cancel = false) {
+  removeFromCart: async function (productId, cancel = false) {
     const response = await api.request({
-      url: `/cart/` + cartItemId,
+      url: `/cart/` + productId,
       method: "DELETE",
       // retrieving the signal value by using the property name
-      signal: cancel ? cancelApiObject[this.deleteItem.name].handleRequestCancellation().signal : undefined,
+      signal: cancel ? cancelApiObject[this.removeFromCart.name].handleRequestCancellation().signal : undefined,
     })
 
     return response.data

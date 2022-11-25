@@ -36,9 +36,9 @@ namespace api.Controllers
         }
 
         [HttpDelete("{productId}")]
-        public IActionResult DeleteItem(int productId)
+        public IActionResult RemoveFromCart(int productId)
         {
-            var res = _cartService.DeleteItem(productId);
+            var res = _cartService.RemoveFromCart(productId);
             return Ok(res);
         }
     }

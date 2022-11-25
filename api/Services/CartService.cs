@@ -121,16 +121,18 @@ namespace api.Services
             return cart;
         }
 
-        public CartRes DeleteItem(int productId)
+        public CartRes RemoveFromCart(int productId)
         {
             var cart = FindCartIfExists(true);
-            var cartItem = cart.CartItems.Where(x => x.ProductId == productId)
+            var cartItem = cart.CartItems
+                .Where(x => x.ProductId == productId)
                 .FirstOrDefault();
             if (cartItem != null)
             {
                 cart.CartItems.Remove(cartItem);
                 cart = CalculateTotals(cart);
             }
+            _repositoryManager.Save();
 
             return _mapper.Map<CartRes>(cart);
         }

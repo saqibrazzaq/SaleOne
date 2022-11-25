@@ -7,6 +7,6 @@ namespace api.Services
         CartRes Get();
         CartRes AddToCart(CartItemReqAddToCart dto);
         //CartRes UpdateItem(int cartItemId, CartItemReqEdit dto);
-        CartRes DeleteItem(int productId);
+        CartRes RemoveFromCart(int productId);
     }
 }
