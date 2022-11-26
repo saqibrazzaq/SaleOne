@@ -10,7 +10,7 @@ const RemoveIconButton = () => {
         variant="outline"
         size="sm"
         fontSize="22px"
-        
+        colorScheme={"red"}
         icon={<BsCartX />}
         aria-label="Remove"
       />

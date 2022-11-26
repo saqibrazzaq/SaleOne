@@ -55,7 +55,8 @@ namespace api.Services
 
             entity.CartItems = _repositoryManager.CartItemRepository.FindByCondition(
                 x => x.CartId == entity.CartId, false,
-                include: i => i.Include(x => x.Product)
+                include: i => i.Include(x => x.Product.ProductImages
+                    .Where(x => x.IsMainImage == true))
                 ).ToList();
             if (entity.CartItems == null) entity.CartItems = new List<CartItem>();
 

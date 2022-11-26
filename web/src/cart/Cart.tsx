@@ -12,6 +12,7 @@ import {
   Container,
   Flex,
   Heading,
+  Image,
   Input,
   Link,
   Select,
@@ -59,7 +60,7 @@ const Cart = () => {
   const loadCart = () => {
     CartApi.get().then((res) => {
       setCart(res);
-      // console.log(res);
+      console.log(res);
     });
   };
 
@@ -107,6 +108,7 @@ const Cart = () => {
         <Table variant="simple">
           <Thead>
             <Tr>
+              <Th></Th>
               <Th>Product</Th>
               <Th>Quantity</Th>
               <Th>Unit Price</Th>
@@ -117,6 +119,13 @@ const Cart = () => {
           <Tbody>
             {cart?.cartItems?.map((item) => (
               <Tr key={item.cartItemId}>
+                <Td>
+                <Image
+                      borderRadius="lg"
+                      boxSize={"50px"}
+                      src={item.product?.productImages?.at(0)?.imageUrl}
+                    />
+                </Td>
                 <Td>{item.product?.name}</Td>
                 <Td>
                   <Select value={item.quantity} onChange={(e) => {
