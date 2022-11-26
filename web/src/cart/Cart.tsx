@@ -60,7 +60,7 @@ const Cart = () => {
   const loadCart = () => {
     CartApi.get().then((res) => {
       setCart(res);
-      console.log(res);
+      // console.log(res);
     });
   };
 
@@ -83,23 +83,25 @@ const Cart = () => {
   };
 
   const addToCart = (productId?: number, quantity?: number) => {
-    CartApi.addToCart(new CartItemReqAddToCart(productId, quantity)).then(res => {
-      loadCart();
-      toast({
-        title: "Success",
-        description: "Quantity updated successfully.",
-        status: "success",
-        position: "bottom-right",
+    CartApi.addToCart(new CartItemReqAddToCart(productId, quantity))
+      .then((res) => {
+        loadCart();
+        toast({
+          title: "Success",
+          description: "Quantity updated successfully.",
+          status: "success",
+          position: "bottom-right",
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: "Quantity was not updated",
+          description: error.response.data.Message,
+          status: "error",
+          position: "bottom-right",
+        });
       });
-    }).catch(error => {
-      toast({
-        title: "Quantity was not updated",
-        description: error.response.data.Message,
-        status: "error",
-        position: "bottom-right",
-      });
-    });
-  }
+  };
 
   const showCartItems = () => (
     <VStack>
@@ -120,24 +122,23 @@ const Cart = () => {
             {cart?.cartItems?.map((item) => (
               <Tr key={item.cartItemId}>
                 <Td>
-                <Image
-                      borderRadius="lg"
-                      boxSize={"50px"}
-                      src={item.product?.productImages?.at(0)?.imageUrl}
-                    />
+                  <Image
+                    borderRadius="lg"
+                    boxSize={"50px"}
+                    src={item.product?.productImages?.at(0)?.imageUrl}
+                  />
                 </Td>
                 <Td>{item.product?.name}</Td>
                 <Td>
-                  <Select value={item.quantity} onChange={(e) => {
-                          // console.log("value: " + e.target.value);
-                          addToCart(item.productId, parseInt(e.target.value));
-                        }}>
+                  <Select
+                    value={item.quantity}
+                    onChange={(e) => {
+                      // console.log("value: " + e.target.value);
+                      addToCart(item.productId, parseInt(e.target.value));
+                    }}
+                  >
                     {arrQuantity.map((qtyOption) => (
-                      <option
-                        key={qtyOption}
-                        value={qtyOption}
-                        
-                      >
+                      <option key={qtyOption} value={qtyOption}>
                         {qtyOption}
                       </option>
                     ))}
@@ -269,6 +270,9 @@ const Cart = () => {
             </Tbody>
           </Table>
         </TableContainer>
+        <Link as={RouteLink} to={"/checkout"} ml={3}>
+          <Button colorScheme={"blue"}>Proceed to Checkout</Button>
+        </Link>
       </VStack>
     </Box>
   );

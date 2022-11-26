@@ -60,7 +60,8 @@ const UserAddresses = () => {
         <Thead>
           <Tr>
             <Th>Name</Th>
-            <Th>City</Th>
+            <Th>Address</Th>
+            <Th>Default</Th>
             <Th></Th>
           </Tr>
         </Thead>
@@ -77,6 +78,9 @@ const UserAddresses = () => {
                 {item.address?.line2 ? <br /> : ''}
                 {item.address?.city?.name + ", " + item.address?.city?.state?.name + ", " +
                 item.address?.city?.state?.country?.name}
+              </Td>
+              <Td>
+                {item.isPrimary ? "Yes" : "No"}
               </Td>
               <Td>
                 <Link

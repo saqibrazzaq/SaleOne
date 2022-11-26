@@ -42,6 +42,7 @@ import Register from "./auth/Register";
 import ResetPassword from "./auth/ResetPassword";
 import UnAuthorized from "./auth/UnAuthorized";
 import Cart from "./cart/Cart";
+import Checkout from "./cart/Checkout";
 import { Roles } from "./dtos/Auth";
 import AccountLayout from "./layout/AccountLayout";
 import AdminLayout from "./layout/AdminLayout";
@@ -103,6 +104,9 @@ export const App = () => {
             </Route>
             <Route path="cart">
               <Route index element={<Cart />} />
+            </Route>
+            <Route path="checkout">
+              <Route index element={<Checkout />} />
             </Route>
           </Route>
 

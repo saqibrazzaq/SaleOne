@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Container,
   Flex,
   FormControl,
@@ -107,7 +108,7 @@ const UserAddressEdit = () => {
             <Stack spacing={4} as={Container} maxW={"3xl"}>
               <FormControl isInvalid={!!errors.isPrimary && touched.isPrimary}>
                 <FormLabel htmlFor="isPrimary">Is Primary</FormLabel>
-                <Field as={Input} id="isPrimary" name="isPrimary" type="text" />
+                <Field as={Checkbox} id="isPrimary" name="isPrimary" />
                 <FormErrorMessage>{errors.isPrimary}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!getIn(errors.address, "firstName") && getIn(touched.address, "firstName")}>
