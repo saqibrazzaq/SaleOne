@@ -84,6 +84,7 @@ namespace api.Extensions
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUnitService, UnitService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IPaymentMethodService, PaymentMethodService>();
 
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IStateService, StateService>();

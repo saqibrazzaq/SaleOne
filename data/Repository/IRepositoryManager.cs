@@ -20,6 +20,7 @@ namespace data.Repository
         IStateRepository StateRepository { get; }
         ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }
+        IPaymentMethodRepository PaymentMethodRepository { get; }
         void Save();
     }
 }

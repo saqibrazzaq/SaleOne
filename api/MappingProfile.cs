@@ -55,6 +55,10 @@ namespace api
             // Cart
             CreateMap<Cart, CartRes>();
             CreateMap<CartItem, CartItemRes>();
+
+            // Payment method
+            CreateMap<PaymentMethod, PaymentMethodRes>();
+            CreateMap<PaymentMethodReqEdit, PaymentMethod>();
         }
     }
 }

@@ -53,11 +53,25 @@ const Checkout = () => {
   const [userAddresses, setUserAddresses] = useState<UserAddressRes[]>();
   const [selectedShippingAddress, setSelectedShippingAddress] =
     useState<AddressRes>();
-  const [setBillingAddress, setSelectedBillingAddress] = useState<AddressRes>();
+  const [selecttedBillingAddress, setSelectedBillingAddress] =
+    useState<AddressRes>();
   const toast = useToast();
 
   useEffect(() => {
     getAllUserAddresses();
+  }, []);
+
+  useEffect(() => {
+    setSelectedBillingAddress(
+      userAddresses?.find((item) => item.isPrimary == true)?.address
+    );
+    setSelectedShippingAddress(
+      userAddresses?.find((item) => item.isPrimary == true)?.address
+    );
+  }, [userAddresses]);
+
+  useEffect(() => {
+    loadCart();
   }, []);
 
   const getAllUserAddresses = () => {
@@ -66,10 +80,6 @@ const Checkout = () => {
       //  console.log(res);
     });
   };
-
-  useEffect(() => {
-    loadCart();
-  }, []);
 
   const loadCart = () => {
     CartApi.get().then((res) => {
@@ -149,36 +159,37 @@ const Checkout = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        <Link as={RouteLink} to={"/placeorder"} ml={3}>
-          <Button colorScheme={"blue"}>Place Order</Button>
+        <Link as={RouteLink} to={"/payment"} ml={3}>
+          <Button colorScheme={"blue"}>Proceed to Payment</Button>
         </Link>
       </VStack>
     </Box>
   );
 
+  const showAddressBox = (address?: AddressRes) => (
+    <Box boxShadow={"md"} padding={4}>
+      {address?.firstName + " " + address?.lastName} <br />
+      {address?.phoneNumber}
+      <br />
+      {address?.line1}
+      <br />
+      {address?.line2}
+      {address?.line2 ? <br /> : ""}
+      {address?.city?.name +
+        ", " +
+        address?.city?.state?.name +
+        ", " +
+        address?.city?.state?.country?.name}
+    </Box>
+  );
+
   const showShippingAddresses = () => (
-    <Box>
+    <Box mt={6} >
       <VStack align={"start"}>
         <Heading fontSize={"md"}>Delivery Address</Heading>
-        <Box boxShadow={"md"} padding={4}>
-          {selectedShippingAddress?.firstName +
-            " " +
-            selectedShippingAddress?.lastName}{" "}
-          <br />
-          {selectedShippingAddress?.phoneNumber}
-          <br />
-          {selectedShippingAddress?.line1}
-          <br />
-          {selectedShippingAddress?.line2}
-          {selectedShippingAddress?.line2 ? <br /> : ""}
-          {selectedShippingAddress?.city?.name +
-            ", " +
-            selectedShippingAddress?.city?.state?.name +
-            ", " +
-            selectedShippingAddress?.city?.state?.country?.name}
-        </Box>
+        {showAddressBox(selectedShippingAddress)}
         <HStack>
-          <Text>Change: </Text>
+          {/* <Text>Change: </Text> */}
           <Select
             value={selectedShippingAddress?.addressId}
             onChange={(e) => {
@@ -194,10 +205,10 @@ const Checkout = () => {
             {userAddresses?.map((userAddress) => (
               <option key={userAddress.addressId} value={userAddress.addressId}>
                 {userAddress.address?.firstName + " "}
-                {userAddress.address?.lastName + " - "}
-                {userAddress.address?.phoneNumber + " - "}
+                {/* {userAddress.address?.lastName + " - "}
+                {userAddress.address?.phoneNumber + " - "} */}
                 {userAddress.address?.line1 + ". "}
-                {userAddress.address?.city?.name}
+                {/* {userAddress.address?.city?.name} */}
               </option>
             ))}
           </Select>
@@ -207,13 +218,14 @@ const Checkout = () => {
   );
 
   const showBillingAddresses = () => (
-    <Box>
+    <Box mt={6} >
       <VStack align={"start"}>
         <Heading fontSize={"md"}>Billing Address</Heading>
+        {showAddressBox(selecttedBillingAddress)}
         <HStack>
-          <Text>Change: </Text>
+          {/* <Text>Change: </Text> */}
           <Select
-            value={setBillingAddress?.addressId}
+            value={selecttedBillingAddress?.addressId}
             onChange={(e) => {
               setSelectedBillingAddress(
                 userAddresses?.find(
@@ -225,10 +237,10 @@ const Checkout = () => {
             {userAddresses?.map((userAddress) => (
               <option key={userAddress.addressId} value={userAddress.addressId}>
                 {userAddress.address?.firstName + " "}
-                {userAddress.address?.lastName + " - "}
-                {userAddress.address?.phoneNumber + " - "}
+                {/* {userAddress.address?.lastName + " - "}
+                {userAddress.address?.phoneNumber + " - "} */}
                 {userAddress.address?.line1 + ". "}
-                {userAddress.address?.city?.name}
+                {/* {userAddress.address?.city?.name} */}
               </option>
             ))}
           </Select>
@@ -239,10 +251,13 @@ const Checkout = () => {
 
   return (
     <Box width={"100%"} p={4}>
-      <Stack spacing={4} as={Container} maxW={"3xl"}>
-        {showShippingAddresses()}
-        {showBillingAddresses()}
-      </Stack>
+      <Stack spacing={4} as={Container} maxW={"3xl"}></Stack>
+      <Center>
+        <Wrap spacing={10} maxW={"3xl"}>
+          {showShippingAddresses()}
+          {showBillingAddresses()}
+        </Wrap>
+      </Center>
       <Center>
         <Wrap mt={6} spacing={4} maxW={"6xl"}>
           <WrapItem>{showCartItems()}</WrapItem>

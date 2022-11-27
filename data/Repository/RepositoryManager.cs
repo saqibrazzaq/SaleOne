@@ -21,6 +21,7 @@ namespace data.Repository
         private readonly Lazy<ICountryRepository> _countryRepository;
         private readonly Lazy<IUserRepository> _userRepository;
         private readonly Lazy<IUnitRepository> _unitRepository;
+        private readonly Lazy<IPaymentMethodRepository> _paymentMethodRepository;
         
         public RepositoryManager(AppDbContext context)
         {
@@ -50,6 +51,8 @@ namespace data.Repository
                 new CartRepository(context));
             _cartItemRepository = new Lazy<ICartItemRepository>(() =>
                 new CartItemRepository(context));
+            _paymentMethodRepository = new Lazy<IPaymentMethodRepository>(() =>
+                new PaymentMethodRepository(context));
         }
 
         public ICategoryRepository CategoryRepository => _categoryRepository.Value;
@@ -64,6 +67,7 @@ namespace data.Repository
         public IUnitRepository UnitRepository => _unitRepository.Value;
         public ICartRepository CartRepository => _cartRepository.Value;
         public ICartItemRepository CartItemRepository => _cartItemRepository.Value;
+        public IPaymentMethodRepository PaymentMethodRepository => _paymentMethodRepository.Value;
 
         public void Save()
         {
