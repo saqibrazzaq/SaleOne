@@ -12,6 +12,7 @@ import {
   Container,
   Flex,
   Heading,
+  HStack,
   Image,
   Input,
   Link,
@@ -45,10 +46,14 @@ import { CartItemReqAddToCart, CartItemRes } from "../dtos/CartItem";
 import { NumericFormat } from "react-number-format";
 import { UserAddressRes } from "../dtos/UserAddress";
 import { UserAddressApi } from "../api/userAddressApi";
+import { AddressRes } from "../dtos/Address";
 
 const Checkout = () => {
   const [cart, setCart] = useState<CartRes>();
   const [userAddresses, setUserAddresses] = useState<UserAddressRes[]>();
+  const [selectedShippingAddress, setSelectedShippingAddress] =
+    useState<AddressRes>();
+  const [setBillingAddress, setSelectedBillingAddress] = useState<AddressRes>();
   const toast = useToast();
 
   useEffect(() => {
@@ -155,17 +160,48 @@ const Checkout = () => {
     <Box>
       <VStack align={"start"}>
         <Heading fontSize={"md"}>Delivery Address</Heading>
-        <Select>
-          {userAddresses?.map((userAddress) => (
-            <option key={userAddress.userAddressId}>
-              {userAddress.address?.firstName + " "}
-              {userAddress.address?.lastName + " - "}
-              {userAddress.address?.phoneNumber + " - "}
-              {userAddress.address?.line1 + ". "}
-              {userAddress.address?.city?.name}
-            </option>
-          ))}
-        </Select>
+        <Box boxShadow={"md"} padding={4}>
+          {selectedShippingAddress?.firstName +
+            " " +
+            selectedShippingAddress?.lastName}{" "}
+          <br />
+          {selectedShippingAddress?.phoneNumber}
+          <br />
+          {selectedShippingAddress?.line1}
+          <br />
+          {selectedShippingAddress?.line2}
+          {selectedShippingAddress?.line2 ? <br /> : ""}
+          {selectedShippingAddress?.city?.name +
+            ", " +
+            selectedShippingAddress?.city?.state?.name +
+            ", " +
+            selectedShippingAddress?.city?.state?.country?.name}
+        </Box>
+        <HStack>
+          <Text>Change: </Text>
+          <Select
+            value={selectedShippingAddress?.addressId}
+            onChange={(e) => {
+              // console.log(e.target.value)
+              // console.log(userAddresses?.find(value => value.addressId == parseInt(e.target.value)))
+              setSelectedShippingAddress(
+                userAddresses?.find(
+                  (value) => value.addressId == parseInt(e.target.value)
+                )?.address
+              );
+            }}
+          >
+            {userAddresses?.map((userAddress) => (
+              <option key={userAddress.addressId} value={userAddress.addressId}>
+                {userAddress.address?.firstName + " "}
+                {userAddress.address?.lastName + " - "}
+                {userAddress.address?.phoneNumber + " - "}
+                {userAddress.address?.line1 + ". "}
+                {userAddress.address?.city?.name}
+              </option>
+            ))}
+          </Select>
+        </HStack>
       </VStack>
     </Box>
   );
@@ -174,17 +210,29 @@ const Checkout = () => {
     <Box>
       <VStack align={"start"}>
         <Heading fontSize={"md"}>Billing Address</Heading>
-        <Select>
-          {userAddresses?.map((userAddress) => (
-            <option key={userAddress.userAddressId}>
-              {userAddress.address?.firstName + " "}
-              {userAddress.address?.lastName + " - "}
-              {userAddress.address?.phoneNumber + " - "}
-              {userAddress.address?.line1 + ". "}
-              {userAddress.address?.city?.name}
-            </option>
-          ))}
-        </Select>
+        <HStack>
+          <Text>Change: </Text>
+          <Select
+            value={setBillingAddress?.addressId}
+            onChange={(e) => {
+              setSelectedBillingAddress(
+                userAddresses?.find(
+                  (value) => value.addressId == parseInt(e.target.value)
+                )?.address
+              );
+            }}
+          >
+            {userAddresses?.map((userAddress) => (
+              <option key={userAddress.addressId} value={userAddress.addressId}>
+                {userAddress.address?.firstName + " "}
+                {userAddress.address?.lastName + " - "}
+                {userAddress.address?.phoneNumber + " - "}
+                {userAddress.address?.line1 + ". "}
+                {userAddress.address?.city?.name}
+              </option>
+            ))}
+          </Select>
+        </HStack>
       </VStack>
     </Box>
   );

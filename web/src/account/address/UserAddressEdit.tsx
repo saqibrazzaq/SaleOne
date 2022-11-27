@@ -60,7 +60,7 @@ const UserAddressEdit = () => {
         title: "Success",
         description: "Address updated successfully.",
         status: "success",
-        position: "top-right",
+        position: "bottom-right",
       });
       navigate("/account/addresses")
     });
@@ -73,7 +73,7 @@ const UserAddressEdit = () => {
         title: "Success",
         description: "Address created successfully.",
         status: "success",
-        position: "top-right",
+        position: "bottom-right",
       });
       // navigate("/countries/edit/" + res.countryId)
       navigate("/account/addresses")
@@ -108,7 +108,7 @@ const UserAddressEdit = () => {
             <Stack spacing={4} as={Container} maxW={"3xl"}>
               <FormControl isInvalid={!!errors.isPrimary && touched.isPrimary}>
                 <FormLabel htmlFor="isPrimary">Is Primary</FormLabel>
-                <Field as={Checkbox} id="isPrimary" name="isPrimary" />
+                <Field type="checkbox" id="isPrimary" name="isPrimary"  />
                 <FormErrorMessage>{errors.isPrimary}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!getIn(errors.address, "firstName") && getIn(touched.address, "firstName")}>
