@@ -51,7 +51,7 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpDelete("paymentMethodId")]
+        [HttpDelete("{paymentMethodId}")]
         [Authorize(Roles = Constants.AllAdminRoles)]
         public IActionResult Delete(int paymentMethodId)
         {
