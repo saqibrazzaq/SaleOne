@@ -9,9 +9,6 @@ namespace data.Dtos.Auth
 {
     public class RegisterRequestDto
     {
-        [Required(ErrorMessage = "Username is required")]
-        [MaxLength(50, ErrorMessage = "Maximum 50 characters for Username")]
-        public string? Username { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [MaxLength(255, ErrorMessage = "Maximum 255 characters for Email")]
         [EmailAddress]

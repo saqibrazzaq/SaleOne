@@ -21,6 +21,9 @@ namespace data.Repository
         ICountryRepository CountryRepository { get; }
         IUserRepository UserRepository { get; }
         IPaymentMethodRepository PaymentMethodRepository { get; }
+        IOrderRepository OrderRepository { get; }
+        IOrderItemRepository OrderItemRepository { get; }
+        IOrderAddressRepository OrderAddressRepository { get; }
         void Save();
     }
 }

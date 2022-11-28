@@ -137,5 +137,13 @@ namespace api.Services
 
             return _mapper.Map<CartRes>(cart);
         }
+
+        public void EmptyCart(bool saveChanges)
+        {
+            var cart = FindCartIfExists(true);
+            _repositoryManager.CartRepository.Delete(cart);
+
+            if (saveChanges) _repositoryManager.Save();
+        }
     }
 }

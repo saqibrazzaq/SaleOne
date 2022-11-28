@@ -39,4 +39,10 @@ namespace data.Dtos
         [Required]
         public int CityId { get; set; }
     }
+
+    public enum AddressType
+    {
+        Billing,
+        Shipping
+    }
 }

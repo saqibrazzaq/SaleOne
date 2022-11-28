@@ -86,7 +86,7 @@ namespace api.Services
             // Create the user
             var userEntity = new AppIdentityUser
             {
-                UserName = dto.Username,
+                UserName = dto.Email,
                 Email = dto.Email,
             };
             var result = await _userManager.CreateAsync(userEntity, dto.Password);
@@ -127,8 +127,8 @@ namespace api.Services
             // Email and username must not already exist
             if ((await checkIfEmailAlreadyExists(dto.Email)) == true)
                 throw new BadRequestException($"Email {dto.Email} is already registered. Use Forgot password if you own this account.");
-            if ((await checkIfUsernameAlreadyTaken(dto.Username)) == true)
-                throw new BadRequestException($"Username {dto.Username} is already taken.");
+            if ((await checkIfUsernameAlreadyTaken(dto.Email)) == true)
+                throw new BadRequestException($"Username {dto.Email} is already taken.");
         }
 
         private async Task<bool> checkIfEmailAlreadyExists(string? email)

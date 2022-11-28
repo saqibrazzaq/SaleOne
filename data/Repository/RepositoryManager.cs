@@ -22,6 +22,9 @@ namespace data.Repository
         private readonly Lazy<IUserRepository> _userRepository;
         private readonly Lazy<IUnitRepository> _unitRepository;
         private readonly Lazy<IPaymentMethodRepository> _paymentMethodRepository;
+        private readonly Lazy<IOrderRepository> _orderRepository;
+        private readonly Lazy<IOrderItemRepository> _orderItemRepository;
+        private readonly Lazy<IOrderAddressRepository> _orderAddressRepository;
         
         public RepositoryManager(AppDbContext context)
         {
@@ -53,6 +56,12 @@ namespace data.Repository
                 new CartItemRepository(context));
             _paymentMethodRepository = new Lazy<IPaymentMethodRepository>(() =>
                 new PaymentMethodRepository(context));
+            _orderRepository = new Lazy<IOrderRepository>(() =>
+                new OrderRepository(context));
+            _orderItemRepository = new Lazy<IOrderItemRepository>(() =>
+                new OrderItemRepository(context));
+            _orderAddressRepository = new Lazy<IOrderAddressRepository>(() =>
+                new OrderAddressRepository(context));
         }
 
         public ICategoryRepository CategoryRepository => _categoryRepository.Value;
@@ -68,6 +77,9 @@ namespace data.Repository
         public ICartRepository CartRepository => _cartRepository.Value;
         public ICartItemRepository CartItemRepository => _cartItemRepository.Value;
         public IPaymentMethodRepository PaymentMethodRepository => _paymentMethodRepository.Value;
+        public IOrderRepository OrderRepository => _orderRepository.Value;
+        public IOrderItemRepository OrderItemRepository => _orderItemRepository.Value;
+        public IOrderAddressRepository OrderAddressRepository => _orderAddressRepository.Value;
 
         public void Save()
         {

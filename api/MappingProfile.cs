@@ -59,6 +59,18 @@ namespace api
             // Payment method
             CreateMap<PaymentMethod, PaymentMethodRes>();
             CreateMap<PaymentMethodReqEdit, PaymentMethod>();
+
+            // Order address
+            CreateMap<Address, OrderAddress>();
+
+            // Order
+            CreateMap<Order, OrderRes>();
+            CreateMap<OrderItem, OrderItemRes>();
+
+            // Cart item to order item
+            CreateMap<CartItemRes, OrderItem>();
+
+
         }
     }
 }

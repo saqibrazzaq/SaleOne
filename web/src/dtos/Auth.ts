@@ -19,13 +19,11 @@ export class UserLoginDto {
 }
 
 export class RegisterUserDto {
-  username?: string = "";
   email?: string = "";
   password?: string = "";
   confirmPassword?: string = "";
 
-  constructor(username?: string, email?:string, password?: string, confirmPassword?: string) {
-    this.username = username;
+  constructor(email?:string, password?: string, confirmPassword?: string) {
     this.email = email;
     this.password = password;
     this.confirmPassword = confirmPassword;

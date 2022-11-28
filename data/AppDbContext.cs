@@ -31,6 +31,9 @@ namespace data
         public DbSet<State>? States { get; set; }
         public DbSet<Country>? Countries { get; set; }
         public DbSet<PaymentMethod>? PaymentMethods { get; set; }
+        public DbSet<Order>? Orders { get; set; }
+        public DbSet<OrderItem>? OrderItems { get; set; }
+        public DbSet<OrderAddress>? OrderAddresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

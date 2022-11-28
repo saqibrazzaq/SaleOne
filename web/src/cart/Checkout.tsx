@@ -47,6 +47,8 @@ import { NumericFormat } from "react-number-format";
 import { UserAddressRes } from "../dtos/UserAddress";
 import { UserAddressApi } from "../api/userAddressApi";
 import { AddressRes } from "../dtos/Address";
+import { OrderApi } from "../api/orderApi";
+import { OrderReqEdit } from "../dtos/Order";
 
 const Checkout = () => {
   const [cart, setCart] = useState<CartRes>();
@@ -159,12 +161,24 @@ const Checkout = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        <Link as={RouteLink} to={"/payment"} ml={3}>
-          <Button colorScheme={"blue"}>Proceed to Payment</Button>
-        </Link>
+        <Button onClick={placeOrder} colorScheme={"blue"}>
+          Place Order
+        </Button>
       </VStack>
     </Box>
   );
+
+  const placeOrder = () => {
+    OrderApi.create(
+      new OrderReqEdit(
+        undefined,
+        selectedShippingAddress?.addressId,
+        selecttedBillingAddress?.addressId
+      )
+    ).then((res) => {
+      console.log(res);
+    });
+  };
 
   const showAddressBox = (address?: AddressRes) => (
     <Box boxShadow={"md"} padding={4}>
@@ -184,7 +198,7 @@ const Checkout = () => {
   );
 
   const showShippingAddresses = () => (
-    <Box mt={6} >
+    <Box mt={6}>
       <VStack align={"start"}>
         <Heading fontSize={"md"}>Delivery Address</Heading>
         {showAddressBox(selectedShippingAddress)}
@@ -218,7 +232,7 @@ const Checkout = () => {
   );
 
   const showBillingAddresses = () => (
-    <Box mt={6} >
+    <Box mt={6}>
       <VStack align={"start"}>
         <Heading fontSize={"md"}>Billing Address</Heading>
         {showAddressBox(selecttedBillingAddress)}

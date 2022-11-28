@@ -35,7 +35,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   const data = new RegisterUserDto(
-    "saqibrazzaq",
     "saqibrazzaq@gmail.com",
     "Saqib123!",
     "Saqib123!"
@@ -72,9 +71,6 @@ const Register = () => {
     email: Yup.string()
       .required("Email is required")
       .email("Invalid email address"),
-    username: Yup.string()
-      .required("Username is required.")
-      .max(50, "Maximum 50 characters."),
     password: Yup.string()
       .required("Password is required.")
       .min(6, "Minimum 6 characters required.")
@@ -102,11 +98,6 @@ const Register = () => {
       {({ handleSubmit, errors, touched }) => (
         <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
-            <FormControl isInvalid={!!errors.username && touched.username}>
-              <FormLabel htmlFor="username">Username</FormLabel>
-              <Field as={Input} id="username" name="username" type="text" />
-              <FormErrorMessage>{errors.username}</FormErrorMessage>
-            </FormControl>
             <FormControl isInvalid={!!errors.email && touched.email}>
               <FormLabel htmlFor="email">Email address</FormLabel>
               <Field as={Input} id="email" name="email" type="email" />
