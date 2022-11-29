@@ -115,7 +115,11 @@ namespace api.Services
 
         public ApiOkPagedResponse<IEnumerable<OrderRes>, MetaData> SearchOrders(OrderReqSearch dto)
         {
-            throw new NotImplementedException();
+            var pagedEntities = _repositoryManager.OrderRepository.
+                Search(dto, false);
+            var dtos = _mapper.Map<IEnumerable<OrderRes>>(pagedEntities);
+            return new ApiOkPagedResponse<IEnumerable<OrderRes>, MetaData>(dtos,
+                pagedEntities.MetaData);
         }
     }
 }

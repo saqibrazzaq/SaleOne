@@ -28,7 +28,7 @@ namespace data.Dtos
 
     public class OrderReqSearch : PagedRequestDto
     {
-        
+        public string? UserId { get; set; }
     }
 
     public class OrderReqEdit

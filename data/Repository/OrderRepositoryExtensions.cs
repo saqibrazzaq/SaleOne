@@ -21,10 +21,16 @@ namespace data.Repository
 
             if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)
             {
-                string searchText = searchParams.SearchText.ToLower();
+                //string searchText = searchParams.SearchText.ToLower();
+                //itemsToReturn = itemsToReturn.Where(
+                //    x => (x.UserId ?? "").Contains(searchParams.SearchText)
+                //);
+            }
+
+            if (string.IsNullOrWhiteSpace(searchParams.UserId) == false)
+            {
                 itemsToReturn = itemsToReturn.Where(
-                    x => (x.UserId ?? "").Contains(searchParams.SearchText)
-                );
+                    x => x.UserId == searchParams.UserId);
             }
 
             return itemsToReturn;

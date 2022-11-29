@@ -24,6 +24,17 @@ export const OrderApi = {
 
     return response.data
   },
+  myOrders: async function (searchParams, cancel = false) {
+    // console.log("my orders ")
+    const response = await api.request({
+      url: "/orders/myorders",
+      method: "GET",
+      params: searchParams,
+      signal: cancel ? cancelApiObject[this.myOrders.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   create: async function (order, cancel = false) {
     const response = await api.request({
       url: `/orders`,
