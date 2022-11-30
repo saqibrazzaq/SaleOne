@@ -8,11 +8,11 @@ namespace data.Entities
 {
     public enum OrderStatus
     {
-        Cancelled = 0,
         Pending = 1,
         Confirmed = 2,
         Shipping = 3,
         Delivered = 4,
+        Cancelled = 5,
         Complete = 10
     }
 }

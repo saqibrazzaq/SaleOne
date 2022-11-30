@@ -34,7 +34,7 @@ namespace data.Repository
                     x => x.UserId == searchParams.UserId);
             }
 
-            if (searchParams.Status != null)
+            if (searchParams.Status != 0)
             {
                 itemsToReturn = itemsToReturn.Where(
                     x => x.Status == searchParams.Status);

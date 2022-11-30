@@ -152,5 +152,25 @@ namespace api.Services
             return new ApiOkPagedResponse<IEnumerable<OrderRes>, MetaData>(dtos,
                 pagedEntities.MetaData);
         }
+
+        public OrderRes UpdateStatus(int orderId, OrderReqUpdateStatus dto)
+        {
+            ValidateStatus(dto.Status);
+            var entity = FindOrderIfExists(orderId, true);
+            entity.Status = dto.Status;
+            _repositoryManager.Save();
+            return _mapper.Map<OrderRes>(entity);
+        }
+
+        private void ValidateStatus(int status)
+        {
+            var found = false;
+            foreach(var st in Enum.GetValues<OrderStatus>())
+            {
+                if ((int)st == status) found = true;
+            }
+
+            if (found == false) throw new BadRequestException("Invalid status " + status);
+        }
     }
 }

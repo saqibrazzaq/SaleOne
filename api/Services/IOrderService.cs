@@ -14,6 +14,6 @@ namespace api.Services
         OrderRes GetOrder(int orderId);
         OrderItemRes GetOrderItem(int orderItemId);
         Task<OrderRes> CreateOrder(OrderReqEdit dto);
-        
+        OrderRes UpdateStatus(int orderId, OrderReqUpdateStatus dto);
     }
 }

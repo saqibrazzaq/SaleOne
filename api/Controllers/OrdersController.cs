@@ -54,5 +54,13 @@ namespace api.Controllers
             var res = await _orderService.CreateOrder(dto);
             return Ok(res);
         }
+
+        [HttpPut("update-status/{orderId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult UpdateStatus(int orderId, OrderReqUpdateStatus dto)
+        {
+            var res = _orderService.UpdateStatus(orderId, dto);
+            return Ok(res);
+        }
     }
 }

@@ -7,7 +7,7 @@ export interface OrderRes {
   userId?: string;
   baseSubTotal?: number;
   orderDate?: Date;
-  status?: number
+  status?: number;
   paymentMethodId?: number;
 
   user?: UserRes;
@@ -40,7 +40,7 @@ export class OrderReqSearch extends PagedReq {
       orderBy,
       searchText = "",
     }: PagedReq,
-    { userId = "", status = undefined }
+    { userId = "", status = 0 }
   ) {
     super({
       pageNumber: pageNumber,
@@ -49,15 +49,23 @@ export class OrderReqSearch extends PagedReq {
       searchText: searchText,
     });
     this.userId = userId;
-    this.status = status
+    this.status = status;
   }
 }
 
 export enum OrderStatus {
-  Cancelled = 0,
   Pending = 1,
   Confirmed = 2,
   Shipping = 3,
   Delivered = 4,
+  Cancelled = 5,
   Complete = 10,
+}
+
+export class OrderReqUpdateStatus {
+  status?: number = 0;
+
+  constructor(status?: number) {
+    this.status = status;
+  }
 }

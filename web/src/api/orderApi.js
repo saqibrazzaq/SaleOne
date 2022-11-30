@@ -45,7 +45,14 @@ export const OrderApi = {
 
     return response.data
   },
-  
+  updateStatus: async function (orderId, status, cancel = false) {
+    await api.request({
+      url: `/orders/update-status/` + orderId,
+      method: "PUT",
+      data: status,
+      signal: cancel ? cancelApiObject[this.updateStatus.name].handleRequestCancellation().signal : undefined,
+    })
+  },
 }
 
 // defining the cancel API object for ProductAPI

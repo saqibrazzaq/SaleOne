@@ -25,7 +25,7 @@ import { Link as RouteLink, useParams } from "react-router-dom";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import DeleteIconButton from "../../components/DeleteIconButton";
 import PagedRes from "../../dtos/PagedRes";
-import { OrderReqSearch, OrderRes, OrderStatus } from "../../dtos/Order";
+import { OrderReqSearch, OrderReqUpdateStatus, OrderRes, OrderStatus } from "../../dtos/Order";
 import { OrderApi } from "../../api/orderApi";
 import dateFormat, { masks } from "dateformat";
 import Common from "../../utility/Common";
@@ -34,7 +34,7 @@ import { NumericFormat } from "react-number-format";
 const Orders = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
   const [searchText, setSearchText] = useState<string>("");
-  const [orderStatus, setOrderStatus] = useState();
+  const [orderStatus, setOrderStatus] = useState<number>(0);
 
   useEffect(() => {
     searchOrders(new OrderReqSearch({}, {}));
@@ -55,7 +55,7 @@ const Orders = () => {
           pageNumber: previousPageNumber,
           searchText: searchText,
         },
-        {}
+        {status: orderStatus}
       );
 
       searchOrders(searchParams);
@@ -70,7 +70,7 @@ const Orders = () => {
           pageNumber: nextPageNumber,
           searchText: searchText,
         },
-        {}
+        {status: orderStatus}
       );
 
       searchOrders(searchParams);
@@ -91,6 +91,13 @@ const Orders = () => {
     </Flex>
   );
 
+  const updateStatus = (orderId?: number, status?: number) => {
+    console.log(orderId + " - " + status)
+    OrderApi.updateStatus(orderId, new OrderReqUpdateStatus(status)).then(res => {
+      searchOrders(new OrderReqSearch({ searchText: searchText }, {status: orderStatus}));
+    })
+  }
+
   const showOrders = () => (
     <TableContainer>
       <Table variant="simple">
@@ -110,7 +117,16 @@ const Orders = () => {
               <Td>{item.orderId}</Td>
               <Td>{item.user?.email}</Td>
               <Td>{dateFormat(item.orderDate, "isoDate")}</Td>
-              <Td>{OrderStatus[item.status || 0]}</Td>
+              <Td>
+                <Select value={item.status} onChange={(e) => {
+                  updateStatus(item.orderId, parseInt(e.target.value));
+                }}>
+                {Common.ORDER_STATUS.map(value => (
+                  <option key={value} value={value}>{OrderStatus[value]}</option>
+                ))}
+                </Select>
+                {OrderStatus[item.status || 0]}
+              </Td>
               <Td>
                 <Link
                   color={"blue"}
@@ -175,9 +191,9 @@ const Orders = () => {
         <Select onChange={(e) => {
           setOrderStatus(parseInt(e.target.value))
         }}>
-          <option>Any status</option>
+          <option key={0} value={0}>Any status</option>
           {Common.ORDER_STATUS.map(value => (
-            <option value={value}>{OrderStatus[value]}</option>
+            <option key={value} value={value}>{OrderStatus[value]}</option>
           ))}
         </Select>
       </Box>
@@ -198,7 +214,7 @@ const Orders = () => {
         <Button
           colorScheme={"blue"}
           onClick={() => {
-            searchOrders(new OrderReqSearch({ searchText: searchText }, {}));
+            searchOrders(new OrderReqSearch({ searchText: searchText }, {status: orderStatus}));
           }}
         >
           Search

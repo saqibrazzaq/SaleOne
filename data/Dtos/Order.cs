@@ -32,7 +32,7 @@ namespace data.Dtos
     public class OrderReqSearch : PagedRequestDto
     {
         public string? UserId { get; set; }
-        public int? Status { get; set; }
+        public int Status { get; set; } = 0;
     }
 
     public class OrderReqEdit
@@ -42,5 +42,11 @@ namespace data.Dtos
         public int AddressIdForShipping { get; set; }
         [Required]
         public int AddressIdForBilling { get; set; }
+    }
+
+    public class OrderReqUpdateStatus
+    {
+        [Required]
+        public int Status { get; set; }
     }
 }
