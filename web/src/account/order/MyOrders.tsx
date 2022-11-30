@@ -28,11 +28,11 @@ import { OrderReqSearch, OrderRes, OrderStatus } from "../../dtos/Order";
 import { OrderApi } from "../../api/orderApi";
 import dateFormat, { masks } from "dateformat";
 import Common from "../../utility/Common";
+import { NumericFormat } from "react-number-format";
 
 const MyOrders = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
   const [searchText, setSearchText] = useState<string>("");
-  
 
   useEffect(() => {
     searchMyOrders(new OrderReqSearch({}, {}));
@@ -106,10 +106,7 @@ const MyOrders = () => {
             <Tr key={item.orderId}>
               <Td>{item.orderId}</Td>
               <Td>{dateFormat(item.orderDate, "fullDate")}</Td>
-              <Td>
-                {OrderStatus[item.status || 0]}
-                
-              </Td>
+              <Td>{OrderStatus[item.status || 0]}</Td>
               <Td>
                 <Link
                   color={"blue"}
@@ -117,7 +114,12 @@ const MyOrders = () => {
                   as={RouteLink}
                   to={"/account/orders/" + item.orderId}
                 >
-                  {item.baseSubTotal}
+                  <NumericFormat
+                    value={item.baseSubTotal}
+                    prefix="Rs. "
+                    thousandSeparator=","
+                    displayType="text"
+                  />
                 </Link>
               </Td>
               <Td>

@@ -31,7 +31,7 @@ namespace api.Controllers
 
         [HttpGet("search-orders")]
         [Authorize(Roles = Constants.AllAdminRoles)]
-        public IActionResult Search(OrderReqSearch dto)
+        public IActionResult Search([FromQuery] OrderReqSearch dto)
         {
             var res = _orderService.SearchOrders(dto);
             return Ok(res);

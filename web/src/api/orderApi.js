@@ -16,7 +16,7 @@ export const OrderApi = {
   search: async function (searchParams, cancel = false) {
     // console.log("search countries ")
     const response = await api.request({
-      url: "/orders/search",
+      url: "/orders/search-orders",
       method: "GET",
       params: searchParams,
       signal: cancel ? cancelApiObject[this.search.name].handleRequestCancellation().signal : undefined,

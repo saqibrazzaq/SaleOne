@@ -35,7 +35,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { Link as RouteLink, useParams } from "react-router-dom";
+import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
 import { CartRes } from "../dtos/Cart";
 import { CartApi } from "../api/cartApi";
 import UpdateIconButton from "../components/UpdateIconButton";
@@ -58,6 +58,7 @@ const Checkout = () => {
   const [selecttedBillingAddress, setSelectedBillingAddress] =
     useState<AddressRes>();
   const toast = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllUserAddresses();
@@ -176,7 +177,8 @@ const Checkout = () => {
         selecttedBillingAddress?.addressId
       )
     ).then((res) => {
-      console.log(res);
+      // console.log(res);
+      navigate("/account/orders")
     });
   };
 

@@ -66,6 +66,7 @@ namespace api
             // Order
             CreateMap<Order, OrderRes>();
             CreateMap<OrderItem, OrderItemRes>();
+            CreateMap<OrderAddress, OrderAddressRes>();
 
             // Cart item to order item
             CreateMap<CartItemRes, OrderItem>();

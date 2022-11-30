@@ -5,6 +5,7 @@ using data.Entities;
 using data.Migrations;
 using data.Repository;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
 {
@@ -100,17 +101,47 @@ namespace api.Services
 
         public OrderRes GetOrder(int orderId)
         {
-            throw new NotImplementedException();
+            var entity = FindOrderIfExists(orderId, false);
+            var dto = _mapper.Map<OrderRes>(entity);
+            return dto;
+        }
+
+        private Order FindOrderIfExists(int orderId, bool trackChanges)
+        {
+            var entity = _repositoryManager.OrderRepository.FindByCondition(
+                x => x.OrderId == orderId, trackChanges,
+                include: i => i.Include(x => x.User))
+                .FirstOrDefault();
+            if (entity == null) throw new NotFoundException("No order found with id " + orderId);
+
+            return entity;
         }
 
         public OrderItemRes GetOrderItem(int orderItemId)
         {
-            throw new NotImplementedException();
+            var entity = FindOrderItemIfExists(orderItemId, false);
+            var dto = _mapper.Map<OrderItemRes>(entity);
+            return dto;
         }
 
-        public ApiOkPagedResponse<IEnumerable<OrderItemRes>, MetaData> SearchOrderItems(OrderItemReqSearch dto)
+        private OrderItem FindOrderItemIfExists(int orderItemId, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var entity = _repositoryManager.OrderItemRepository.FindByCondition(
+                x => x.OrderItemId == orderItemId, trackChanges)
+                .FirstOrDefault();
+            if (entity == null) throw new NotFoundException("No order item found with id " + orderItemId);
+
+            return entity;
+        }
+
+        public ApiOkPagedResponse<IEnumerable<OrderItemRes>, MetaData> SearchOrderItems(
+            OrderItemReqSearch dto)
+        {
+            var pagedEntities = _repositoryManager.OrderItemRepository.
+                Search(dto, false);
+            var dtos = _mapper.Map<IEnumerable<OrderItemRes>>(pagedEntities);
+            return new ApiOkPagedResponse<IEnumerable<OrderItemRes>, MetaData>(dtos,
+                pagedEntities.MetaData);
         }
 
         public ApiOkPagedResponse<IEnumerable<OrderRes>, MetaData> SearchOrders(OrderReqSearch dto)

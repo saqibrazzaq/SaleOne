@@ -1,13 +1,16 @@
 import Common from "../utility/Common";
 import { PagedReq } from "./PagedReq";
+import { UserRes } from "./User";
 
 export interface OrderRes {
   orderId?: number;
-  username?: string;
+  userId?: string;
   baseSubTotal?: number;
   orderDate?: Date;
   status?: number
   paymentMethodId?: number;
+
+  user?: UserRes;
 }
 
 export class OrderReqEdit {
@@ -28,6 +31,7 @@ export class OrderReqEdit {
 
 export class OrderReqSearch extends PagedReq {
   userId?: string;
+  status?: number;
 
   constructor(
     {
@@ -36,7 +40,7 @@ export class OrderReqSearch extends PagedReq {
       orderBy,
       searchText = "",
     }: PagedReq,
-    { userId = "" }
+    { userId = "", status = undefined }
   ) {
     super({
       pageNumber: pageNumber,
@@ -45,6 +49,7 @@ export class OrderReqSearch extends PagedReq {
       searchText: searchText,
     });
     this.userId = userId;
+    this.status = status
   }
 }
 

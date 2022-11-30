@@ -14,23 +14,25 @@ namespace data.Dtos
     public class OrderRes
     {
         public int OrderId { get; set; }
-        public string? Username { get; set; }
+        public string? UserId { get; set; }
+        public UserRes? User { get; set; }
         public decimal BaseSubTotal { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         public int PaymentMethodId { get; set; }
-        public PaymentMethod? PaymentMethod { get; set; }
+        public PaymentMethodRes? PaymentMethod { get; set; }
 
         public int Status { get; set; }
 
         // Child tables
-        public IEnumerable<OrderAddress>? Addresses { get; set; }
-        public ICollection<OrderItem>? OrderItems { get; set; }
+        public IEnumerable<OrderAddressRes>? Addresses { get; set; }
+        public ICollection<OrderItemRes>? OrderItems { get; set; }
     }
 
     public class OrderReqSearch : PagedRequestDto
     {
         public string? UserId { get; set; }
+        public int? Status { get; set; }
     }
 
     public class OrderReqEdit

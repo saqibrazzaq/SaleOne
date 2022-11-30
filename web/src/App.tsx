@@ -18,6 +18,7 @@ import Countries from "./admin/country/Countries";
 import CountryDelete from "./admin/country/CountryDelete";
 import CountryEdit from "./admin/country/CountryEdit";
 import Home from "./admin/Home";
+import Orders from "./admin/order/Orders";
 import PaymentMethodDelete from "./admin/paymentMethod/PaymentMethodDelete";
 import PaymentMethodEdit from "./admin/paymentMethod/PaymentMethodEdit";
 import PaymentMethods from "./admin/paymentMethod/PaymentMethods";
@@ -128,6 +129,10 @@ export const App = () => {
           >
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<Home />} />
+              {/* Orders */}
+              <Route path="orders">
+                <Route index element={<Orders />} />
+              </Route>
               {/* Payment methods */}
               <Route path="payment-methods">
                 <Route index element={<PaymentMethods />} />

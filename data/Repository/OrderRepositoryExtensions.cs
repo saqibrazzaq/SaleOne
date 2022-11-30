@@ -1,6 +1,7 @@
 ﻿using data.Dtos;
 using data.Entities;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace data.Repository
             OrderReqSearch searchParams)
         {
             var itemsToReturn = items
-                //.Include(x => x.States)
+                .Include(x => x.User)
                 .AsQueryable();
 
             if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)
@@ -31,6 +32,12 @@ namespace data.Repository
             {
                 itemsToReturn = itemsToReturn.Where(
                     x => x.UserId == searchParams.UserId);
+            }
+
+            if (searchParams.Status != null)
+            {
+                itemsToReturn = itemsToReturn.Where(
+                    x => x.Status == searchParams.Status);
             }
 
             return itemsToReturn;
