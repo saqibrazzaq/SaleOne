@@ -7,6 +7,7 @@ import {
   Heading,
   Input,
   Link,
+  Select,
   Spacer,
   Stack,
   Table,
@@ -23,16 +24,18 @@ import { Link as RouteLink, useParams } from "react-router-dom";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import DeleteIconButton from "../../components/DeleteIconButton";
 import PagedRes from "../../dtos/PagedRes";
-import { OrderReqSearch, OrderRes } from "../../dtos/Order";
+import { OrderReqSearch, OrderRes, OrderStatus } from "../../dtos/Order";
 import { OrderApi } from "../../api/orderApi";
 import dateFormat, { masks } from "dateformat";
+import Common from "../../utility/Common";
 
 const MyOrders = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
   const [searchText, setSearchText] = useState<string>("");
+  
 
   useEffect(() => {
-    searchMyOrders(new OrderReqSearch({},{}));
+    searchMyOrders(new OrderReqSearch({}, {}));
   }, []);
 
   const searchMyOrders = (searchParams: OrderReqSearch) => {
@@ -45,10 +48,13 @@ const MyOrders = () => {
   const previousPage = () => {
     if (pagedRes?.metaData) {
       let previousPageNumber = (pagedRes?.metaData?.currentPage || 2) - 1;
-      let searchParams = new OrderReqSearch({
-        pageNumber: previousPageNumber,
-        searchText: searchText,
-      },{});
+      let searchParams = new OrderReqSearch(
+        {
+          pageNumber: previousPageNumber,
+          searchText: searchText,
+        },
+        {}
+      );
 
       searchMyOrders(searchParams);
     }
@@ -57,10 +63,13 @@ const MyOrders = () => {
   const nextPage = () => {
     if (pagedRes?.metaData) {
       let nextPageNumber = (pagedRes?.metaData?.currentPage || 0) + 1;
-      let searchParams = new OrderReqSearch({
-        pageNumber: nextPageNumber,
-        searchText: searchText,
-      },{});
+      let searchParams = new OrderReqSearch(
+        {
+          pageNumber: nextPageNumber,
+          searchText: searchText,
+        },
+        {}
+      );
 
       searchMyOrders(searchParams);
     }
@@ -87,6 +96,7 @@ const MyOrders = () => {
           <Tr>
             <Th>Id</Th>
             <Th>Date</Th>
+            <Th>Status</Th>
             <Th>SubTotal</Th>
             <Th></Th>
           </Tr>
@@ -97,7 +107,16 @@ const MyOrders = () => {
               <Td>{item.orderId}</Td>
               <Td>{dateFormat(item.orderDate, "fullDate")}</Td>
               <Td>
-                <Link color={"blue"} mr={2} as={RouteLink} to={"/account/orders/" + item.orderId}>
+                {OrderStatus[item.status || 0]}
+                
+              </Td>
+              <Td>
+                <Link
+                  color={"blue"}
+                  mr={2}
+                  as={RouteLink}
+                  to={"/account/orders/" + item.orderId}
+                >
                   {item.baseSubTotal}
                 </Link>
               </Td>
@@ -152,7 +171,9 @@ const MyOrders = () => {
           onChange={(e) => setSearchText(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              searchMyOrders(new OrderReqSearch({ searchText: searchText },{}));
+              searchMyOrders(
+                new OrderReqSearch({ searchText: searchText }, {})
+              );
             }
           }}
         />
@@ -161,7 +182,7 @@ const MyOrders = () => {
         <Button
           colorScheme={"blue"}
           onClick={() => {
-            searchMyOrders(new OrderReqSearch({ searchText: searchText },{}));
+            searchMyOrders(new OrderReqSearch({ searchText: searchText }, {}));
           }}
         >
           Search
@@ -179,6 +200,6 @@ const MyOrders = () => {
       </Stack>
     </Box>
   );
-}
+};
 
-export default MyOrders
+export default MyOrders;

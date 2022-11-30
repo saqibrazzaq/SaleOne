@@ -6,6 +6,7 @@ export interface OrderRes {
   username?: string;
   baseSubTotal?: number;
   orderDate?: Date;
+  status?: number
   paymentMethodId?: number;
 }
 
@@ -45,4 +46,13 @@ export class OrderReqSearch extends PagedReq {
     });
     this.userId = userId;
   }
+}
+
+export enum OrderStatus {
+  Cancelled = 0,
+  Pending = 1,
+  Confirmed = 2,
+  Shipping = 3,
+  Delivered = 4,
+  Complete = 10,
 }

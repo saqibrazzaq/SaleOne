@@ -25,6 +25,8 @@ namespace data.Entities
         [ForeignKey("PaymentMethodId")]
         public PaymentMethod? PaymentMethod { get; set; }
 
+        public int Status { get; set; } = (int)OrderStatus.Pending;
+
         // Child tables
         public ICollection<OrderAddress>? Addresses { get; set; }
         public ICollection<OrderItem>? OrderItems { get; set; }

@@ -21,6 +21,8 @@ namespace data.Dtos
         public int PaymentMethodId { get; set; }
         public PaymentMethod? PaymentMethod { get; set; }
 
+        public int Status { get; set; }
+
         // Child tables
         public IEnumerable<OrderAddress>? Addresses { get; set; }
         public ICollection<OrderItem>? OrderItems { get; set; }
