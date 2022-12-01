@@ -5,6 +5,7 @@ import UserAddressDelete from "./account/address/UserAddressDelete";
 import UserAddressEdit from "./account/address/UserAddressEdit";
 import UserAddresses from "./account/address/UserAddresses";
 import MyOrders from "./account/order/MyOrders";
+import OrderView from "./account/order/OrderView";
 import ChangePassword from "./account/profile/ChangePassword";
 import EmailPin from "./account/verification/EmailPin";
 import EmailVerificationStatus from "./account/verification/EmailVerificationStatus";
@@ -108,7 +109,7 @@ export const App = () => {
               </Route>
               <Route path="orders">
                 <Route index element={<MyOrders />} />
-                
+                <Route path=":orderId" element={<OrderView />} />
               </Route>
             </Route>
             <Route path="cart">

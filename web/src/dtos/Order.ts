@@ -1,4 +1,5 @@
 import Common from "../utility/Common";
+import { CityRes } from "./City";
 import { PagedReq } from "./PagedReq";
 import { UserRes } from "./User";
 
@@ -11,6 +12,7 @@ export interface OrderRes {
   paymentMethodId?: number;
 
   user?: UserRes;
+  addresses?: OrderAddressRes[];
 }
 
 export class OrderReqEdit {
@@ -68,4 +70,19 @@ export class OrderReqUpdateStatus {
   constructor(status?: number) {
     this.status = status;
   }
+}
+
+export interface OrderAddressRes {
+  orderAddressId?: number;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  line1?: string;
+  line2?: string;
+
+  cityId?: number;
+  city?: CityRes;
+
+  isShippingAddress?: boolean;
+  isBillingAddress?: boolean;
 }

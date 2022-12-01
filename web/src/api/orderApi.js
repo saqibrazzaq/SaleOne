@@ -13,10 +13,21 @@ export const OrderApi = {
 
     return response.data
   },
+  getMyOrder: async function (orderId, cancel = false) {
+    if (!orderId) return {};
+    const response = await api.request({
+      url: `/orders/myorders/` + orderId,
+      method: "GET",
+      // retrieving the signal value by using the property name
+      signal: cancel ? cancelApiObject[this.getMyOrder.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   search: async function (searchParams, cancel = false) {
     // console.log("search countries ")
     const response = await api.request({
-      url: "/orders/search-orders",
+      url: "/orders/search",
       method: "GET",
       params: searchParams,
       signal: cancel ? cancelApiObject[this.search.name].handleRequestCancellation().signal : undefined,
@@ -31,6 +42,17 @@ export const OrderApi = {
       method: "GET",
       params: searchParams,
       signal: cancel ? cancelApiObject[this.myOrders.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
+  myOrderItems: async function (searchParams, cancel = false) {
+    // console.log("my orders ")
+    const response = await api.request({
+      url: "/orders/myorders/items-search",
+      method: "GET",
+      params: searchParams,
+      signal: cancel ? cancelApiObject[this.myOrderItems.name].handleRequestCancellation().signal : undefined,
     })
 
     return response.data

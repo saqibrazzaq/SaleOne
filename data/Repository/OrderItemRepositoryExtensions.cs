@@ -1,6 +1,7 @@
 ﻿using data.Dtos;
 using data.Entities;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace data.Repository
             OrderItemReqSearch searchParams)
         {
             var itemsToReturn = items
-                //.Include(x => x.States)
+                .Include(x => x.Product.ProductImages.Where(x => x.IsMainImage == true))
                 .Where(x => x.OrderId == searchParams.OrderId)
                 .AsQueryable();
 

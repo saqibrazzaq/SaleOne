@@ -9,9 +9,12 @@ namespace api.Services
             OrderReqSearch dto);
         ApiOkPagedResponse<IEnumerable<OrderItemRes>, MetaData>SearchOrderItems(
             OrderItemReqSearch dto);
+        Task<ApiOkPagedResponse<IEnumerable<OrderItemRes>, MetaData>> SearchMyOrderItems(
+            OrderItemReqSearch dto);
         int Count();
         int Count(string username);
-        OrderRes GetOrder(int orderId);
+        OrderRes Get(int orderId);
+        Task<OrderRes> GetMyOrder(int orderId);
         OrderItemRes GetOrderItem(int orderItemId);
         Task<OrderRes> CreateOrder(OrderReqEdit dto);
         OrderRes UpdateStatus(int orderId, OrderReqUpdateStatus dto);

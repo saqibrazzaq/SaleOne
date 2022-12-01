@@ -42,7 +42,6 @@ const Orders = () => {
 
   const searchOrders = () => {
     OrderApi.search(searchParams).then((res) => {
-      console.log(searchParams)
       setPagedRes(res);
       // console.log(res);
     });
@@ -110,7 +109,7 @@ const Orders = () => {
                   <option key={value} value={value}>{OrderStatus[value]}</option>
                 ))}
                 </Select>
-                {OrderStatus[item.status || 0]}
+                
               </Td>
               <Td>
                 <Link

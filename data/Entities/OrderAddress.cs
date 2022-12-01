@@ -31,5 +31,10 @@ namespace data.Entities
 
         public bool IsShippingAddress { get; set; } = false;
         public bool IsBillingAddress { get; set; } = false;
+
+        // Foreign keys
+        public int OrderId { get; set; }
+        [ForeignKey("OrderId")]
+        public Order? Order { get; set; }
     }
 }

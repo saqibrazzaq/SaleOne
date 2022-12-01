@@ -25,7 +25,7 @@ namespace data.Dtos
         public int Status { get; set; }
 
         // Child tables
-        public IEnumerable<OrderAddressRes>? Addresses { get; set; }
+        public IList<OrderAddressRes>? Addresses { get; set; }
         public ICollection<OrderItemRes>? OrderItems { get; set; }
     }
 

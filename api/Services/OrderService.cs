@@ -99,11 +99,44 @@ namespace api.Services
             return entity;
         }
 
-        public OrderRes GetOrder(int orderId)
+        public OrderRes Get(int orderId)
         {
             var entity = FindOrderIfExists(orderId, false);
             var dto = _mapper.Map<OrderRes>(entity);
             return dto;
+        }
+
+        public async Task<OrderRes> GetMyOrder(int orderId)
+        {
+            var entity = await FindMyOrderIfExists(orderId, false);
+            entity.Addresses.Add(GetOrderShippingAddress(orderId));
+            entity.Addresses.Add(GetOrderBillingAddress(orderId));
+            var dto = _mapper.Map<OrderRes>(entity);
+            return dto;
+        }
+
+        private OrderAddress GetOrderShippingAddress(int orderId)
+        {
+            var entity = _repositoryManager.OrderAddressRepository.FindByCondition(
+                x => x.OrderId == orderId && x.IsShippingAddress == true,
+                false,
+                include: i => i.Include(x => x.City.State.Country))
+                .FirstOrDefault();
+            if (entity == null) throw new NotFoundException("No shipping address found for id " + orderId);
+
+            return entity;
+        }
+
+        private OrderAddress GetOrderBillingAddress(int orderId)
+        {
+            var entity = _repositoryManager.OrderAddressRepository.FindByCondition(
+                x => x.OrderId == orderId && x.IsBillingAddress == true,
+                false,
+                include: i => i.Include(x => x.City.State.Country))
+                .FirstOrDefault();
+            if (entity == null) throw new NotFoundException("No billing address found for id " + orderId);
+
+            return entity;
         }
 
         private Order FindOrderIfExists(int orderId, bool trackChanges)
@@ -111,6 +144,22 @@ namespace api.Services
             var entity = _repositoryManager.OrderRepository.FindByCondition(
                 x => x.OrderId == orderId, trackChanges,
                 include: i => i.Include(x => x.User))
+                .FirstOrDefault();
+            if (entity == null) throw new NotFoundException("No order found with id " + orderId);
+
+            return entity;
+        }
+
+        private async Task<Order> FindMyOrderIfExists(int orderId, bool trackChanges)
+        {
+            var userId = (await _userService.GetLoggedInUser()).Id;
+            var entity = _repositoryManager.OrderRepository.FindByCondition(
+                x => x.OrderId == orderId && x.UserId == userId, 
+                trackChanges,
+                include: i => i
+                    .Include(x => x.User)
+                    .Include(x => x.Addresses)
+                    )
                 .FirstOrDefault();
             if (entity == null) throw new NotFoundException("No order found with id " + orderId);
 
@@ -144,6 +193,14 @@ namespace api.Services
                 pagedEntities.MetaData);
         }
 
+        public async Task<ApiOkPagedResponse<IEnumerable<OrderItemRes>, MetaData>> SearchMyOrderItems(
+            OrderItemReqSearch dto)
+        {
+            await FindMyOrderIfExists(dto.OrderId, false);
+
+            return SearchOrderItems(dto);
+        }
+
         public ApiOkPagedResponse<IEnumerable<OrderRes>, MetaData> SearchOrders(OrderReqSearch dto)
         {
             var pagedEntities = _repositoryManager.OrderRepository.
@@ -172,5 +229,7 @@ namespace api.Services
 
             if (found == false) throw new BadRequestException("Invalid status " + status);
         }
+
+        
     }
 }

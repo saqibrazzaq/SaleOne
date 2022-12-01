@@ -29,7 +29,7 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpGet("search-orders")]
+        [HttpGet("search")]
         [Authorize(Roles = Constants.AllAdminRoles)]
         public IActionResult Search([FromQuery] OrderReqSearch dto)
         {
@@ -43,6 +43,22 @@ namespace api.Controllers
         {
             dto.UserId = (await _userService.GetLoggedInUser()).Id;
             var res = _orderService.SearchOrders(dto);
+            return Ok(res);
+        }
+
+        [HttpGet("myorders/{orderId}")]
+        [Authorize(Roles = Constants.AllRoles)]
+        public async Task<IActionResult> GetMyOrder(int orderId)
+        {
+            var res = await _orderService.GetMyOrder(orderId);
+            return Ok(res);
+        }
+
+        [HttpGet("myorders/items-search")]
+        [Authorize(Roles = Constants.AllRoles)]
+        public async Task<IActionResult> MyOrderItems([FromQuery] OrderItemReqSearch dto)
+        {
+            var res = await _orderService.SearchMyOrderItems(dto);
             return Ok(res);
         }
 
