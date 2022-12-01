@@ -34,14 +34,15 @@ import { NumericFormat } from "react-number-format";
 const Orders = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
   const [searchText, setSearchText] = useState<string>("");
-  const [orderStatus, setOrderStatus] = useState<number>(0);
+  const [searchParams, setSearchParams] = useState<OrderReqSearch>(new OrderReqSearch({}, {}));
 
   useEffect(() => {
-    searchOrders(new OrderReqSearch({}, {}));
-  }, []);
+    searchOrders();
+  }, [searchParams]);
 
-  const searchOrders = (searchParams: OrderReqSearch) => {
+  const searchOrders = () => {
     OrderApi.search(searchParams).then((res) => {
+      console.log(searchParams)
       setPagedRes(res);
       // console.log(res);
     });
@@ -50,30 +51,14 @@ const Orders = () => {
   const previousPage = () => {
     if (pagedRes?.metaData) {
       let previousPageNumber = (pagedRes?.metaData?.currentPage || 2) - 1;
-      let searchParams = new OrderReqSearch(
-        {
-          pageNumber: previousPageNumber,
-          searchText: searchText,
-        },
-        {status: orderStatus}
-      );
-
-      searchOrders(searchParams);
+      setSearchParams({...searchParams, ...{pageNumber: previousPageNumber}});
     }
   };
 
   const nextPage = () => {
     if (pagedRes?.metaData) {
       let nextPageNumber = (pagedRes?.metaData?.currentPage || 0) + 1;
-      let searchParams = new OrderReqSearch(
-        {
-          pageNumber: nextPageNumber,
-          searchText: searchText,
-        },
-        {status: orderStatus}
-      );
-
-      searchOrders(searchParams);
+      setSearchParams({...searchParams, ...{pageNumber: nextPageNumber}});
     }
   };
 
@@ -94,7 +79,7 @@ const Orders = () => {
   const updateStatus = (orderId?: number, status?: number) => {
     console.log(orderId + " - " + status)
     OrderApi.updateStatus(orderId, new OrderReqUpdateStatus(status)).then(res => {
-      searchOrders(new OrderReqSearch({ searchText: searchText }, {status: orderStatus}));
+      searchOrders();
     })
   }
 
@@ -189,7 +174,8 @@ const Orders = () => {
       </Center>
       <Box flex={1} ml={4}>
         <Select onChange={(e) => {
-          setOrderStatus(parseInt(e.target.value))
+          //setOrderStatus(parseInt(e.target.value))
+          setSearchParams({...searchParams, ...{status: parseInt(e.target.value)}})
         }}>
           <option key={0} value={0}>Any status</option>
           {Common.ORDER_STATUS.map(value => (
@@ -205,7 +191,7 @@ const Orders = () => {
           onChange={(e) => setSearchText(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              searchOrders(new OrderReqSearch({ searchText: searchText }, {status: orderStatus}));
+              setSearchParams({...searchParams, ...{searchText: searchText}})
             }
           }}
         />
@@ -214,7 +200,7 @@ const Orders = () => {
         <Button
           colorScheme={"blue"}
           onClick={() => {
-            searchOrders(new OrderReqSearch({ searchText: searchText }, {status: orderStatus}));
+            setSearchParams({...searchParams, ...{searchText: searchText}})
           }}
         >
           Search
