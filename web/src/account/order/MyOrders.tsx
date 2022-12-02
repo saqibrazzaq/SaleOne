@@ -29,6 +29,7 @@ import { OrderApi } from "../../api/orderApi";
 import dateFormat, { masks } from "dateformat";
 import Common from "../../utility/Common";
 import { NumericFormat } from "react-number-format";
+import ViewIconButton from "../../components/ViewIconButton";
 
 const MyOrders = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
@@ -128,7 +129,7 @@ const MyOrders = () => {
                   as={RouteLink}
                   to={"/account/orders/" + item.orderId}
                 >
-                  <UpdateIconButton />
+                  <ViewIconButton />
                 </Link>
               </Td>
             </Tr>

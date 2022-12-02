@@ -41,7 +41,7 @@ import { OrderAddressRes, OrderRes, OrderStatus } from "../../dtos/Order";
 import { OrderItemReqSearch, OrderItemRes } from "../../dtos/OrderItem";
 import PagedRes from "../../dtos/PagedRes";
 
-const OrderView = () => {
+const OrderEdit = () => {
   const [order, setOrder] = useState<OrderRes>();
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderItemRes>>();
   const [searchText, setSearchText] = useState<string>("");
@@ -60,7 +60,7 @@ const OrderView = () => {
   }, [searchParams]);
 
   const searchOrderItems = () => {
-    OrderApi.myOrderItems(searchParams).then((res) => {
+    OrderApi.orderItems(searchParams).then((res) => {
       setPagedRes(res);
       //  console.log(res);
     });
@@ -150,7 +150,7 @@ const OrderView = () => {
   );
 
   const loadOrder = () => {
-    OrderApi.getMyOrder(orderId).then((res) => {
+    OrderApi.get(orderId).then((res) => {
       setOrder(res);
       // console.log(res);
     });
@@ -163,7 +163,7 @@ const OrderView = () => {
       </Box>
       <Spacer />
       <Box>
-        <Link ml={2} as={RouteLink} to={"/account/orders/"}>
+        <Link ml={2} as={RouteLink} to={"/admin/orders/"}>
           <Button type="button" colorScheme={"gray"}>
             Back
           </Button>
@@ -241,6 +241,6 @@ const OrderView = () => {
       </Stack>
     </Box>
   );
-};
+}
 
-export default OrderView;
+export default OrderEdit

@@ -25,7 +25,12 @@ import { Link as RouteLink, useParams } from "react-router-dom";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import DeleteIconButton from "../../components/DeleteIconButton";
 import PagedRes from "../../dtos/PagedRes";
-import { OrderReqSearch, OrderReqUpdateStatus, OrderRes, OrderStatus } from "../../dtos/Order";
+import {
+  OrderReqSearch,
+  OrderReqUpdateStatus,
+  OrderRes,
+  OrderStatus,
+} from "../../dtos/Order";
 import { OrderApi } from "../../api/orderApi";
 import dateFormat, { masks } from "dateformat";
 import Common from "../../utility/Common";
@@ -34,7 +39,9 @@ import { NumericFormat } from "react-number-format";
 const Orders = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
   const [searchText, setSearchText] = useState<string>("");
-  const [searchParams, setSearchParams] = useState<OrderReqSearch>(new OrderReqSearch({}, {}));
+  const [searchParams, setSearchParams] = useState<OrderReqSearch>(
+    new OrderReqSearch({}, {})
+  );
 
   useEffect(() => {
     searchOrders();
@@ -50,14 +57,17 @@ const Orders = () => {
   const previousPage = () => {
     if (pagedRes?.metaData) {
       let previousPageNumber = (pagedRes?.metaData?.currentPage || 2) - 1;
-      setSearchParams({...searchParams, ...{pageNumber: previousPageNumber}});
+      setSearchParams({
+        ...searchParams,
+        ...{ pageNumber: previousPageNumber },
+      });
     }
   };
 
   const nextPage = () => {
     if (pagedRes?.metaData) {
       let nextPageNumber = (pagedRes?.metaData?.currentPage || 0) + 1;
-      setSearchParams({...searchParams, ...{pageNumber: nextPageNumber}});
+      setSearchParams({ ...searchParams, ...{ pageNumber: nextPageNumber } });
     }
   };
 
@@ -76,11 +86,13 @@ const Orders = () => {
   );
 
   const updateStatus = (orderId?: number, status?: number) => {
-    console.log(orderId + " - " + status)
-    OrderApi.updateStatus(orderId, new OrderReqUpdateStatus(status)).then(res => {
-      searchOrders();
-    })
-  }
+    // console.log(orderId + " - " + status);
+    OrderApi.updateStatus(orderId, new OrderReqUpdateStatus(status)).then(
+      (res) => {
+        searchOrders();
+      }
+    );
+  };
 
   const showOrders = () => (
     <TableContainer>
@@ -102,14 +114,18 @@ const Orders = () => {
               <Td>{item.user?.email}</Td>
               <Td>{dateFormat(item.orderDate, "isoDate")}</Td>
               <Td>
-                <Select value={item.status} onChange={(e) => {
-                  updateStatus(item.orderId, parseInt(e.target.value));
-                }}>
-                {Common.ORDER_STATUS.map(value => (
-                  <option key={value} value={value}>{OrderStatus[value]}</option>
-                ))}
+                <Select
+                  value={item.status}
+                  onChange={(e) => {
+                    updateStatus(item.orderId, parseInt(e.target.value));
+                  }}
+                >
+                  {Common.ORDER_STATUS.map((value) => (
+                    <option key={value} value={value}>
+                      {OrderStatus[value]}
+                    </option>
+                  ))}
                 </Select>
-                
               </Td>
               <Td>
                 <Link
@@ -172,13 +188,22 @@ const Orders = () => {
         <Text>Select status:</Text>
       </Center>
       <Box flex={1} ml={4}>
-        <Select onChange={(e) => {
-          //setOrderStatus(parseInt(e.target.value))
-          setSearchParams({...searchParams, ...{status: parseInt(e.target.value)}})
-        }}>
-          <option key={0} value={0}>Any status</option>
-          {Common.ORDER_STATUS.map(value => (
-            <option key={value} value={value}>{OrderStatus[value]}</option>
+        <Select
+          onChange={(e) => {
+            //setOrderStatus(parseInt(e.target.value))
+            setSearchParams({
+              ...searchParams,
+              ...{ status: parseInt(e.target.value), pageNumber: 1 },
+            });
+          }}
+        >
+          <option key={0} value={0}>
+            Any status
+          </option>
+          {Common.ORDER_STATUS.map((value) => (
+            <option key={value} value={value}>
+              {OrderStatus[value]}
+            </option>
           ))}
         </Select>
       </Box>
@@ -190,7 +215,10 @@ const Orders = () => {
           onChange={(e) => setSearchText(e.currentTarget.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              setSearchParams({...searchParams, ...{searchText: searchText}})
+              setSearchParams({
+                ...searchParams,
+                ...{ searchText: searchText },
+              });
             }
           }}
         />
@@ -199,7 +227,7 @@ const Orders = () => {
         <Button
           colorScheme={"blue"}
           onClick={() => {
-            setSearchParams({...searchParams, ...{searchText: searchText}})
+            setSearchParams({ ...searchParams, ...{ searchText: searchText } });
           }}
         >
           Search

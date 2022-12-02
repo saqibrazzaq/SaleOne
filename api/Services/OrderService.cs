@@ -102,6 +102,8 @@ namespace api.Services
         public OrderRes Get(int orderId)
         {
             var entity = FindOrderIfExists(orderId, false);
+            entity.Addresses.Add(GetOrderShippingAddress(orderId));
+            entity.Addresses.Add(GetOrderBillingAddress(orderId));
             var dto = _mapper.Map<OrderRes>(entity);
             return dto;
         }
@@ -143,7 +145,10 @@ namespace api.Services
         {
             var entity = _repositoryManager.OrderRepository.FindByCondition(
                 x => x.OrderId == orderId, trackChanges,
-                include: i => i.Include(x => x.User))
+                include: i => i
+                    .Include(x => x.User)
+                    .Include(x => x.Addresses)
+                    )
                 .FirstOrDefault();
             if (entity == null) throw new NotFoundException("No order found with id " + orderId);
 

@@ -19,6 +19,7 @@ import Countries from "./admin/country/Countries";
 import CountryDelete from "./admin/country/CountryDelete";
 import CountryEdit from "./admin/country/CountryEdit";
 import Home from "./admin/Home";
+import OrderEdit from "./admin/order/OrderEdit";
 import Orders from "./admin/order/Orders";
 import PaymentMethodDelete from "./admin/paymentMethod/PaymentMethodDelete";
 import PaymentMethodEdit from "./admin/paymentMethod/PaymentMethodEdit";
@@ -133,6 +134,7 @@ export const App = () => {
               {/* Orders */}
               <Route path="orders">
                 <Route index element={<Orders />} />
+                <Route path=":orderId" element={<OrderEdit />} />
               </Route>
               {/* Payment methods */}
               <Route path="payment-methods">
