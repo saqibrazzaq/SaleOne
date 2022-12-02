@@ -18,5 +18,7 @@ namespace api.Services
         OrderItemRes GetOrderItem(int orderItemId);
         Task<OrderRes> CreateOrder(OrderReqEdit dto);
         OrderRes UpdateStatus(int orderId, OrderReqUpdateStatus dto);
+        OrderItemRes UpdateOrderItem(int orderItemId, OrderItemReqEdit dto);
+        void DeleteOrderItem(int orderItemId);
     }
 }

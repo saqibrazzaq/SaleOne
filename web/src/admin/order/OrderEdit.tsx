@@ -35,11 +35,13 @@ import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
 import { OrderApi } from "../../api/orderApi";
+import DeleteIconButton from "../../components/DeleteIconButton";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import { AddressRes } from "../../dtos/Address";
 import { OrderAddressRes, OrderRes, OrderStatus } from "../../dtos/Order";
 import { OrderItemReqSearch, OrderItemRes } from "../../dtos/OrderItem";
 import PagedRes from "../../dtos/PagedRes";
+import { UserAddressRes } from "../../dtos/UserAddress";
 
 const OrderEdit = () => {
   const [order, setOrder] = useState<OrderRes>();
@@ -51,6 +53,12 @@ const OrderEdit = () => {
     new OrderItemReqSearch({}, { orderId: orderId })
   );
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef<HTMLAnchorElement>(null);
+  const [selectedOrderItem, setSelectedOrderItem] = useState<OrderItemRes>();
+
+  const toast = useToast();
+
   useEffect(() => {
     loadOrder();
   }, [orderId]);
@@ -58,6 +66,22 @@ const OrderEdit = () => {
   useEffect(() => {
     searchOrderItems();
   }, [searchParams]);
+
+  const deleteOrderItem = () => {
+    onClose();
+    OrderApi.deleteOrderItem(selectedOrderItem?.orderItemId).then(res => {
+      toast({
+        title: "Success",
+        description: "Item deleted successfully.",
+        status: "success",
+        position: "bottom-right",
+      });
+      searchOrderItems();
+      loadOrder();
+    }).catch(error => {
+      //setError(error.response.data);
+    });
+  };
 
   const searchOrderItems = () => {
     OrderApi.orderItems(searchParams).then((res) => {
@@ -117,7 +141,21 @@ const OrderEdit = () => {
                   displayType="text"
                 />
               </Td>
-              <Td></Td>
+              <Td>
+                <Link>
+                  <UpdateIconButton />
+                </Link>
+                <Link
+                  ml={2}
+                  onClick={() => {
+                    console.log("Delete " + item.product?.name);
+                    setSelectedOrderItem(item);
+                    onOpen();
+                  }}
+                >
+                  <DeleteIconButton />
+                </Link>
+              </Td>
             </Tr>
           ))}
         </Tbody>
@@ -147,6 +185,70 @@ const OrderEdit = () => {
         </Tfoot>
       </Table>
     </TableContainer>
+  );
+
+  const showAlertDialog_Delete = () => (
+    <AlertDialog
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Delete Item
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            <Image
+              borderRadius="lg"
+              boxSize={"150px"}
+              src={selectedOrderItem?.product?.productImages?.at(0)?.imageUrl}
+            />
+          </AlertDialogBody>
+
+          <AlertDialogBody>
+            <Text fontSize={"xl"}>{selectedOrderItem?.product?.name}</Text>
+            <Text>
+              Rate:{" "}
+              <NumericFormat
+                value={selectedOrderItem?.rate}
+                prefix="Rs. "
+                thousandSeparator=","
+                displayType="text"
+              />
+            </Text>
+            <Text>Quantity: {selectedOrderItem?.quantity}</Text>
+            <Text>
+              Price:{" "}
+              <NumericFormat
+                value={selectedOrderItem?.basePrice}
+                prefix="Rs. "
+                thousandSeparator=","
+                displayType="text"
+              />
+            </Text>
+          </AlertDialogBody>
+
+          <AlertDialogBody>
+            Are you sure? You can't undo this action afterwards.
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Link ref={cancelRef} onClick={onClose}>
+              <Button type="button" colorScheme={"gray"}>
+                Cancel
+              </Button>
+            </Link>
+            <Link onClick={deleteOrderItem} ml={3}>
+              <Button type="submit" colorScheme={"red"}>
+                Delete Item
+              </Button>
+            </Link>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
   );
 
   const loadOrder = () => {
@@ -233,14 +335,15 @@ const OrderEdit = () => {
 
   return (
     <Box p={4}>
-      <Stack spacing={4} as={Container} maxW={"3xl"}>
+      <Stack spacing={4} as={Container} maxW={"6xl"}>
         {displayHeading()}
         {displayOrderSummary()}
         {showOrderItems()}
         {showAddressesInfo()}
       </Stack>
+      {showAlertDialog_Delete()}
     </Box>
   );
-}
+};
 
-export default OrderEdit
+export default OrderEdit;

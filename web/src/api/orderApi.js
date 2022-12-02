@@ -86,6 +86,16 @@ export const OrderApi = {
       signal: cancel ? cancelApiObject[this.updateStatus.name].handleRequestCancellation().signal : undefined,
     })
   },
+  deleteOrderItem: async function (orderItemId, cancel = false) {
+    const response = await api.request({
+      url: `/orders/delete-order-item/` + orderItemId,
+      method: "DELETE",
+      // retrieving the signal value by using the property name
+      signal: cancel ? cancelApiObject[this.deleteOrderItem.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
 }
 
 // defining the cancel API object for ProductAPI

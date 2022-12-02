@@ -94,5 +94,22 @@ namespace api.Controllers
             var res = _orderService.UpdateStatus(orderId, dto);
             return Ok(res);
         }
+
+        [HttpPut("update-order-item/{orderItemId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult UpdateOrderItem(int orderItemId, OrderItemReqEdit dto)
+        {
+            var res = _orderService.UpdateOrderItem(orderItemId, dto);
+            return Ok(res);
+        }
+
+        [HttpDelete("delete-order-item/{orderItemId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult DeleteOrderItem(int orderItemId)
+        {
+            _orderService.DeleteOrderItem(orderItemId);
+            return NoContent();
+        }
     }
 }

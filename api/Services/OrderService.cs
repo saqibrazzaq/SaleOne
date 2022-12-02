@@ -235,6 +235,28 @@ namespace api.Services
             if (found == false) throw new BadRequestException("Invalid status " + status);
         }
 
-        
+        public OrderItemRes UpdateOrderItem(int orderItemId, OrderItemReqEdit dto)
+        {
+            var orderItem = FindOrderItemIfExists(orderItemId, true);
+            var difference = orderItem.BasePrice - (dto.Rate * dto.Quantity);
+            UpdateOrderTotals(orderItem.OrderId, difference);
+            _mapper.Map(dto, orderItem);
+            _repositoryManager.Save();
+            return _mapper.Map<OrderItemRes>(orderItem);
+        }
+
+        private void UpdateOrderTotals(int orderId, decimal difference)
+        {
+            var order = FindOrderIfExists(orderId, true);
+            order.BaseSubTotal += difference;
+        }
+
+        public void DeleteOrderItem(int orderItemId)
+        {
+            var orderItem = FindOrderItemIfExists(orderItemId, true);
+            UpdateOrderTotals(orderItem.OrderId, orderItem.BasePrice * -1);
+            _repositoryManager.OrderItemRepository.Delete(orderItem);
+            _repositoryManager.Save();
+        }
     }
 }
