@@ -19,6 +19,7 @@ import {
   Image,
   Input,
   Link,
+  Select,
   Spacer,
   Stack,
   Table,
@@ -44,7 +45,7 @@ import { OrderApi } from "../../api/orderApi";
 import DeleteIconButton from "../../components/DeleteIconButton";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import { AddressRes } from "../../dtos/Address";
-import { OrderAddressRes, OrderRes, OrderStatus } from "../../dtos/Order";
+import { OrderAddressRes, OrderReqUpdateStatus, OrderRes, OrderStatus } from "../../dtos/Order";
 import {
   OrderItemReqEdit,
   OrderItemReqSearch,
@@ -55,6 +56,7 @@ import { UserAddressRes } from "../../dtos/UserAddress";
 import ProductSearchBox from "../../searchboxes/ProductSearchBox";
 import { ProductRes } from "../../dtos/Product";
 import { ProductApi } from "../../api/productApi";
+import Common from "../../utility/Common";
 
 const OrderEdit = () => {
   const [order, setOrder] = useState<OrderRes>();
@@ -396,12 +398,38 @@ const OrderEdit = () => {
     </Flex>
   );
 
+  const updateStatus = (orderId?: number, status?: number) => {
+    // console.log(orderId + " - " + status);
+    OrderApi.updateStatus(orderId, new OrderReqUpdateStatus(status)).then(
+      (res) => {
+        loadOrder();
+        toast({
+          title: "Success",
+          description: "Order status updated successfully.",
+          status: "success",
+          position: "bottom-right",
+        });
+      }
+    );
+  };
+
   const displayOrderSummary = () => (
     <Flex>
       <Box>
         <Text fontSize={"xl"}>
-          Order # {order?.orderId} - {OrderStatus[order?.status || 0]}
+          Order # {order?.orderId}
         </Text>
+      </Box>
+      <Box ml={6}>
+        <Select value={order?.status} onChange={(e) => {
+          updateStatus(order?.orderId, parseInt(e.target.value));
+        }}>
+          {Common.ORDER_STATUS.map((value) => (
+            <option key={value} value={value}>
+              {OrderStatus[value]}
+            </option>
+          ))}
+        </Select>
       </Box>
       <Spacer />
       <Box>
