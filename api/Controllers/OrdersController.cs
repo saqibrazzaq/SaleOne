@@ -103,6 +103,14 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpPut("update-payment-method/{orderId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult UpdatePaymentMethod(int orderId, OrderReqUpdatePaymentMethod dto)
+        {
+            var res = _orderService.UpdatePaymentMethod(orderId, dto);
+            return Ok(res);
+        }
+
         [HttpPost("add-order-item")]
         [Authorize(Roles = Constants.AllAdminRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]

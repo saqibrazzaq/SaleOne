@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Box,
   Button,
   Center,
@@ -14,22 +8,15 @@ import {
   Heading,
   HStack,
   Image,
-  Input,
-  Link,
   Select,
-  SimpleGrid,
-  Spacer,
   Stack,
   Table,
   TableContainer,
   Tbody,
   Td,
-  Text,
-  Tfoot,
   Th,
   Thead,
   Tr,
-  useDisclosure,
   useToast,
   VStack,
   Wrap,
@@ -38,11 +25,6 @@ import {
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
 import { CartRes } from "../dtos/Cart";
 import { CartApi } from "../api/cartApi";
-import UpdateIconButton from "../components/UpdateIconButton";
-import RemoveIconButton from "../components/RemoveIconButton";
-import ErrorDetails from "../dtos/ErrorDetails";
-import { ProductRes } from "../dtos/Product";
-import { CartItemReqAddToCart, CartItemRes } from "../dtos/CartItem";
 import { NumericFormat } from "react-number-format";
 import { UserAddressRes } from "../dtos/UserAddress";
 import { UserAddressApi } from "../api/userAddressApi";
@@ -178,7 +160,7 @@ const Checkout = () => {
       )
     ).then((res) => {
       // console.log(res);
-      navigate("/account/orders")
+      navigate("/account/orders/payment-method/" + res.orderId);
     });
   };
 

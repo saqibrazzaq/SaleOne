@@ -72,6 +72,14 @@ export class OrderReqUpdateStatus {
   }
 }
 
+export class OrderReqUpdatePaymentMethod {
+  paymentMethodId?: number;
+
+  constructor(paymentMethodId?: number) {
+    this.paymentMethodId = paymentMethodId;
+  }
+}
+
 export interface OrderAddressRes {
   orderAddressId?: number;
   firstName?: string;

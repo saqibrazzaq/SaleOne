@@ -224,6 +224,14 @@ namespace api.Services
             return _mapper.Map<OrderRes>(entity);
         }
 
+        public OrderRes UpdatePaymentMethod(int orderId, OrderReqUpdatePaymentMethod dto)
+        {
+            var entity = FindOrderIfExists(orderId, true);
+            entity.PaymentMethodId = dto.PaymentMethodId;
+            _repositoryManager.Save();
+            return _mapper.Map<OrderRes>(entity);
+        }
+
         private void ValidateStatus(int status)
         {
             var found = false;

@@ -50,6 +50,7 @@ import ResetPassword from "./auth/ResetPassword";
 import UnAuthorized from "./auth/UnAuthorized";
 import Cart from "./cart/Cart";
 import Checkout from "./cart/Checkout";
+import PaymentMethod from "./admin/order/PaymentMethod";
 import { Roles } from "./dtos/Auth";
 import AccountLayout from "./layout/AccountLayout";
 import AdminLayout from "./layout/AdminLayout";
@@ -111,6 +112,7 @@ export const App = () => {
               <Route path="orders">
                 <Route index element={<MyOrders />} />
                 <Route path=":orderId" element={<OrderView />} />
+                <Route path="payment-method/:orderId" element={<PaymentMethod />} />
               </Route>
             </Route>
             <Route path="cart">

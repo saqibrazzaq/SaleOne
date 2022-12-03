@@ -49,4 +49,10 @@ namespace data.Dtos
         [Required]
         public int Status { get; set; }
     }
+
+    public class OrderReqUpdatePaymentMethod
+    {
+        [Required, Range(1, int.MaxValue)]
+        public int PaymentMethodId { get; set; }
+    }
 }
