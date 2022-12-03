@@ -78,6 +78,14 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("recalculate-order-totals/{orderId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult RecalculateOrderTotals(int orderId)
+        {
+            _orderService.RecalculateOrderTotals(orderId); 
+            return NoContent();
+        }
+
         [HttpPost]
         [Authorize(Roles = Constants.AllRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]

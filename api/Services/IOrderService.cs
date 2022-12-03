@@ -20,5 +20,6 @@ namespace api.Services
         OrderRes UpdateStatus(int orderId, OrderReqUpdateStatus dto);
         OrderItemRes UpdateOrderItem(int orderItemId, OrderItemReqEdit dto);
         void DeleteOrderItem(int orderItemId);
+        void RecalculateOrderTotals(int orderId);
     }
 }

@@ -15,6 +15,15 @@ export interface OrderItemRes {
   unit?: UnitRes;
 }
 
+export class OrderItemReqEdit {
+  orderId?: number = 0;
+  productId?: number = 0;
+  quantity?: number = 1;
+  rate?: number = 1;
+  basePrice?: number = 1;
+  unitId?: number = 0;
+}
+
 export class OrderItemReqSearch extends PagedReq {
   orderId?: number;
 

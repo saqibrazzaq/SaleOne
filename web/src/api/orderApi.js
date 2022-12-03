@@ -13,6 +13,16 @@ export const OrderApi = {
 
     return response.data
   },
+  recalculateOrderTotals: async function (orderId, cancel = false) {
+    const response = await api.request({
+      url: `/orders/recalculate-order-totals/` + orderId,
+      method: "GET",
+      // retrieving the signal value by using the property name
+      signal: cancel ? cancelApiObject[this.recalculateOrderTotals.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   getMyOrder: async function (orderId, cancel = false) {
     if (!orderId) return {};
     const response = await api.request({
@@ -84,6 +94,14 @@ export const OrderApi = {
       method: "PUT",
       data: status,
       signal: cancel ? cancelApiObject[this.updateStatus.name].handleRequestCancellation().signal : undefined,
+    })
+  },
+  updateOrderItem: async function (orderItemId, orderItem, cancel = false) {
+    await api.request({
+      url: `/orders/update-order-item/` + orderItemId,
+      method: "PUT",
+      data: orderItem,
+      signal: cancel ? cancelApiObject[this.updateOrderItem.name].handleRequestCancellation().signal : undefined,
     })
   },
   deleteOrderItem: async function (orderItemId, cancel = false) {

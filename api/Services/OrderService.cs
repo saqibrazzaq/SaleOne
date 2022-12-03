@@ -238,9 +238,10 @@ namespace api.Services
         public OrderItemRes UpdateOrderItem(int orderItemId, OrderItemReqEdit dto)
         {
             var orderItem = FindOrderItemIfExists(orderItemId, true);
-            var difference = orderItem.BasePrice - (dto.Rate * dto.Quantity);
+            var difference = -1*(orderItem.BasePrice) + (dto.Rate * dto.Quantity);
             UpdateOrderTotals(orderItem.OrderId, difference);
             _mapper.Map(dto, orderItem);
+            orderItem.BasePrice = dto.Rate * dto.Quantity;
             _repositoryManager.Save();
             return _mapper.Map<OrderItemRes>(orderItem);
         }
@@ -256,6 +257,23 @@ namespace api.Services
             var orderItem = FindOrderItemIfExists(orderItemId, true);
             UpdateOrderTotals(orderItem.OrderId, orderItem.BasePrice * -1);
             _repositoryManager.OrderItemRepository.Delete(orderItem);
+            _repositoryManager.Save();
+        }
+
+        public void RecalculateOrderTotals(int orderId)
+        {
+            var order = FindOrderIfExists(orderId, true);
+            decimal baseSubTotal = 0;
+            var orderItems = _repositoryManager.OrderItemRepository.FindByCondition(
+                x => x.OrderId == orderId, true);
+            foreach(var orderItem in orderItems)
+            {
+                orderItem.BasePrice = orderItem.Rate * orderItem.Quantity;
+                baseSubTotal += orderItem.BasePrice;
+            }
+
+            order.BaseSubTotal = baseSubTotal;
+
             _repositoryManager.Save();
         }
     }

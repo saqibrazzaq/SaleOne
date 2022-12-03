@@ -11,9 +11,13 @@ import {
   Container,
   Divider,
   Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Heading,
   HStack,
   Image,
+  Input,
   Link,
   Spacer,
   Stack,
@@ -31,6 +35,8 @@ import {
   VStack,
   Wrap,
 } from "@chakra-ui/react";
+import { Field, Formik } from "formik";
+import * as Yup from "yup";
 import React, { useEffect, useState } from "react";
 import { NumericFormat } from "react-number-format";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
@@ -39,7 +45,11 @@ import DeleteIconButton from "../../components/DeleteIconButton";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import { AddressRes } from "../../dtos/Address";
 import { OrderAddressRes, OrderRes, OrderStatus } from "../../dtos/Order";
-import { OrderItemReqSearch, OrderItemRes } from "../../dtos/OrderItem";
+import {
+  OrderItemReqEdit,
+  OrderItemReqSearch,
+  OrderItemRes,
+} from "../../dtos/OrderItem";
 import PagedRes from "../../dtos/PagedRes";
 import { UserAddressRes } from "../../dtos/UserAddress";
 
@@ -53,11 +63,42 @@ const OrderEdit = () => {
     new OrderItemReqSearch({}, { orderId: orderId })
   );
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
   const cancelRef = React.useRef<HTMLAnchorElement>(null);
-  const [selectedOrderItem, setSelectedOrderItem] = useState<OrderItemRes>();
+  const [selectedOrderItem, setSelectedOrderItem] = useState<OrderItemRes>(
+    new OrderItemReqEdit()
+  );
 
   const toast = useToast();
+
+  // Formik validation schema
+  const validationSchema = Yup.object({
+    rate: Yup.number().required("Rate is required"),
+    quantity: Yup.number().required("Quantity is required"),
+  });
+
+  const submitForm = (values: OrderItemReqEdit) => {
+    onCloseEdit();
+    OrderApi.updateOrderItem(selectedOrderItem.orderItemId, values).then(res => {
+      searchOrderItems();
+      loadOrder();
+      toast({
+        title: "Success",
+        description: "Item updated successfully.",
+        status: "success",
+        position: "bottom-right",
+      });
+    })
+  };
 
   useEffect(() => {
     loadOrder();
@@ -68,19 +109,21 @@ const OrderEdit = () => {
   }, [searchParams]);
 
   const deleteOrderItem = () => {
-    onClose();
-    OrderApi.deleteOrderItem(selectedOrderItem?.orderItemId).then(res => {
-      toast({
-        title: "Success",
-        description: "Item deleted successfully.",
-        status: "success",
-        position: "bottom-right",
+    onCloseDelete();
+    OrderApi.deleteOrderItem(selectedOrderItem?.orderItemId)
+      .then((res) => {
+        toast({
+          title: "Success",
+          description: "Item deleted successfully.",
+          status: "success",
+          position: "bottom-right",
+        });
+        searchOrderItems();
+        loadOrder();
+      })
+      .catch((error) => {
+        //setError(error.response.data);
       });
-      searchOrderItems();
-      loadOrder();
-    }).catch(error => {
-      //setError(error.response.data);
-    });
   };
 
   const searchOrderItems = () => {
@@ -142,7 +185,13 @@ const OrderEdit = () => {
                 />
               </Td>
               <Td>
-                <Link>
+                <Link
+                  onClick={() => {
+                    console.log("Update " + item.product?.name);
+                    setSelectedOrderItem(item);
+                    onOpenEdit();
+                  }}
+                >
                   <UpdateIconButton />
                 </Link>
                 <Link
@@ -150,7 +199,7 @@ const OrderEdit = () => {
                   onClick={() => {
                     console.log("Delete " + item.product?.name);
                     setSelectedOrderItem(item);
-                    onOpen();
+                    onOpenDelete();
                   }}
                 >
                   <DeleteIconButton />
@@ -189,9 +238,9 @@ const OrderEdit = () => {
 
   const showAlertDialog_Delete = () => (
     <AlertDialog
-      isOpen={isOpen}
+      isOpen={isOpenDelete}
       leastDestructiveRef={cancelRef}
-      onClose={onClose}
+      onClose={onCloseDelete}
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
@@ -235,7 +284,7 @@ const OrderEdit = () => {
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <Link ref={cancelRef} onClick={onClose}>
+            <Link ref={cancelRef} onClick={onCloseDelete}>
               <Button type="button" colorScheme={"gray"}>
                 Cancel
               </Button>
@@ -258,6 +307,19 @@ const OrderEdit = () => {
     });
   };
 
+  const recalculateOrderTotals = () => {
+    OrderApi.recalculateOrderTotals(orderId).then(res => {
+      toast({
+        title: "Success",
+        description: "Order totals recalculated successfully.",
+        status: "success",
+        position: "bottom-right",
+      });
+      searchOrderItems();
+      loadOrder();
+    })
+  }
+
   const displayHeading = () => (
     <Flex>
       <Box>
@@ -265,6 +327,9 @@ const OrderEdit = () => {
       </Box>
       <Spacer />
       <Box>
+      <Button onClick={recalculateOrderTotals} type="button" colorScheme={"blue"}>
+            Recalculate Order Totals
+          </Button>
         <Link ml={2} as={RouteLink} to={"/admin/orders/"}>
           <Button type="button" colorScheme={"gray"}>
             Back
@@ -333,6 +398,92 @@ const OrderEdit = () => {
     </VStack>
   );
 
+  const showAlertDialog_Edit = () => (
+    <AlertDialog
+      isOpen={isOpenEdit}
+      leastDestructiveRef={cancelRef}
+      onClose={onCloseEdit}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Edit Item
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            <Image
+              borderRadius="lg"
+              boxSize={"150px"}
+              src={selectedOrderItem?.product?.productImages?.at(0)?.imageUrl}
+            />
+          </AlertDialogBody>
+
+          <AlertDialogBody>
+            <Box p={0}>
+              <Formik
+                initialValues={selectedOrderItem}
+                onSubmit={(values) => {
+                  submitForm(values);
+                }}
+                validationSchema={validationSchema}
+                enableReinitialize={true}
+              >
+                {({ handleSubmit, errors, touched, setFieldValue, values }) => (
+                  <form onSubmit={handleSubmit}>
+                    <Stack spacing={4} as={Container} maxW={"3xl"}>
+                      <FormControl isInvalid={!!errors.rate && touched.rate}>
+                        <FormLabel htmlFor="rate">Rate</FormLabel>
+                        <Field as={Input} id="rate" name="rate" type="text" />
+                        <FormErrorMessage>{errors.rate}</FormErrorMessage>
+                      </FormControl>
+                      <FormControl
+                        isInvalid={!!errors.quantity && touched.quantity}
+                      >
+                        <FormLabel htmlFor="quantity">Quantity</FormLabel>
+                        <Field
+                          as={Input}
+                          id="quantity"
+                          name="quantity"
+                          type="text"
+                        />
+                        <FormErrorMessage>{errors.quantity}</FormErrorMessage>
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>Price</FormLabel>
+                        <Text>
+                          <NumericFormat
+                            value={
+                              (values?.rate || 1) * (values?.quantity || 1)
+                            }
+                            prefix="Rs. "
+                            thousandSeparator=","
+                            displayType="text"
+                          />
+                        </Text>
+                      </FormControl>
+                      <Stack direction={"row"} spacing={6}>
+                        <Link ref={cancelRef} onClick={onCloseEdit}>
+                          <Button type="button" colorScheme={"gray"}>
+                            Cancel
+                          </Button>
+                        </Link>
+                        <Button type="submit" colorScheme={"blue"}>
+                          Save Changes
+                        </Button>
+                      </Stack>
+                    </Stack>
+                  </form>
+                )}
+              </Formik>
+            </Box>
+          </AlertDialogBody>
+
+          <AlertDialogFooter></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+  );
+
   return (
     <Box p={4}>
       <Stack spacing={4} as={Container} maxW={"6xl"}>
@@ -342,6 +493,7 @@ const OrderEdit = () => {
         {showAddressesInfo()}
       </Stack>
       {showAlertDialog_Delete()}
+      {showAlertDialog_Edit()}
     </Box>
   );
 };
