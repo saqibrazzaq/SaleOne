@@ -18,6 +18,7 @@ namespace api.Services
         OrderItemRes GetOrderItem(int orderItemId);
         Task<OrderRes> CreateOrder(OrderReqEdit dto);
         OrderRes UpdateStatus(int orderId, OrderReqUpdateStatus dto);
+        OrderItemRes AddOrderItem(OrderItemReqEdit dto);
         OrderItemRes UpdateOrderItem(int orderItemId, OrderItemReqEdit dto);
         void DeleteOrderItem(int orderItemId);
         void RecalculateOrderTotals(int orderId);

@@ -276,5 +276,15 @@ namespace api.Services
 
             _repositoryManager.Save();
         }
+
+        public OrderItemRes AddOrderItem(OrderItemReqEdit dto)
+        {
+            var orderItem = _mapper.Map<OrderItem>(dto);
+            orderItem.BasePrice = dto.Rate* dto.Quantity;
+            UpdateOrderTotals(dto.OrderId, orderItem.BasePrice);
+            _repositoryManager.OrderItemRepository.Create(orderItem);
+            _repositoryManager.Save();
+            return _mapper.Map<OrderItemRes>(orderItem);
+        }
     }
 }

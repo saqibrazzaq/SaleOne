@@ -52,6 +52,9 @@ import {
 } from "../../dtos/OrderItem";
 import PagedRes from "../../dtos/PagedRes";
 import { UserAddressRes } from "../../dtos/UserAddress";
+import ProductSearchBox from "../../searchboxes/ProductSearchBox";
+import { ProductRes } from "../../dtos/Product";
+import { ProductApi } from "../../api/productApi";
 
 const OrderEdit = () => {
   const [order, setOrder] = useState<OrderRes>();
@@ -62,6 +65,7 @@ const OrderEdit = () => {
   const [searchParams, setSearchParams] = useState<OrderItemReqSearch>(
     new OrderItemReqSearch({}, { orderId: orderId })
   );
+  const [selectedProduct, setSelectedProduct] = useState<ProductRes>();
 
   const {
     isOpen: isOpenDelete,
@@ -72,6 +76,11 @@ const OrderEdit = () => {
     isOpen: isOpenEdit,
     onOpen: onOpenEdit,
     onClose: onCloseEdit,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenAdd,
+    onOpen: onOpenAdd,
+    onClose: onCloseAdd,
   } = useDisclosure();
   const cancelRef = React.useRef<HTMLAnchorElement>(null);
   const [selectedOrderItem, setSelectedOrderItem] = useState<OrderItemRes>(
@@ -86,18 +95,34 @@ const OrderEdit = () => {
     quantity: Yup.number().required("Quantity is required"),
   });
 
-  const submitForm = (values: OrderItemReqEdit) => {
+  const submitEditForm = (values: OrderItemReqEdit) => {
     onCloseEdit();
-    OrderApi.updateOrderItem(selectedOrderItem.orderItemId, values).then(res => {
+    OrderApi.updateOrderItem(selectedOrderItem.orderItemId, values).then(
+      (res) => {
+        searchOrderItems();
+        loadOrder();
+        toast({
+          title: "Success",
+          description: "Item updated successfully.",
+          status: "success",
+          position: "bottom-right",
+        });
+      }
+    );
+  };
+
+  const submitAddForm = (values: OrderItemReqEdit) => {
+    onCloseAdd();
+    OrderApi.addOrderItem(values).then((res) => {
       searchOrderItems();
       loadOrder();
       toast({
         title: "Success",
-        description: "Item updated successfully.",
+        description: "Item added successfully.",
         status: "success",
         position: "bottom-right",
       });
-    })
+    });
   };
 
   useEffect(() => {
@@ -107,6 +132,23 @@ const OrderEdit = () => {
   useEffect(() => {
     searchOrderItems();
   }, [searchParams]);
+
+  useEffect(() => {
+    loadOrderItemForAdd();
+  }, [selectedProduct]);
+
+  const loadOrderItemForAdd = () => {
+    if (selectedProduct) {
+      setSelectedOrderItem({
+        orderId: orderId,
+        productId: selectedProduct.productId,
+        rate: selectedProduct.rate,
+        quantity: 1,
+        basePrice: selectedProduct.rate,
+        unitId: selectedProduct.unitId,
+      });
+    }
+  };
 
   const deleteOrderItem = () => {
     onCloseDelete();
@@ -308,7 +350,7 @@ const OrderEdit = () => {
   };
 
   const recalculateOrderTotals = () => {
-    OrderApi.recalculateOrderTotals(orderId).then(res => {
+    OrderApi.recalculateOrderTotals(orderId).then((res) => {
       toast({
         title: "Success",
         description: "Order totals recalculated successfully.",
@@ -317,8 +359,8 @@ const OrderEdit = () => {
       });
       searchOrderItems();
       loadOrder();
-    })
-  }
+    });
+  };
 
   const displayHeading = () => (
     <Flex>
@@ -327,9 +369,24 @@ const OrderEdit = () => {
       </Box>
       <Spacer />
       <Box>
-      <Button onClick={recalculateOrderTotals} type="button" colorScheme={"blue"}>
-            Recalculate Order Totals
-          </Button>
+        <Button
+          colorScheme={"blue"}
+          onClick={() => {
+            onOpenAdd();
+            setSelectedProduct(undefined);
+            setSelectedOrderItem(new OrderItemReqEdit());
+          }}
+        >
+          Add Item
+        </Button>
+        <Button
+          onClick={recalculateOrderTotals}
+          type="button"
+          colorScheme={"blue"}
+          ml={2}
+        >
+          Recalculate Order Totals
+        </Button>
         <Link ml={2} as={RouteLink} to={"/admin/orders/"}>
           <Button type="button" colorScheme={"gray"}>
             Back
@@ -423,7 +480,7 @@ const OrderEdit = () => {
               <Formik
                 initialValues={selectedOrderItem}
                 onSubmit={(values) => {
-                  submitForm(values);
+                  submitEditForm(values);
                 }}
                 validationSchema={validationSchema}
                 enableReinitialize={true}
@@ -484,6 +541,110 @@ const OrderEdit = () => {
     </AlertDialog>
   );
 
+  const showAlertDialog_Add = () => (
+    <AlertDialog
+      isOpen={isOpenAdd}
+      leastDestructiveRef={cancelRef}
+      onClose={onCloseAdd}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Add Item
+          </AlertDialogHeader>
+
+          <AlertDialogBody></AlertDialogBody>
+
+          <AlertDialogBody>
+            <Box p={0}>
+              <Formik
+                initialValues={selectedOrderItem}
+                onSubmit={(values) => {
+                  submitAddForm(values);
+                }}
+                validationSchema={validationSchema}
+                enableReinitialize={true}
+              >
+                {({ handleSubmit, errors, touched, setFieldValue, values }) => (
+                  <form onSubmit={handleSubmit}>
+                    <Stack spacing={4} as={Container} maxW={"3xl"}>
+                      <FormControl>
+                        <ProductSearchBox
+                          selectedProduct={selectedProduct}
+                          handleChange={(newValue?: ProductRes) => {
+                            setSelectedProduct(newValue);
+                            setFieldValue(
+                              "productId",
+                              newValue?.productId || 0
+                            );
+                            // console.log(newValue)
+                          }}
+                        />
+                        <Field
+                          as={Input}
+                          id="productId"
+                          name="productId"
+                          type="text"
+                        />
+                        <Image
+                          borderRadius="lg"
+                          boxSize={"150px"}
+                          src={selectedProduct?.productImages?.at(0)?.imageUrl}
+                        />
+                      </FormControl>
+                      <FormControl isInvalid={!!errors.rate && touched.rate}>
+                        <FormLabel htmlFor="rate">Rate</FormLabel>
+                        <Field as={Input} id="rate" name="rate" type="text" />
+                        <FormErrorMessage>{errors.rate}</FormErrorMessage>
+                      </FormControl>
+                      <FormControl
+                        isInvalid={!!errors.quantity && touched.quantity}
+                      >
+                        <FormLabel htmlFor="quantity">Quantity</FormLabel>
+                        <Field
+                          as={Input}
+                          id="quantity"
+                          name="quantity"
+                          type="text"
+                        />
+                        <FormErrorMessage>{errors.quantity}</FormErrorMessage>
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>Price</FormLabel>
+                        <Text>
+                          <NumericFormat
+                            value={
+                              (values?.rate || 1) * (values?.quantity || 1)
+                            }
+                            prefix="Rs. "
+                            thousandSeparator=","
+                            displayType="text"
+                          />
+                        </Text>
+                      </FormControl>
+                      <Stack direction={"row"} spacing={6}>
+                        <Link ref={cancelRef} onClick={onCloseAdd}>
+                          <Button type="button" colorScheme={"gray"}>
+                            Cancel
+                          </Button>
+                        </Link>
+                        <Button type="submit" colorScheme={"blue"}>
+                          Save Changes
+                        </Button>
+                      </Stack>
+                    </Stack>
+                  </form>
+                )}
+              </Formik>
+            </Box>
+          </AlertDialogBody>
+
+          <AlertDialogFooter></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+  );
+
   return (
     <Box p={4}>
       <Stack spacing={4} as={Container} maxW={"6xl"}>
@@ -494,6 +655,7 @@ const OrderEdit = () => {
       </Stack>
       {showAlertDialog_Delete()}
       {showAlertDialog_Edit()}
+      {showAlertDialog_Add()}
     </Box>
   );
 };

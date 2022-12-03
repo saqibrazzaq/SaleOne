@@ -103,6 +103,15 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpPost("add-order-item")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public IActionResult AddOrderItem(OrderItemReqEdit dto)
+        {
+            var res = _orderService.AddOrderItem(dto);
+            return Ok(res);
+        }
+
         [HttpPut("update-order-item/{orderItemId}")]
         [Authorize(Roles = Constants.AllAdminRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]

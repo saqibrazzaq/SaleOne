@@ -88,6 +88,16 @@ export const OrderApi = {
 
     return response.data
   },
+  addOrderItem: async function (orderItem, cancel = false) {
+    const response = await api.request({
+      url: `/orders/add-order-item`,
+      method: "POST",
+      data: orderItem,
+      signal: cancel ? cancelApiObject[this.addOrderItem.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   updateStatus: async function (orderId, status, cancel = false) {
     await api.request({
       url: `/orders/update-status/` + orderId,
