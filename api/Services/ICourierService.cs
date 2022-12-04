@@ -6,6 +6,7 @@ namespace api.Services
     public interface ICourierService
     {
         ApiOkPagedResponse<IEnumerable<CourierRes>, MetaData> Search(CourierReqSearch dto);
+        ApiOkPagedResponse<IEnumerable<CourierResWithDeliveryPlansCount>, MetaData> SearchWithDeliveryPlansCount(CourierReqSearch dto);
         CourierRes Get(int courierId);
         int Count();
         CourierRes Create(CourierReqEdit dto);

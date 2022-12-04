@@ -66,6 +66,16 @@ namespace api.Services
                 pagedEntities.MetaData);
         }
 
+        public ApiOkPagedResponse<IEnumerable<CourierResWithDeliveryPlansCount>, MetaData> SearchWithDeliveryPlansCount(
+            CourierReqSearch dto)
+        {
+            var pagedEntities = _repositoryManager.CourierRepository.
+                Search(dto, false);
+            var dtos = _mapper.Map<IEnumerable<CourierResWithDeliveryPlansCount>>(pagedEntities);
+            return new ApiOkPagedResponse<IEnumerable<CourierResWithDeliveryPlansCount>, MetaData>(dtos,
+                pagedEntities.MetaData);
+        }
+
         public CourierRes Update(int courierId, CourierReqEdit dto)
         {
             var entity = FindCourierIfExists(courierId, true);

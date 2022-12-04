@@ -33,6 +33,20 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("searchWithDeliveryPlansCount")]
+        public IActionResult SearchWithDeliveryPlansCount([FromQuery] CourierReqSearch dto)
+        {
+            var res = _courierService.SearchWithDeliveryPlansCount(dto);
+            return Ok(res);
+        }
+
+        [HttpGet("{courierId}")]
+        public IActionResult Get(int courierId)
+        {
+            var res = _courierService.Get(courierId);
+            return Ok(res);
+        }
+
         [HttpGet("count")]
         public IActionResult Count()
         {

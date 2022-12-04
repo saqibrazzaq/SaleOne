@@ -44,5 +44,40 @@ namespace data.Repository
 
             return items.OrderBy(orderQuery);
         }
+
+        public static IQueryable<CourierResWithDeliveryPlansCount> SearchWithDeliveryPlansCount(
+            this IQueryable<CourierResWithDeliveryPlansCount> items,
+            CourierReqSearch searchParams)
+        {
+            var itemsToReturn = items
+                //.Include(x => x.States)
+                .AsQueryable();
+
+            if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)
+            {
+                string searchText = searchParams.SearchText.ToLower();
+                itemsToReturn = itemsToReturn.Where(
+                    x => (x.Name ?? "").Contains(searchParams.SearchText) ||
+                    (x.Description ?? "").Contains(searchParams.SearchText)
+                );
+            }
+
+            return itemsToReturn;
+        }
+
+        public static IQueryable<CourierResWithDeliveryPlansCount> SortWithDeliveryPlansCount(
+            this IQueryable<CourierResWithDeliveryPlansCount> items,
+            string? orderBy)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                return items.OrderBy(e => e.Name);
+
+            var orderQuery = OrderQueryBuilder.CreateOrderQuery<CourierResWithDeliveryPlansCount>(orderBy);
+
+            if (string.IsNullOrWhiteSpace(orderQuery))
+                return items.OrderBy(e => e.Name);
+
+            return items.OrderBy(orderQuery);
+        }
     }
 }

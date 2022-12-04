@@ -74,6 +74,7 @@ namespace api
 
             // Courier
             CreateMap<Courier, CourierRes>();
+            CreateMap<Courier, CourierResWithDeliveryPlansCount>();
             CreateMap<CourierReqEdit, Courier>();
 
             // Delivery plan

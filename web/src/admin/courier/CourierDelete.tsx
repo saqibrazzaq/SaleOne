@@ -28,56 +28,56 @@ import {
 import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
 import { ErrorAlert } from "../../alertboxes/Alerts";
-import { CountryApi } from "../../api/countryApi";
-import { CountryResWithStatesCount } from "../../dtos/Country";
+import { CourierApi } from "../../api/courierApi";
+import { CourierRes } from "../../dtos/Courier";
 import ErrorDetails from "../../dtos/ErrorDetails";
 
-const CountryDelete = () => {
+const CourierDelete = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLAnchorElement>(null);
   const [error, setError] = useState<ErrorDetails>();
 
-  const [country, setCountry] = useState<CountryResWithStatesCount>();
+  const [courier, setCourier] = useState<CourierRes>();
   
   const toast = useToast();
   const navigate = useNavigate();
   let params = useParams();
-  const countryId = params.countryId;
+  const courierId = params.courierId;
   
-  const deleteCountry = () => {
+  const deleteCourier = () => {
     onClose();
-    CountryApi.delete(countryId).then(res => {
+    CourierApi.delete(courierId).then(res => {
       toast({
         title: "Success",
-        description: country?.name + " deleted successfully.",
+        description: courier?.name + " deleted successfully.",
         status: "success",
         position: "bottom-right",
       });
-      navigate("/admin/countries");
+      navigate("/admin/couriers");
     }).catch(error => {
       setError(error.response.data);
     });
   };
 
-  const showCountryInfo = () => (
+  const showCourierInfo = () => (
     <div>
       <TableContainer>
         <Table variant="simple">
           <Tbody>
             <Tr>
               <Th>Name</Th>
-              <Td>{country?.name}</Td>
+              <Td>{courier?.name}</Td>
             </Tr>
             <Tr>
-              <Th>States</Th>
-              <Td>{country?.statesCount}</Td>
+              <Th>Description</Th>
+              <Td>{courier?.description}</Td>
             </Tr>
           </Tbody>
         </Table>
       </TableContainer>
       <HStack pt={4} spacing={4}>
         <Link onClick={onOpen}>
-          <Button type="button" colorScheme={"red"}>YES, I WANT TO DELETE THIS COUNTRY</Button>
+          <Button type="button" colorScheme={"red"}>YES, I WANT TO DELETE THIS COURIER</Button>
         </Link>
       </HStack>
     </div>
@@ -92,7 +92,7 @@ const CountryDelete = () => {
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Delete Country
+            Delete Courier
           </AlertDialogHeader>
 
           <AlertDialogBody>
@@ -103,8 +103,8 @@ const CountryDelete = () => {
             <Link ref={cancelRef} onClick={onClose}>
               <Button type="button" colorScheme={"gray"}>Cancel</Button>
             </Link>
-            <Link onClick={deleteCountry} ml={3}>
-              <Button type="submit" colorScheme={"red"}>Delete Country</Button>
+            <Link onClick={deleteCourier} ml={3}>
+              <Button type="submit" colorScheme={"red"}>Delete Courier</Button>
             </Link>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -113,13 +113,13 @@ const CountryDelete = () => {
   );
 
   useEffect(() => {
-    loadCountry();
+    loadCourier();
   }, []);
 
-  const loadCountry = () => {
-    if (countryId) {
-      CountryApi.getCountryWithStatesCount(countryId).then(res => {
-        setCountry(res);
+  const loadCourier = () => {
+    if (courierId) {
+      CourierApi.get(courierId).then(res => {
+        setCourier(res);
         // console.log(res);
       })
     }
@@ -128,11 +128,11 @@ const CountryDelete = () => {
   const displayHeading = () => (
     <Flex>
       <Box>
-        <Heading fontSize={"xl"}>Delete Country</Heading>
+        <Heading fontSize={"xl"}>Delete Courier</Heading>
       </Box>
       <Spacer />
       <Box>
-        <Link ml={2} as={RouteLink} to={"/admin/countries"}>
+        <Link ml={2} as={RouteLink} to={"/admin/couriers"}>
           <Button type="button" colorScheme={"gray"}>Back</Button>
         </Link>
       </Box>
@@ -143,14 +143,14 @@ const CountryDelete = () => {
       <Stack spacing={4} as={Container} maxW={"3xl"}>
         {displayHeading()}
         <Text fontSize="xl">
-          Are you sure you want to delete the following Country?
+          Are you sure you want to delete the following Courier?
         </Text>
         {error && <ErrorAlert description={error.Message} />}
-        {showCountryInfo()}
+        {showCourierInfo()}
       </Stack>
       {showAlertDialog()}
     </Box>
   )
 }
 
-export default CountryDelete
+export default CourierDelete

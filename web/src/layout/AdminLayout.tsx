@@ -12,6 +12,7 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Categories", icon: CgOrganisation, href: "/admin/categories" },
   { name: "Products", icon: CgOrganisation, href: "/admin/products" },
   { name: "Units", icon: CgOrganisation, href: "/admin/units" },
+  { name: "Couriers", icon: CgOrganisation, href: "/admin/couriers" },
   { name: "Payment Methods", icon: CgOrganisation, href: "/admin/payment-methods" },
   { name: "Countries", icon: CgOrganisation, href: "/admin/countries" },
   { name: "Users", icon: CgOrganisation, href: "/admin/users" },

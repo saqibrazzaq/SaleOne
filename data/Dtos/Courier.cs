@@ -18,6 +18,11 @@ namespace data.Dtos
         public IEnumerable<DeliveryPlan>? DeliveryPlans { get; set; }
     }
 
+    public class CourierResWithDeliveryPlansCount : CourierRes
+    {
+        public int DeliveryPlansCount { get; set; }
+    }
+
     public class CourierReqEdit
     {
         [Required, MaxLength(50)]

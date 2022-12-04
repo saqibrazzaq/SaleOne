@@ -56,6 +56,9 @@ import AccountLayout from "./layout/AccountLayout";
 import AdminLayout from "./layout/AdminLayout";
 import Layout from "./layout/Layout";
 import ProductList from "./product/ProductList";
+import Couriers from "./admin/courier/Couriers";
+import CourierEdit from "./admin/courier/CourierEdit";
+import CourierDelete from "./admin/courier/CourierDelete";
 
 export const App = () => {
   return (
@@ -133,6 +136,13 @@ export const App = () => {
           >
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<Home />} />
+              {/* Couriers */}
+              <Route path="couriers">
+                <Route index element={<Couriers />} />
+                <Route path="edit" element={<CourierEdit />} />
+                <Route path="edit/:courierId" element={<CourierEdit />} />
+                <Route path="delete/:courierId" element={<CourierDelete />} />
+              </Route>
               {/* Orders */}
               <Route path="orders">
                 <Route index element={<Orders />} />
