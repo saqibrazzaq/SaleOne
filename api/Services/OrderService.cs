@@ -148,6 +148,7 @@ namespace api.Services
                 include: i => i
                     .Include(x => x.User)
                     .Include(x => x.Addresses)
+                    .Include(x => x.PaymentMethod)
                     )
                 .FirstOrDefault();
             if (entity == null) throw new NotFoundException("No order found with id " + orderId);
@@ -227,6 +228,14 @@ namespace api.Services
         public async Task<OrderRes> UpdatePaymentMethodForMyOrder(int orderId, OrderReqUpdatePaymentMethod dto)
         {
             var entity = await FindMyOrderIfExists(orderId, true);
+            entity.PaymentMethodId = dto.PaymentMethodId;
+            _repositoryManager.Save();
+            return _mapper.Map<OrderRes>(entity);
+        }
+
+        public OrderRes UpdatePaymentMethod(int orderId, OrderReqUpdatePaymentMethod dto)
+        {
+            var entity = FindOrderIfExists(orderId, true);
             entity.PaymentMethodId = dto.PaymentMethodId;
             _repositoryManager.Save();
             return _mapper.Map<OrderRes>(entity);

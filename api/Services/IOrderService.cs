@@ -20,6 +20,7 @@ namespace api.Services
         Task<OrderRes> CreateOrder(OrderReqEdit dto);
         OrderRes UpdateStatus(int orderId, OrderReqUpdateStatus dto);
         Task<OrderRes> UpdatePaymentMethodForMyOrder(int orderId, OrderReqUpdatePaymentMethod dto);
+        OrderRes UpdatePaymentMethod(int orderId, OrderReqUpdatePaymentMethod dto);
         OrderItemRes AddOrderItem(OrderItemReqEdit dto);
         OrderItemRes UpdateOrderItem(int orderItemId, OrderItemReqEdit dto);
         void DeleteOrderItem(int orderItemId);

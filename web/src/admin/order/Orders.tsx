@@ -103,6 +103,7 @@ const Orders = () => {
             <Th>Username</Th>
             <Th>Date</Th>
             <Th>Status</Th>
+            <Th>Pay</Th>
             <Th>SubTotal</Th>
             <Th></Th>
           </Tr>
@@ -126,6 +127,9 @@ const Orders = () => {
                     </option>
                   ))}
                 </Select>
+              </Td>
+              <Td>
+                {item.paymentMethod?.name}
               </Td>
               <Td>
                 <Link

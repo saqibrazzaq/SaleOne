@@ -117,9 +117,17 @@ export const OrderApi = {
       signal: cancel ? cancelApiObject[this.updateStatus.name].handleRequestCancellation().signal : undefined,
     })
   },
-  updatePaymentMethod: async function (orderId, paymentMethod, cancel = false) {
+  updatePaymentMethodForMyOrder: async function (orderId, paymentMethod, cancel = false) {
     await api.request({
       url: `/orders/myorders/update-payment-method/` + orderId,
+      method: "PUT",
+      data: paymentMethod,
+      signal: cancel ? cancelApiObject[this.updatePaymentMethodForMyOrder.name].handleRequestCancellation().signal : undefined,
+    })
+  },
+  updatePaymentMethod: async function (orderId, paymentMethod, cancel = false) {
+    await api.request({
+      url: `/orders/update-payment-method/` + orderId,
       method: "PUT",
       data: paymentMethod,
       signal: cancel ? cancelApiObject[this.updatePaymentMethod.name].handleRequestCancellation().signal : undefined,

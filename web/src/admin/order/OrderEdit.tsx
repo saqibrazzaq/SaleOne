@@ -45,7 +45,13 @@ import { OrderApi } from "../../api/orderApi";
 import DeleteIconButton from "../../components/DeleteIconButton";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import { AddressRes } from "../../dtos/Address";
-import { OrderAddressRes, OrderReqUpdateStatus, OrderRes, OrderStatus } from "../../dtos/Order";
+import {
+  OrderAddressRes,
+  OrderReqUpdatePaymentMethod,
+  OrderReqUpdateStatus,
+  OrderRes,
+  OrderStatus,
+} from "../../dtos/Order";
 import {
   OrderItemReqEdit,
   OrderItemReqSearch,
@@ -57,6 +63,8 @@ import ProductSearchBox from "../../searchboxes/ProductSearchBox";
 import { ProductRes } from "../../dtos/Product";
 import { ProductApi } from "../../api/productApi";
 import Common from "../../utility/Common";
+import { PaymentMethodRes } from "../../dtos/PaymentMethod";
+import { PaymentMethodApi } from "../../api/paymentMethodApi";
 
 const OrderEdit = () => {
   const [order, setOrder] = useState<OrderRes>();
@@ -68,6 +76,7 @@ const OrderEdit = () => {
     new OrderItemReqSearch({}, { orderId: orderId })
   );
   const [selectedProduct, setSelectedProduct] = useState<ProductRes>();
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethodRes[]>([]);
 
   const {
     isOpen: isOpenDelete,
@@ -129,6 +138,7 @@ const OrderEdit = () => {
 
   useEffect(() => {
     loadOrder();
+    loadPaymentMethods();
   }, [orderId]);
 
   useEffect(() => {
@@ -138,6 +148,12 @@ const OrderEdit = () => {
   useEffect(() => {
     loadOrderItemForAdd();
   }, [selectedProduct]);
+
+  const loadPaymentMethods = () => {
+    PaymentMethodApi.getAll().then((res) => {
+      setPaymentMethods(res);
+    });
+  };
 
   const loadOrderItemForAdd = () => {
     if (selectedProduct) {
@@ -416,21 +432,9 @@ const OrderEdit = () => {
   const displayOrderSummary = () => (
     <Flex>
       <Box>
-        <Text fontSize={"xl"}>
-          Order # {order?.orderId}
-        </Text>
+        <Text fontSize={"xl"}>Order # {order?.orderId}</Text>
       </Box>
-      <Box ml={6}>
-        <Select value={order?.status} onChange={(e) => {
-          updateStatus(order?.orderId, parseInt(e.target.value));
-        }}>
-          {Common.ORDER_STATUS.map((value) => (
-            <option key={value} value={value}>
-              {OrderStatus[value]}
-            </option>
-          ))}
-        </Select>
-      </Box>
+      <Box ml={6}></Box>
       <Spacer />
       <Box>
         <Text fontSize={"xl"}>
@@ -673,11 +677,67 @@ const OrderEdit = () => {
     </AlertDialog>
   );
 
+  const updatePaymentMethod = (paymentMethodId: number) => {
+    OrderApi.updatePaymentMethod(orderId, new OrderReqUpdatePaymentMethod(paymentMethodId)).then(res => {
+      loadOrder();
+      toast({
+        title: "Success",
+        description: "Payment Method updated successfully.",
+        status: "success",
+        position: "bottom-right",
+      });
+    })
+  }
+
+  const displayOrderEditOptions = () => (
+    <TableContainer width={"sm"}>
+      <Table variant="unstyled" size={"sm"}>
+        <Tbody>
+          <Tr>
+            <Th>Status</Th>
+            <Td>
+              <Select
+                value={order?.status}
+                onChange={(e) => {
+                  updateStatus(order?.orderId, parseInt(e.target.value));
+                }}
+              >
+                {Common.ORDER_STATUS.map((value) => (
+                  <option key={value} value={value}>
+                    {OrderStatus[value]}
+                  </option>
+                ))}
+              </Select>
+            </Td>
+          </Tr>
+          <Tr>
+            <Th>Payment Method</Th>
+            <Td>
+              <Select value={order?.paymentMethodId} onChange={(e) => {
+                updatePaymentMethod(parseInt(e.target.value));
+              }}>
+                {paymentMethods.map((item) => (
+                  <option
+                    key={item.paymentMethodId}
+                    value={item.paymentMethodId}
+                  >
+                    {item.name}
+                  </option>
+                ))}
+              </Select>
+            </Td>
+          </Tr>
+        </Tbody>
+      </Table>
+    </TableContainer>
+  );
+
   return (
     <Box p={4}>
       <Stack spacing={4} as={Container} maxW={"6xl"}>
         {displayHeading()}
         {displayOrderSummary()}
+        {displayOrderEditOptions()}
         {showOrderItems()}
         {showAddressesInfo()}
       </Stack>

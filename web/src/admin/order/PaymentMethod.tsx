@@ -114,7 +114,7 @@ const PaymentMethod = () => {
   );
 
   const updatePaymentMethod = () => {
-    OrderApi.updatePaymentMethod(
+    OrderApi.updatePaymentMethodForMyOrder(
       orderId,
       new OrderReqUpdatePaymentMethod(selectedPaymentMethodId)
     ).then((res) => {
