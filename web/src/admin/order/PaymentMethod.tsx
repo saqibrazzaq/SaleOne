@@ -19,7 +19,11 @@ import { NumericFormat } from "react-number-format";
 import { useParams, Link as RouteLink, useNavigate } from "react-router-dom";
 import { OrderApi } from "../../api/orderApi";
 import { PaymentMethodApi } from "../../api/paymentMethodApi";
-import { OrderReqUpdatePaymentMethod, OrderRes, OrderStatus } from "../../dtos/Order";
+import {
+  OrderReqUpdatePaymentMethod,
+  OrderRes,
+  OrderStatus,
+} from "../../dtos/Order";
 import { PaymentMethodRes } from "../../dtos/PaymentMethod";
 
 const PaymentMethod = () => {
@@ -37,7 +41,7 @@ const PaymentMethod = () => {
   }, [orderId]);
 
   const loadOrder = () => {
-    OrderApi.get(orderId).then((res) => {
+    OrderApi.getMyOrder(orderId).then((res) => {
       setOrder(res);
       loadPaymentMethods();
     });
@@ -102,13 +106,18 @@ const PaymentMethod = () => {
         </Select>
       </FormControl>
       <Stack direction={"row"} spacing={6}>
-        <Button onClick={updatePaymentMethod} colorScheme={"blue"}>Save Changes</Button>
+        <Button onClick={updatePaymentMethod} colorScheme={"blue"}>
+          Confirm Order
+        </Button>
       </Stack>
     </Stack>
   );
 
   const updatePaymentMethod = () => {
-    OrderApi.updatePaymentMethod(orderId, new OrderReqUpdatePaymentMethod(selectedPaymentMethodId)).then(res => {
+    OrderApi.updatePaymentMethod(
+      orderId,
+      new OrderReqUpdatePaymentMethod(selectedPaymentMethodId)
+    ).then((res) => {
       navigate("/account/orders/" + orderId);
       toast({
         title: "Success",
@@ -116,8 +125,8 @@ const PaymentMethod = () => {
         status: "success",
         position: "bottom-right",
       });
-    })
-  }
+    });
+  };
 
   return (
     <Box p={4}>

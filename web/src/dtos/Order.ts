@@ -1,6 +1,7 @@
 import Common from "../utility/Common";
 import { CityRes } from "./City";
 import { PagedReq } from "./PagedReq";
+import { PaymentMethodRes } from "./PaymentMethod";
 import { UserRes } from "./User";
 
 export interface OrderRes {
@@ -11,6 +12,7 @@ export interface OrderRes {
   status?: number;
   paymentMethodId?: number;
 
+  paymentMethod?: PaymentMethodRes;
   user?: UserRes;
   addresses?: OrderAddressRes[];
 }

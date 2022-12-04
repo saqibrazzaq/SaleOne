@@ -98,6 +98,7 @@ const MyOrders = () => {
             <Th>Id</Th>
             <Th>Date</Th>
             <Th>Status</Th>
+            <Th>Payment Method</Th>
             <Th>SubTotal</Th>
             <Th></Th>
           </Tr>
@@ -108,6 +109,7 @@ const MyOrders = () => {
               <Td>{item.orderId}</Td>
               <Td>{dateFormat(item.orderDate, "fullDate")}</Td>
               <Td>{OrderStatus[item.status || 0]}</Td>
+              <Td>{item.paymentMethod?.name}</Td>
               <Td>
                 <Link
                   color={"blue"}
@@ -196,7 +198,7 @@ const MyOrders = () => {
 
   return (
     <Box width={"100%"} p={4}>
-      <Stack spacing={4} as={Container} maxW={"3xl"}>
+      <Stack spacing={4} as={Container} maxW={"6xl"}>
         {showHeading()}
         {displaySearchBar()}
         {showOrders()}

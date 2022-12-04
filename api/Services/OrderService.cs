@@ -224,9 +224,9 @@ namespace api.Services
             return _mapper.Map<OrderRes>(entity);
         }
 
-        public OrderRes UpdatePaymentMethod(int orderId, OrderReqUpdatePaymentMethod dto)
+        public async Task<OrderRes> UpdatePaymentMethodForMyOrder(int orderId, OrderReqUpdatePaymentMethod dto)
         {
-            var entity = FindOrderIfExists(orderId, true);
+            var entity = await FindMyOrderIfExists(orderId, true);
             entity.PaymentMethodId = dto.PaymentMethodId;
             _repositoryManager.Save();
             return _mapper.Map<OrderRes>(entity);

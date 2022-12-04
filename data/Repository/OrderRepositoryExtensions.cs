@@ -18,6 +18,7 @@ namespace data.Repository
         {
             var itemsToReturn = items
                 .Include(x => x.User)
+                .Include(x => x.PaymentMethod)
                 .AsQueryable();
 
             if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)

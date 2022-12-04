@@ -103,11 +103,11 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpPut("update-payment-method/{orderId}")]
-        [Authorize(Roles = Constants.AllAdminRoles)]
-        public IActionResult UpdatePaymentMethod(int orderId, OrderReqUpdatePaymentMethod dto)
+        [HttpPut("myorders/update-payment-method/{orderId}")]
+        [Authorize(Roles = Constants.AllRoles)]
+        public async Task<IActionResult> UpdatePaymentMethod(int orderId, OrderReqUpdatePaymentMethod dto)
         {
-            var res = _orderService.UpdatePaymentMethod(orderId, dto);
+            var res = await _orderService.UpdatePaymentMethodForMyOrder(orderId, dto);
             return Ok(res);
         }
 
