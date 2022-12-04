@@ -136,5 +136,13 @@ namespace api.Controllers
             _orderService.DeleteOrderItem(orderItemId);
             return NoContent();
         }
+
+        [HttpGet("count-by-payment-method/{paymentMethodId}")]
+        [Authorize(Roles = Constants.AllAdminRoles)]
+        public IActionResult CountByPaymentMethod(int paymentMethodId)
+        {
+            var res = _orderService.CountByPaymentMethod(paymentMethodId);
+            return Ok(res);
+        }
     }
 }

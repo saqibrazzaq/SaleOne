@@ -13,6 +13,7 @@ namespace api.Services
             OrderItemReqSearch dto);
         int Count();
         int Count(string username);
+        int CountByPaymentMethod(int paymentMethodId);
         OrderRes Get(int orderId);
         Task<OrderRes> GetMyOrder(int orderId);
         OrderItemRes GetOrderItem(int orderItemId);

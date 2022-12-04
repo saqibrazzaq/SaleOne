@@ -29,6 +29,7 @@ import React, { useEffect, useState } from "react";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
 import { ErrorAlert } from "../../alertboxes/Alerts";
 import { CountryApi } from "../../api/countryApi";
+import { OrderApi } from "../../api/orderApi";
 import { PaymentMethodApi } from "../../api/paymentMethodApi";
 import { CountryResWithStatesCount } from "../../dtos/Country";
 import ErrorDetails from "../../dtos/ErrorDetails";
@@ -40,6 +41,7 @@ const PaymentMethodDelete = () => {
   const [error, setError] = useState<ErrorDetails>();
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodRes>();
+  const [ordersCount, setOrdersCount] = useState(0);
   
   const toast = useToast();
   const navigate = useNavigate();
@@ -73,6 +75,10 @@ const PaymentMethodDelete = () => {
             <Tr>
               <Th>Description</Th>
               <Td>{paymentMethod?.description}</Td>
+            </Tr>
+            <Tr>
+              <Th>Order Count</Th>
+              <Td>{ordersCount}</Td>
             </Tr>
           </Tbody>
         </Table>
@@ -116,7 +122,14 @@ const PaymentMethodDelete = () => {
 
   useEffect(() => {
     loadPaymentMethod();
-  }, []);
+    loadOrdersCount();
+  }, [paymentMethodId]);
+
+  const loadOrdersCount = () => {
+    OrderApi.countByPaymentMethod(paymentMethodId).then(res => {
+      setOrdersCount(res);
+    })
+  }
 
   const loadPaymentMethod = () => {
     if (paymentMethodId) {

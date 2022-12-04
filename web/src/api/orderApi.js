@@ -34,6 +34,17 @@ export const OrderApi = {
 
     return response.data
   },
+  countByPaymentMethod: async function (paymentMethodId, cancel = false) {
+    if (!paymentMethodId) return {};
+    const response = await api.request({
+      url: `/orders/count-by-payment-method/` + paymentMethodId,
+      method: "GET",
+      // retrieving the signal value by using the property name
+      signal: cancel ? cancelApiObject[this.countByPaymentMethod.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   search: async function (searchParams, cancel = false) {
     // console.log("search countries ")
     const response = await api.request({

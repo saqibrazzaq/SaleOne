@@ -10,11 +10,14 @@ namespace api.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public PaymentMethodService(IRepositoryManager repositoryManager, 
-            IMapper mapper)
+        private readonly IOrderService _orderService;
+        public PaymentMethodService(IRepositoryManager repositoryManager,
+            IMapper mapper,
+            IOrderService orderService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _orderService = orderService;
         }
 
         public PaymentMethodRes Create(PaymentMethodReqEdit dto)
@@ -28,8 +31,17 @@ namespace api.Services
         public void Delete(int paymentMethodId)
         {
             var entity = FindPaymentMethodIfExists(paymentMethodId, true);
+            ValidateDeletePaymentMethod(entity);
             _repositoryManager.PaymentMethodRepository.Delete(entity);
             _repositoryManager.Save();
+        }
+
+        private void ValidateDeletePaymentMethod(PaymentMethod entity)
+        {
+            var ordersCount = _orderService.CountByPaymentMethod(entity.PaymentMethodId);
+            if (ordersCount > 0) 
+                throw new BadRequestException("Cannot delete Payment Method. It has " 
+                    + ordersCount + " orders.");
         }
 
         private PaymentMethod FindPaymentMethodIfExists(int paymentMethodId, bool trackChanges)

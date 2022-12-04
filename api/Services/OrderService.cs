@@ -294,5 +294,13 @@ namespace api.Services
             _repositoryManager.Save();
             return _mapper.Map<OrderItemRes>(orderItem);
         }
+
+        public int CountByPaymentMethod(int paymentMethodId)
+        {
+            var count = _repositoryManager.OrderRepository.FindByCondition(
+                x => x.PaymentMethodId == paymentMethodId, false)
+                .Count();
+            return count;
+        }
     }
 }
