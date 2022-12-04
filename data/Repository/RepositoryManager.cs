@@ -25,6 +25,8 @@ namespace data.Repository
         private readonly Lazy<IOrderRepository> _orderRepository;
         private readonly Lazy<IOrderItemRepository> _orderItemRepository;
         private readonly Lazy<IOrderAddressRepository> _orderAddressRepository;
+        private readonly Lazy<ICourierRepository> _courierRepository;
+        private readonly Lazy<IDeliveryPlanRepository> _deliveryPlanRepository;
         
         public RepositoryManager(AppDbContext context)
         {
@@ -62,6 +64,10 @@ namespace data.Repository
                 new OrderItemRepository(context));
             _orderAddressRepository = new Lazy<IOrderAddressRepository>(() =>
                 new OrderAddressRepository(context));
+            _courierRepository = new Lazy<ICourierRepository>(() =>
+                new CourierRepository(context));
+            _deliveryPlanRepository = new Lazy<IDeliveryPlanRepository>(() =>
+                new DeliveryPlanRepository(context));
         }
 
         public ICategoryRepository CategoryRepository => _categoryRepository.Value;
@@ -80,6 +86,8 @@ namespace data.Repository
         public IOrderRepository OrderRepository => _orderRepository.Value;
         public IOrderItemRepository OrderItemRepository => _orderItemRepository.Value;
         public IOrderAddressRepository OrderAddressRepository => _orderAddressRepository.Value;
+        public ICourierRepository CourierRepository => _courierRepository.Value;
+        public IDeliveryPlanRepository DeliveryPlanRepository => _deliveryPlanRepository.Value;
 
         public void Save()
         {

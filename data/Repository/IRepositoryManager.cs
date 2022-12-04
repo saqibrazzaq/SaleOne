@@ -24,6 +24,8 @@ namespace data.Repository
         IOrderRepository OrderRepository { get; }
         IOrderItemRepository OrderItemRepository { get; }
         IOrderAddressRepository OrderAddressRepository { get; }
+        ICourierRepository CourierRepository { get; }
+        IDeliveryPlanRepository DeliveryPlanRepository { get; }
         void Save();
     }
 }
