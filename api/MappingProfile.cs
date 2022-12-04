@@ -72,7 +72,13 @@ namespace api
             // Cart item to order item
             CreateMap<CartItemRes, OrderItem>();
 
+            // Courier
+            CreateMap<Courier, CourierRes>();
+            CreateMap<CourierReqEdit, Courier>();
 
+            // Delivery plan
+            CreateMap<DeliveryPlan, DeliveryPlanRes>();
+            CreateMap<DeliveryPlanReqEdit, DeliveryPlan>();
         }
     }
 }

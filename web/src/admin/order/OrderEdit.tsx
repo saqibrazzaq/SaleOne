@@ -737,8 +737,8 @@ const OrderEdit = () => {
       <Stack spacing={4} as={Container} maxW={"6xl"}>
         {displayHeading()}
         {displayOrderSummary()}
-        {displayOrderEditOptions()}
         {showOrderItems()}
+        {displayOrderEditOptions()}
         {showAddressesInfo()}
       </Stack>
       {showAlertDialog_Delete()}

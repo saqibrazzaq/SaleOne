@@ -34,6 +34,8 @@ namespace data
         public DbSet<Order>? Orders { get; set; }
         public DbSet<OrderItem>? OrderItems { get; set; }
         public DbSet<OrderAddress>? OrderAddresses { get; set; }
+        public DbSet<Courier>? Couriers { get; set; }
+        public DbSet<DeliveryPlan>? DeliveryPlans { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
