@@ -17,6 +17,17 @@ namespace data.Entities
         public int OrderId { get; set; }
         [ForeignKey("OrderId")]
         public Order? Order { get; set; }
-
+        public string? TrackingNumber { get; set; }
+        [Required]
+        public int DeliveryPlanId { get; set; }
+        [ForeignKey("DeliveryPlanId")]
+        public DeliveryPlan? DeliveryPlan { get; set; }
+        public DateTime BookingDate { get; set; } = DateTime.UtcNow;
+        public DateTime? DeliveryDate { get; set; }
+        [Required]
+        public int ShipmentAddressId { get; set; }
+        [ForeignKey("ShipmentAddressId")]
+        public ShipmentAddress? ShipmentAddress { get; set; }
+        public ICollection<ShipmentItem>? ShipmentItems { get; set; }
     }
 }

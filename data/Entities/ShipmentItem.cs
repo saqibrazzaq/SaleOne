@@ -8,30 +8,21 @@ using System.Threading.Tasks;
 
 namespace data.Entities
 {
-    [Table("OrderItem")]
-    public class OrderItem
+    [Table("ShipmentItem")]
+    public class ShipmentItem
     {
         [Key]
-        public int OrderItemId { get; set; }
+        public int ShipmentItemId { get; set; }
         [Required]
-        public int OrderId { get; set; }
-        [ForeignKey("OrderId")]
-        public Order? Order { get; set; }
+        public int ShipmentId { get; set; }
+        [ForeignKey("ShipmentId")]
+        public Shipment? Shipment { get; set; }
         [Required]
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
         public Product? Product { get; set; }
         [Column(TypeName = "decimal(12, 2)")]
         public decimal Quantity { get; set; }
-        [Column(TypeName = "decimal(12, 2)")]
-        public decimal ShippedQuantity { get; set; }
-
-        [Column(TypeName = "decimal(12, 2)")]
-        public decimal Rate { get; set; }
-
-        [Column(TypeName = "decimal(12, 2)")]
-        public decimal BasePrice { get; set; }
-
         [Required]
         public int? UnitId { get; set; }
         [ForeignKey("UnitId")]
