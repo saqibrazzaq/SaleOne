@@ -25,25 +25,34 @@ import { Link as RouteLink, useParams } from "react-router-dom";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import DeleteIconButton from "../../components/DeleteIconButton";
 import PagedRes from "../../dtos/PagedRes";
-import dateFormat, { masks } from "dateformat";
-import Common from "../../utility/Common";
-import { NumericFormat } from "react-number-format";
-import { CourierReqSearch, CourierRes, CourierResWithDeliveryPlansCount } from "../../dtos/Courier";
 import { CourierApi } from "../../api/courierApi";
+import {
+  DeliveryPlanReqSearch,
+  DeliveryPlanRes,
+} from "../../dtos/DeliveryPlan";
+import { CourierRes } from "../../dtos/Courier";
 
-const Couriers = () => {
-  const [pagedRes, setPagedRes] = useState<PagedRes<CourierResWithDeliveryPlansCount>>();
+const DeliveryPlans = () => {
+  const [pagedRes, setPagedRes] = useState<PagedRes<DeliveryPlanRes>>();
   const [searchText, setSearchText] = useState<string>("");
-  const [searchParams, setSearchParams] = useState<CourierReqSearch>(
-    new CourierReqSearch({})
+  const [courier, setCourier] = useState<CourierRes>();
+  let params = useParams();
+  const courierId = parseInt(params.courierId || "0");
+
+  const [searchParams, setSearchParams] = useState<DeliveryPlanReqSearch>(
+    new DeliveryPlanReqSearch({}, { courierId })
   );
 
   useEffect(() => {
     searchCouriers();
   }, [searchParams]);
 
+  useEffect(() => {
+    CourierApi.get(courierId).then((res) => setCourier(res));
+  }, [courierId]);
+
   const searchCouriers = () => {
-    CourierApi.searchWithDeliveryPlansCount(searchParams).then((res) => {
+    CourierApi.searchDeliveryPlans(searchParams).then((res) => {
       setPagedRes(res);
       // console.log(res);
     });
@@ -69,49 +78,65 @@ const Couriers = () => {
   const showHeading = () => (
     <Flex>
       <Box>
-        <Heading fontSize={"xl"}>Couriers</Heading>
+        <Heading fontSize={"xl"}>{courier?.name} Delivery Plans</Heading>
       </Box>
       <Spacer />
       <Box>
-        <Link ml={2} as={RouteLink} to={"/admin/couriers/edit"}>
-          <Button colorScheme={"blue"}>Create Courier</Button>
+        <Link
+          ml={2}
+          as={RouteLink}
+          to={"/admin/couriers/deliveryplans/edit/" + courierId}
+        >
+          <Button colorScheme={"blue"}>Create Delivery Plan</Button>
+        </Link>
+        <Link
+          ml={2}
+          as={RouteLink}
+          to={"/admin/couriers/"}
+        >
+          <Button colorScheme={"gray"}>Back</Button>
         </Link>
       </Box>
     </Flex>
   );
 
-  const showCouriers = () => (
+  const showDeliveryPlans = () => (
     <TableContainer>
       <Table variant="simple">
         <Thead>
           <Tr>
             <Th>Name</Th>
-            <Th>Delivery Plans</Th>
+            <Th>Fee</Th>
             <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
           {pagedRes?.pagedList?.map((item) => (
-            <Tr key={item.courierId}>
-              <Td>
-                <Link as={RouteLink} color={"blue"}
-                  to={"/admin/couriers/deliveryplans/" + item.courierId}>
-                {item.name}
-                </Link>
-              </Td>
-              <Td>{item.deliveryPlansCount}</Td>
+            <Tr key={item.deliveryPlanId}>
+              <Td>{item.name}</Td>
+              <Td>{item.fee}</Td>
               <Td>
                 <Link
                   mr={2}
                   as={RouteLink}
-                  to={"/admin/couriers/edit/" + item.courierId}
+                  to={
+                    "/admin/couriers/deliveryplans/edit/" +
+                    item.courierId +
+                    "/" +
+                    item.deliveryPlanId
+                  }
                 >
                   <UpdateIconButton />
                 </Link>
                 <Link
                   mr={2}
                   as={RouteLink}
-                  to={"/admin/couriers/delete/" + item.courierId}
+                  to={
+                    "/admin/couriers/deliveryplans/delete/" +
+                    item.courierId +
+                    "/" +
+                    item.deliveryPlanId
+                  }
                 >
                   <DeleteIconButton />
                 </Link>
@@ -149,12 +174,8 @@ const Couriers = () => {
 
   const displaySearchBar = () => (
     <Flex>
-      <Center>
-        
-      </Center>
-      <Box flex={1} ml={4}>
-        
-      </Box>
+      <Center></Center>
+      <Box flex={1} ml={4}></Box>
 
       <Box ml={4}>
         <Input
@@ -189,10 +210,10 @@ const Couriers = () => {
       <Stack spacing={4} as={Container} maxW={"6xl"}>
         {showHeading()}
         {displaySearchBar()}
-        {showCouriers()}
+        {showDeliveryPlans()}
       </Stack>
     </Box>
   );
-}
+};
 
-export default Couriers
+export default DeliveryPlans;

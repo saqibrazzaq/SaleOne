@@ -59,6 +59,9 @@ import ProductList from "./product/ProductList";
 import Couriers from "./admin/courier/Couriers";
 import CourierEdit from "./admin/courier/CourierEdit";
 import CourierDelete from "./admin/courier/CourierDelete";
+import DeliveryPlans from "./admin/courier/DeliveryPlans";
+import DeliveryPlanEdit from "./admin/courier/DeliveryPlanEdit";
+import DeliveryPlanDelete from "./admin/courier/DeliveryPlanDelete";
 
 export const App = () => {
   return (
@@ -142,6 +145,12 @@ export const App = () => {
                 <Route path="edit" element={<CourierEdit />} />
                 <Route path="edit/:courierId" element={<CourierEdit />} />
                 <Route path="delete/:courierId" element={<CourierDelete />} />
+                <Route path="deliveryplans">
+                  <Route path=":courierId" element={<DeliveryPlans />} />
+                  <Route path="edit/:courierId" element={<DeliveryPlanEdit />} />
+                  <Route path="edit/:courierId/:deliveryPlanId" element={<DeliveryPlanEdit />} />
+                  <Route path="delete/:courierId/:deliveryPlanId" element={<DeliveryPlanDelete />} />
+                </Route>
               </Route>
               {/* Orders */}
               <Route path="orders">

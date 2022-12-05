@@ -4,6 +4,7 @@ using data.Dtos;
 using data.Entities;
 using data.Repository;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
 {
@@ -104,7 +105,8 @@ namespace api.Services
         private DeliveryPlan FindDeliveryPlanIfExists(int deliveryPlanId, bool trackChanges)
         {
             var entity = _repositoryManager.DeliveryPlanRepository.FindByCondition(
-                x => x.DeliveryPlanId == deliveryPlanId, trackChanges)
+                x => x.DeliveryPlanId == deliveryPlanId, trackChanges,
+                include: i => i.Include(x => x.Courier))
                 .FirstOrDefault();
             if (entity == null) throw new NotFoundException("No delivery plan found with id " + deliveryPlanId);
 

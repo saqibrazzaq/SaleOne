@@ -54,6 +54,13 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpGet("deliveryplans/count/{courierId}")]
+        public IActionResult CountDeliveryPlans(int courierId)
+        {
+            var res = _courierService.CountDeliveryPlans(courierId);
+            return Ok(res);
+        }
+
         [HttpPost]
         [Authorize(Roles = Constants.AllAdminRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -80,21 +87,21 @@ namespace api.Controllers
             return NoContent();
         }
 
-        [HttpGet("deliveryplan/search")]
+        [HttpGet("deliveryplans/search")]
         public IActionResult SearchDeliveryPlans([FromQuery] DeliveryPlanReqSearch dto)
         {
             var res = _courierService.SearchDeliveryPlans(dto);
             return Ok(res);
         }
 
-        [HttpGet("deliveryplan/{deliveryPlanId}")]
+        [HttpGet("deliveryplans/{deliveryPlanId}")]
         public IActionResult GetDeliveryPlan(int deliveryPlanId)
         {
             var res = _courierService.GetDeliveryPlan(deliveryPlanId);
             return Ok(res);
         }
 
-        [HttpPost("deliveryplan")]
+        [HttpPost("deliveryplans")]
         [Authorize(Roles = Constants.AllAdminRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult CreateDeliveryPlan(DeliveryPlanReqEdit dto)
@@ -103,7 +110,7 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpPut("deliveryplan/{deliveryPlanId}")]
+        [HttpPut("deliveryplans/{deliveryPlanId}")]
         [Authorize(Roles = Constants.AllAdminRoles)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult UpdateDeliveryPlan(int deliveryPlanId, DeliveryPlanReqEdit dto)
@@ -112,7 +119,7 @@ namespace api.Controllers
             return Ok(res);
         }
 
-        [HttpDelete("deliveryplan/{deliveryPlanId}")]
+        [HttpDelete("deliveryplans/{deliveryPlanId}")]
         [Authorize(Roles = Constants.AllAdminRoles)]
         public IActionResult DeleteDeliveryPlan(int deliveryPlanId)
         {

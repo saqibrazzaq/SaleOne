@@ -17,16 +17,24 @@ import * as Yup from "yup";
 import { Link as RouteLink, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Field, Formik } from "formik";
-import { CourierReqEdit } from "../../dtos/Courier";
+import { CourierReqEdit, CourierRes } from "../../dtos/Courier";
 import { CourierApi } from "../../api/courierApi";
+import { DeliveryPlanReqEdit } from "../../dtos/DeliveryPlan";
 
-const CourierEdit = () => {
+const DeliveryPlanEdit = () => {
   const params = useParams();
-  const courierId = params.courierId;
-  const updateText = courierId ? "Update Courier" : "Add Courier";
-  const [courier, setCourier] = useState<CourierReqEdit>(new CourierReqEdit());
+  const courierId = parseInt(params.courierId || "0");
+  const deliveryPlanId = params.deliveryPlanId;
+  const updateText = deliveryPlanId ? "Update Delivery Plan" : "Add Delivery Plan";
+  const [courier, setCourier] = useState<CourierRes>();
+  const [deliveryPlan, setDeliveryPlan] = useState<DeliveryPlanReqEdit>(
+    new DeliveryPlanReqEdit(courierId));
   const toast = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    loadDeliveryPlan();
+  }, [deliveryPlanId]);
 
   useEffect(() => {
     loadCourier();
@@ -34,8 +42,14 @@ const CourierEdit = () => {
 
   const loadCourier = () => {
     if (courierId) {
-      CourierApi.get(courierId).then(res => {
-        setCourier(res);
+      CourierApi.get(courierId).then(res => setCourier(res));
+    }
+  }
+
+  const loadDeliveryPlan = () => {
+    if (deliveryPlanId) {
+      CourierApi.getDeliveryPlan(deliveryPlanId).then(res => {
+        setDeliveryPlan(res);
         // console.log(res);
       })
     }
@@ -43,48 +57,50 @@ const CourierEdit = () => {
 
   // Formik validation schema
   const validationSchema = Yup.object({
+    courierId: Yup.number().required("Courier Id is required").min(1),
     name: Yup.string().required("Name is required").max(50),
     description: Yup.string(),
+    fee: Yup.number(),
   });
 
-  const submitForm = (values: CourierReqEdit) => {
+  const submitForm = (values: DeliveryPlanReqEdit) => {
     // console.log(values);
-    if (courierId) {
-      updateCourier(values);
+    if (deliveryPlanId) {
+      updateDeliveryPlan(values);
     } else {
-      createCourier(values);
+      createDeliveryPlan(values);
     }
   };
 
-  const updateCourier = (values: CourierReqEdit) => {
-    CourierApi.update(courierId, values).then(res => {
+  const updateDeliveryPlan = (values: DeliveryPlanReqEdit) => {
+    CourierApi.updateDeliveryPlan(deliveryPlanId, values).then(res => {
       toast({
         title: "Success",
-        description: "Courier updated successfully.",
+        description: "Delivery Plan updated successfully.",
         status: "success",
         position: "bottom-right",
       });
-      navigate("/admin/couriers")
+      navigate("/admin/couriers/deliveryplans/" + courierId)
     });
   };
 
-  const createCourier = (values: CourierReqEdit) => {
-    CourierApi.create(values).then(res => {
+  const createDeliveryPlan = (values: DeliveryPlanReqEdit) => {
+    CourierApi.createDeliveryPlan(values).then(res => {
       toast({
         title: "Success",
-        description: "Courier created successfully.",
+        description: "Delivery Plan created successfully.",
         status: "success",
         position: "bottom-right",
       });
       // navigate("/countries/edit/" + res.countryId)
-      navigate("/admin/couriers")
+      navigate("/admin/couriers/deliveryplans/" + courierId)
     });
   }
 
   const showUpdateForm = () => (
     <Box p={0}>
       <Formik
-        initialValues={courier}
+        initialValues={deliveryPlan}
         onSubmit={(values) => {
           submitForm(values);
         }}
@@ -98,11 +114,18 @@ const CourierEdit = () => {
                 <FormLabel htmlFor="name">Name</FormLabel>
                 <Field as={Input} id="name" name="name" type="text" />
                 <FormErrorMessage>{errors.name}</FormErrorMessage>
+                <Field as={Input} id="courierId" name="courierId" type="hidden" />
+                <FormErrorMessage>{errors.courierId}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!errors.description && touched.description}>
                 <FormLabel htmlFor="description">Description</FormLabel>
                 <Field as={Input} id="description" name="description" type="text" />
                 <FormErrorMessage>{errors.description}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.fee && touched.fee}>
+                <FormLabel htmlFor="fee">Fee</FormLabel>
+                <Field as={Input} id="fee" name="fee" type="number" />
+                <FormErrorMessage>{errors.fee}</FormErrorMessage>
               </FormControl>
               <Stack direction={"row"} spacing={6}>
                 <Button type="submit" colorScheme={"blue"}>{updateText}</Button>
@@ -117,14 +140,14 @@ const CourierEdit = () => {
   const displayHeading = () => (
     <Flex>
       <Box>
-        <Heading fontSize={"xl"}>{updateText}</Heading>
+        <Heading fontSize={"xl"}>{courier?.name} - {updateText}</Heading>
       </Box>
       <Spacer />
       <Box>
         <Link
           ml={2}
           as={RouteLink}
-          to={"/admin/couriers"}
+          to={"/admin/couriers/deliveryplans/" + courierId}
         >
           <Button colorScheme={"gray"}>Back</Button>
         </Link>
@@ -142,4 +165,4 @@ const CourierEdit = () => {
   );
 }
 
-export default CourierEdit
+export default DeliveryPlanEdit
