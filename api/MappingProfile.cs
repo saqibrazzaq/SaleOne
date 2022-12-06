@@ -80,6 +80,16 @@ namespace api
             // Delivery plan
             CreateMap<DeliveryPlan, DeliveryPlanRes>();
             CreateMap<DeliveryPlanReqEdit, DeliveryPlan>();
+
+            // Shipment
+            CreateMap<Shipment, ShipmentRes>();
+            CreateMap<ShipmentReqEdit, Shipment>();
+
+            CreateMap<ShipmentItem, ShipmentItemRes>();
+            CreateMap<ShipmentItemReqEdit, ShipmentItem>();
+
+            CreateMap<ShipmentAddress, ShipmentAddressRes>();
+            CreateMap<ShipmentAddressReqEdit, ShipmentAddress>();
         }
     }
 }

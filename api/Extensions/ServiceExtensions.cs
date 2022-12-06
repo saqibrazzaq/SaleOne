@@ -87,6 +87,7 @@ namespace api.Extensions
             services.AddScoped<IPaymentMethodService, PaymentMethodService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICourierService, CourierService>();
+            services.AddScoped<IShipmentService, ShipmentService>();
 
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IStateService, StateService>();
