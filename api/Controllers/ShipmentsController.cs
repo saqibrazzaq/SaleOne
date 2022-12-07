@@ -50,7 +50,7 @@ namespace api.Controllers
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public IActionResult Create(ShipmentReqEdit dto)
+        public IActionResult Create(ShipmentReqCreate dto)
         {
             var res = _shipmentService.Create(dto);
             return Ok(res);

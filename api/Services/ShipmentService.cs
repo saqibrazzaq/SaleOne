@@ -21,7 +21,7 @@ namespace api.Services
             _orderService = orderService;
         }
 
-        public ShipmentRes Create(ShipmentReqEdit dto)
+        public ShipmentRes Create(ShipmentReqCreate dto)
         {
             var entity = _mapper.Map<Shipment>(dto);
             _repositoryManager.ShipmentRepository.Create(entity);

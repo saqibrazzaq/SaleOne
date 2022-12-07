@@ -20,10 +20,17 @@ export interface ShipmentRes {
   shipmentItems?: ShipmentItemRes[];
 }
 
+export class ShipmentReqCreate {
+  orderId?: number = 0;
+  trackingNumber?: string = "";
+  deliveryPlanId?: number = 0;
+}
+
 export class ShipmentReqEdit {
   orderId?: number = 0;
   trackingNumber?: string = "";
   deliveryPlanId?: number = 0;
+  deliveryDate?: Date = new Date();
 }
 
 export class ShipmentItemReqSearch extends PagedReq {

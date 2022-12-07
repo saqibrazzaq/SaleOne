@@ -8,7 +8,7 @@ namespace api.Services
         ApiOkPagedResponse<IEnumerable<ShipmentRes>, MetaData> Search(ShipmentReqSearch dto);
         ApiOkPagedResponse<IEnumerable<ShipmentItemRes>, MetaData> SearchShipmentItems(ShipmentItemReqSearch dto);
         ShipmentRes Get(int shipmentId);
-        ShipmentRes Create(ShipmentReqEdit dto);
+        ShipmentRes Create(ShipmentReqCreate dto);
         ShipmentRes Update(int shipmentId, ShipmentReqEdit dto);
         void Delete(int shipmentId);
         ShipmentItemRes GetShipmentItem(int shipmentItemId);

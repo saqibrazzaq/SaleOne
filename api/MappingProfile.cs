@@ -83,6 +83,7 @@ namespace api
 
             // Shipment
             CreateMap<Shipment, ShipmentRes>();
+            CreateMap<ShipmentReqCreate, Shipment>();
             CreateMap<ShipmentReqEdit, Shipment>();
 
             CreateMap<ShipmentItem, ShipmentItemRes>();
