@@ -8,6 +8,8 @@ export interface OrderRes {
   orderId?: number;
   userId?: string;
   baseSubTotal?: number;
+  quantity?: number;
+  shippedQuantity?: number;
   orderDate?: Date;
   status?: number;
   paymentMethodId?: number;

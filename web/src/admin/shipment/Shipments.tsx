@@ -25,30 +25,31 @@ import { Link as RouteLink, useParams } from "react-router-dom";
 import UpdateIconButton from "../../components/UpdateIconButton";
 import DeleteIconButton from "../../components/DeleteIconButton";
 import PagedRes from "../../dtos/PagedRes";
-import {
-  OrderReqSearch,
-  OrderReqUpdateStatus,
-  OrderRes,
-  OrderStatus,
-} from "../../dtos/Order";
-import { OrderApi } from "../../api/orderApi";
 import dateFormat, { masks } from "dateformat";
 import Common from "../../utility/Common";
 import { NumericFormat } from "react-number-format";
+import {
+  CourierReqSearch,
+  CourierRes,
+  CourierResWithDeliveryPlansCount,
+} from "../../dtos/Courier";
+import { CourierApi } from "../../api/courierApi";
+import { ShipmentReqSearch, ShipmentRes } from "../../dtos/Shipment";
+import { ShipmentApi } from "../../api/shipmentApi";
 
-const Orders = () => {
-  const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
+const Shipments = () => {
+  const [pagedRes, setPagedRes] = useState<PagedRes<ShipmentRes>>();
   const [searchText, setSearchText] = useState<string>("");
-  const [searchParams, setSearchParams] = useState<OrderReqSearch>(
-    new OrderReqSearch({}, {})
+  const [searchParams, setSearchParams] = useState<ShipmentReqSearch>(
+    new ShipmentReqSearch({}, {})
   );
 
   useEffect(() => {
-    searchOrders();
+    searchShipments();
   }, [searchParams]);
 
-  const searchOrders = () => {
-    OrderApi.search(searchParams).then((res) => {
+  const searchShipments = () => {
+    ShipmentApi.search(searchParams).then((res) => {
       setPagedRes(res);
       // console.log(res);
     });
@@ -74,93 +75,53 @@ const Orders = () => {
   const showHeading = () => (
     <Flex>
       <Box>
-        <Heading fontSize={"xl"}>Orders</Heading>
+        <Heading fontSize={"xl"}>Shipments</Heading>
       </Box>
       <Spacer />
       <Box>
-        {/* <Link ml={2} as={RouteLink} to={"/account/my-orders"}>
-          <Button colorScheme={"blue"}>Add Country</Button>
-        </Link> */}
+        <Link ml={2} as={RouteLink} to={"/admin/shipments/edit"}>
+          <Button colorScheme={"blue"}>Create Shipment</Button>
+        </Link>
       </Box>
     </Flex>
   );
 
-  const updateStatus = (orderId?: number, status?: number) => {
-    // console.log(orderId + " - " + status);
-    OrderApi.updateStatus(orderId, new OrderReqUpdateStatus(status)).then(
-      (res) => {
-        searchOrders();
-      }
-    );
-  };
-
-  const showOrders = () => (
+  const showShipments = () => (
     <TableContainer>
-      <Table variant="simple" size={"sm"}>
+      <Table variant="simple">
         <Thead>
           <Tr>
-            <Th>Id</Th>
-            <Th>Username</Th>
-            <Th>Date</Th>
-            <Th>Status</Th>
-            <Th>Pay</Th>
-            <Th>Qty</Th>
-            <Th>Shipped</Th>
-            <Th>SubTotal</Th>
+            <Th>Name</Th>
+            <Th>Shipment #</Th>
+            <Th>Order #</Th>
+            <Th>Tracking #</Th>
             <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
           {pagedRes?.pagedList?.map((item) => (
-            <Tr key={item.orderId}>
+            <Tr key={item.shipmentId}>
+              <Td>
+                {item.shipmentAddress?.firstName}{" "}
+                {item.shipmentAddress?.lastName}
+              </Td>
+              <Td>{item.shipmentId}</Td>
               <Td>{item.orderId}</Td>
-              <Td>{item.user?.email}</Td>
-              <Td>{dateFormat(item.orderDate, "isoDate")}</Td>
-              <Td>
-                <Select
-                  value={item.status}
-                  onChange={(e) => {
-                    updateStatus(item.orderId, parseInt(e.target.value));
-                  }}
-                >
-                  {Common.ORDER_STATUS.map((value) => (
-                    <option key={value} value={value}>
-                      {OrderStatus[value]}
-                    </option>
-                  ))}
-                </Select>
-              </Td>
-              <Td>
-                {item.paymentMethod?.name}
-              </Td>
-              <Td>
-                {item.quantity}
-              </Td>
-              <Td>
-                {item.shippedQuantity}
-              </Td>
-              <Td>
-                <Link
-                  color={"blue"}
-                  mr={2}
-                  as={RouteLink}
-                  to={"/admin/orders/" + item.orderId}
-                >
-                  <NumericFormat
-                    value={item.baseSubTotal}
-                    prefix="Rs. "
-                    thousandSeparator=","
-                    displayType="text"
-                  />
-                </Link>
-              </Td>
+              <Td>{item.trackingNumber}</Td>
               <Td>
                 <Link
                   mr={2}
                   as={RouteLink}
-                  to={"/admin/orders/" + item.orderId}
+                  to={"/admin/shipments/" + item.shipmentId}
                 >
                   <UpdateIconButton />
+                </Link>
+                <Link
+                  mr={2}
+                  as={RouteLink}
+                  to={"/admin/shipments/" + item.shipmentId}
+                >
+                  <DeleteIconButton />
                 </Link>
               </Td>
             </Tr>
@@ -196,29 +157,8 @@ const Orders = () => {
 
   const displaySearchBar = () => (
     <Flex>
-      <Center>
-        <Text>Select status:</Text>
-      </Center>
-      <Box flex={1} ml={4}>
-        <Select
-          onChange={(e) => {
-            //setOrderStatus(parseInt(e.target.value))
-            setSearchParams({
-              ...searchParams,
-              ...{ status: parseInt(e.target.value), pageNumber: 1 },
-            });
-          }}
-        >
-          <option key={0} value={0}>
-            Any status
-          </option>
-          {Common.ORDER_STATUS.map((value) => (
-            <option key={value} value={value}>
-              {OrderStatus[value]}
-            </option>
-          ))}
-        </Select>
-      </Box>
+      <Center></Center>
+      <Box flex={1} ml={4}></Box>
 
       <Box ml={4}>
         <Input
@@ -253,10 +193,10 @@ const Orders = () => {
       <Stack spacing={4} as={Container} maxW={"6xl"}>
         {showHeading()}
         {displaySearchBar()}
-        {showOrders()}
+        {showShipments()}
       </Stack>
     </Box>
   );
 };
 
-export default Orders;
+export default Shipments;

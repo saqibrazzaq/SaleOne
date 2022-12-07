@@ -17,6 +17,8 @@ namespace data.Dtos
         public string? UserId { get; set; }
         public UserRes? User { get; set; }
         public decimal BaseSubTotal { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal ShippedQuantity { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         public int PaymentMethodId { get; set; }

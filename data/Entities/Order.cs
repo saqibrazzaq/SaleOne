@@ -19,6 +19,10 @@ namespace data.Entities
         public AppIdentityUser? User { get; set; }
         [Column(TypeName = "decimal(12, 2)")]
         public decimal BaseSubTotal { get; set; }
+        [Column(TypeName = "decimal(12, 2)")]
+        public decimal Quantity { get; set; }
+        [Column(TypeName = "decimal(12, 2)")]
+        public decimal ShippedQuantity { get; set; }
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         public int? PaymentMethodId { get; set; }

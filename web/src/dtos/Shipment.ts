@@ -33,7 +33,7 @@ export class ShipmentReqEdit {
   deliveryDate?: Date = new Date();
 }
 
-export class ShipmentItemReqSearch extends PagedReq {
+export class ShipmentReqSearch extends PagedReq {
   orderId?: number;
   constructor(
     {
