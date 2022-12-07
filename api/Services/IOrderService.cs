@@ -15,6 +15,7 @@ namespace api.Services
         int Count(string username);
         int CountByPaymentMethod(int paymentMethodId);
         OrderRes Get(int orderId);
+        OrderAddressRes GetShippingAddress(int orderId);
         Task<OrderRes> GetMyOrder(int orderId);
         OrderItemRes GetOrderItem(int orderItemId);
         Task<OrderRes> CreateOrder(OrderReqEdit dto);

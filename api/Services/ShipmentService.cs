@@ -11,17 +11,22 @@ namespace api.Services
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public ShipmentService(IRepositoryManager repositoryManager, 
-            IMapper mapper)
+        private readonly IOrderService _orderService;
+        public ShipmentService(IRepositoryManager repositoryManager,
+            IMapper mapper,
+            IOrderService orderService)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _orderService = orderService;
         }
 
         public ShipmentRes Create(ShipmentReqEdit dto)
         {
             var entity = _mapper.Map<Shipment>(dto);
             _repositoryManager.ShipmentRepository.Create(entity);
+            var orderShippingAddress = _orderService.GetShippingAddress(entity.OrderId);
+            entity.ShipmentAddress = _mapper.Map<ShipmentAddress>(orderShippingAddress);
             _repositoryManager.Save();
             return _mapper.Map<ShipmentRes>(entity);
         }
@@ -80,7 +85,7 @@ namespace api.Services
             return _mapper.Map<ShipmentItemRes>(entity);
         }
 
-        public ApiOkPagedResponse<IEnumerable<ShipmentRes>, MetaData> Search(ShipmentReqSearch dto, bool trackChanges)
+        public ApiOkPagedResponse<IEnumerable<ShipmentRes>, MetaData> Search(ShipmentReqSearch dto)
         {
             var pagedEntities = _repositoryManager.ShipmentRepository.
                 Search(dto, false);
@@ -89,7 +94,7 @@ namespace api.Services
                 pagedEntities.MetaData);
         }
 
-        public ApiOkPagedResponse<IEnumerable<ShipmentItemRes>, MetaData> SearchShipmentItems(ShipmentItemReqSearch dto, bool trackChanges)
+        public ApiOkPagedResponse<IEnumerable<ShipmentItemRes>, MetaData> SearchShipmentItems(ShipmentItemReqSearch dto)
         {
             var pagedEntities = _repositoryManager.ShipmentItemRepository.
                 Search(dto, false);

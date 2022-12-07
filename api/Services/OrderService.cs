@@ -311,5 +311,16 @@ namespace api.Services
                 .Count();
             return count;
         }
+
+        public OrderAddressRes GetShippingAddress(int orderId)
+        {
+            var entity = _repositoryManager.OrderAddressRepository.FindByCondition(
+                x => x.OrderId == orderId && x.IsShippingAddress == true,
+                false
+                ).FirstOrDefault();
+            if (entity == null) throw new NotFoundException("No shipping address found for order " + orderId);
+
+            return _mapper.Map<OrderAddressRes>(entity);
+        }
     }
 }

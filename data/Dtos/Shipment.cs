@@ -34,8 +34,7 @@ namespace data.Dtos
         public int DeliveryPlanId { get; set; }
         public DateTime BookingDate { get; set; } = DateTime.UtcNow;
         public DateTime? DeliveryDate { get; set; }
-        [Required]
-        public int ShipmentAddressId { get; set; }
+        
     }
 
     public class ShipmentReqSearch : PagedRequestDto

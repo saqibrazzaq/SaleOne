@@ -5,8 +5,8 @@ namespace api.Services
 {
     public interface IShipmentService
     {
-        ApiOkPagedResponse<IEnumerable<ShipmentRes>, MetaData> Search(ShipmentReqSearch dto, bool trackChanges);
-        ApiOkPagedResponse<IEnumerable<ShipmentItemRes>, MetaData> SearchShipmentItems(ShipmentItemReqSearch dto, bool trackChanges);
+        ApiOkPagedResponse<IEnumerable<ShipmentRes>, MetaData> Search(ShipmentReqSearch dto);
+        ApiOkPagedResponse<IEnumerable<ShipmentItemRes>, MetaData> SearchShipmentItems(ShipmentItemReqSearch dto);
         ShipmentRes Get(int shipmentId);
         ShipmentRes Create(ShipmentReqEdit dto);
         ShipmentRes Update(int shipmentId, ShipmentReqEdit dto);
