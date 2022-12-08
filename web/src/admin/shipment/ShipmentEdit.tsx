@@ -10,7 +10,15 @@ import {
   Link,
   Spacer,
   Stack,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -24,31 +32,77 @@ import React, { useEffect, useState } from "react";
 import { OrderAddressRes, OrderRes } from "../../dtos/Order";
 import { OrderApi } from "../../api/orderApi";
 import { NumericFormat } from "react-number-format";
-import { OrderItemReqSearch } from "../../dtos/OrderItem";
+import { OrderItemReqSearch, OrderItemRes } from "../../dtos/OrderItem";
+import PagedRes from "../../dtos/PagedRes";
 
 const ShipmentEdit = () => {
   const toast = useToast();
   const params = useParams();
+  const navigate = useNavigate();
+  const [urlParams] = useSearchParams();
+  // console.log(urlParams.get('orderId'))
   const shipmentId = params.shipmentId;
   const updateText = shipmentId ? "Update Shipment" : "Add Shipment";
 
-  const [orderSearchText, setOrderSearchText] = useState("");
-  const [orderId, setOrderId] = useState(0);
-  const [order, setOrder] = useState<OrderRes>();
+  const [importOrderId, setImportOrderId] = useState<number>(parseInt(urlParams.get('orderId') || "0"));
+  const [importedOrder, setImportedOrder] = useState<OrderRes>();
+  const [pagedRes, setPagedRes] = useState<PagedRes<OrderItemRes>>();
 
   useEffect(() => {
     loadOrder();
-  }, [orderId]);
+    importOrderItems();
+  }, [importOrderId]);
 
   // console.log("Shipment id: " + shipmentId)
 
   const importOrderItems = () => {
     OrderApi.orderItems(
-      new OrderItemReqSearch({}, { orderId: orderId, unshippedItems: true })
+      new OrderItemReqSearch({}, { orderId: importOrderId, unshippedItems: true })
     ).then((res) => {
-      console.log(res);
+      // console.log(res);
+      setPagedRes(res);
     });
   };
+
+  const showImportedOrderitems = () => (
+    <VStack>
+      <Text fontSize={"xl"}>Import from Order</Text>
+      <TableContainer>
+      <Table variant="simple" size={"sm"}>
+        <Thead>
+          <Tr>
+            <Th></Th>
+            <Th>Product</Th>
+            <Th>Quantity</Th>
+            <Th>Shipped</Th>
+            <Th>SubTotal</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {pagedRes?.pagedList?.map((item) => (
+            <Tr key={item.orderItemId}>
+              <Td>{item.orderItemId}</Td>
+              <Td>{item.product?.name}</Td>
+              <Td>{item.quantity}</Td>
+              <Td>
+                {item.shippedQuantity}
+              </Td>
+              <Td>
+                {item.basePrice}
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+        <Tfoot>
+          <Tr>
+            
+          </Tr>
+        </Tfoot>
+      </Table>
+    </TableContainer>
+    </VStack>
+  )
 
   const displayHeading = () => (
     <Flex>
@@ -57,83 +111,53 @@ const ShipmentEdit = () => {
       </Box>
       <Spacer />
       <Box>
-        {orderId ? (
+        {importOrderId ? (
           <Button onClick={importOrderItems} colorScheme={"blue"}>
             Import Order Items
           </Button>
         ) : (
           <></>
         )}
-        <Link ml={2} as={RouteLink} to={"/admin/shipments"}>
-          <Button colorScheme={"gray"}>Back</Button>
-        </Link>
+        {/* <Link ml={2} as={RouteLink} to={"/admin/shipments"}> */}
+          <Button ml={2} onClick={() => navigate(-1)} colorScheme={"gray"}>Back</Button>
+        {/* </Link> */}
       </Box>
     </Flex>
   );
 
   const loadOrder = () => {
-    OrderApi.get(orderId)
-      .then((res) => setOrder(res))
+    OrderApi.get(importOrderId)
+      .then((res) => setImportedOrder(res))
       .catch((error) => {
-        setOrderId(0);
-        setOrder(undefined);
+        setImportOrderId(0);
+        setImportedOrder(undefined);
         toast({
           title: "Order not found",
-          description: "No order found with id " + orderId,
+          description: "No order found with id " + importOrderId,
           status: "error",
           position: "bottom-right",
         });
       });
   };
 
-  const displayOrderSearch = () => (
-    <Flex>
-      <Center></Center>
-      <Box flex={1} ml={4}></Box>
-
-      <Box ml={4}>
-        <Input
-          placeholder="Enter order #..."
-          value={orderSearchText}
-          onChange={(e) => setOrderSearchText(e.currentTarget.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              setOrderId(parseInt(orderSearchText));
-            }
-          }}
-        />
-      </Box>
-      <Box ml={0}>
-        <Button
-          colorScheme={"blue"}
-          onClick={() => {
-            setOrderId(parseInt(orderSearchText));
-          }}
-        >
-          Search
-        </Button>
-      </Box>
-    </Flex>
-  );
-
   const displayOrderSummary = () => (
     <Flex>
       <Box>
-        <Text fontSize={"lg"}>Order # {order?.orderId}</Text>
-        <Text>Total Qty: {order?.quantity}</Text>
+        <Text fontSize={"lg"}>Order # {importedOrder?.orderId}</Text>
+        <Text>Total Qty: {importedOrder?.quantity}</Text>
       </Box>
       <Box ml={6}></Box>
       <Spacer />
       <Box>
         <Text fontSize={"lg"}>
           <NumericFormat
-            value={order?.baseSubTotal}
+            value={importedOrder?.baseSubTotal}
             prefix="Rs. "
             thousandSeparator=","
             displayType="text"
           />
         </Text>
-        <Text>Shipped Qty: {order?.shippedQuantity}</Text>
+        <Text>Shipped Qty: {importedOrder?.shippedQuantity}</Text>
       </Box>
     </Flex>
   );
@@ -141,10 +165,10 @@ const ShipmentEdit = () => {
   const showAddressesInfo = () => (
     <VStack align={"start"}>
       {showAddressBox(
-        order?.addresses?.find((value) => value.isShippingAddress)
+        importedOrder?.addresses?.find((value) => value.isShippingAddress)
       )}
       {showAddressBox(
-        order?.addresses?.find((value) => value.isBillingAddress)
+        importedOrder?.addresses?.find((value) => value.isBillingAddress)
       )}
     </VStack>
   );
@@ -170,9 +194,9 @@ const ShipmentEdit = () => {
     <Box width={"100%"} p={4}>
       <Stack spacing={4} as={Container} maxW={"3xl"}>
         {displayHeading()}
-        {displayOrderSearch()}
-        {orderId && displayOrderSummary()}
-        {orderId && showAddressesInfo()}
+        {importOrderId && displayOrderSummary()}
+        {importOrderId && showAddressesInfo()}
+        {importOrderId && showImportedOrderitems()}
       </Stack>
     </Box>
   );

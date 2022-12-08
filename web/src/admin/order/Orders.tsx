@@ -35,6 +35,7 @@ import { OrderApi } from "../../api/orderApi";
 import dateFormat, { masks } from "dateformat";
 import Common from "../../utility/Common";
 import { NumericFormat } from "react-number-format";
+import ShipIconButton from "../../components/ShipIconButton";
 
 const Orders = () => {
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderRes>>();
@@ -161,6 +162,13 @@ const Orders = () => {
                   to={"/admin/orders/" + item.orderId}
                 >
                   <UpdateIconButton />
+                </Link>
+                <Link
+                  mr={2}
+                  as={RouteLink}
+                  to={"/admin/shipments/edit?orderId=" + item.orderId}
+                >
+                  <ShipIconButton />
                 </Link>
               </Td>
             </Tr>

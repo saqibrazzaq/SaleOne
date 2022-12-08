@@ -79,9 +79,9 @@ const Shipments = () => {
       </Box>
       <Spacer />
       <Box>
-        <Link ml={2} as={RouteLink} to={"/admin/shipments/edit"}>
+        {/* <Link ml={2} as={RouteLink} to={"/admin/shipments/edit"}>
           <Button colorScheme={"blue"}>Create Shipment</Button>
-        </Link>
+        </Link> */}
       </Box>
     </Flex>
   );
