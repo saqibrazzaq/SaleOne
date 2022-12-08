@@ -5,6 +5,7 @@ import {
   Container,
   Flex,
   Heading,
+  HStack,
   Input,
   Link,
   Spacer,
@@ -23,6 +24,7 @@ import React, { useEffect, useState } from "react";
 import { OrderAddressRes, OrderRes } from "../../dtos/Order";
 import { OrderApi } from "../../api/orderApi";
 import { NumericFormat } from "react-number-format";
+import { OrderItemReqSearch } from "../../dtos/OrderItem";
 
 const ShipmentEdit = () => {
   const toast = useToast();
@@ -41,8 +43,12 @@ const ShipmentEdit = () => {
   // console.log("Shipment id: " + shipmentId)
 
   const importOrderItems = () => {
-    console.log("import order items from order id : " + orderId)
-  }
+    OrderApi.orderItems(
+      new OrderItemReqSearch({}, { orderId: orderId, unshippedItems: true })
+    ).then((res) => {
+      console.log(res);
+    });
+  };
 
   const displayHeading = () => (
     <Flex>
@@ -52,7 +58,9 @@ const ShipmentEdit = () => {
       <Spacer />
       <Box>
         {orderId ? (
-          <Button onClick={importOrderItems} colorScheme={"blue"}>Import Order Items</Button>
+          <Button onClick={importOrderItems} colorScheme={"blue"}>
+            Import Order Items
+          </Button>
         ) : (
           <></>
         )}
@@ -111,12 +119,13 @@ const ShipmentEdit = () => {
   const displayOrderSummary = () => (
     <Flex>
       <Box>
-        <Text fontSize={"xl"}>Order # {order?.orderId}</Text>
+        <Text fontSize={"lg"}>Order # {order?.orderId}</Text>
+        <Text>Total Qty: {order?.quantity}</Text>
       </Box>
       <Box ml={6}></Box>
       <Spacer />
       <Box>
-        <Text fontSize={"xl"}>
+        <Text fontSize={"lg"}>
           <NumericFormat
             value={order?.baseSubTotal}
             prefix="Rs. "
@@ -124,46 +133,37 @@ const ShipmentEdit = () => {
             displayType="text"
           />
         </Text>
+        <Text>Shipped Qty: {order?.shippedQuantity}</Text>
       </Box>
     </Flex>
   );
 
   const showAddressesInfo = () => (
-    <Flex>
-      <Box>
-        {showAddressBox(
-          order?.addresses?.find((value) => value.isShippingAddress)
-        )}
-      </Box>
-      <Spacer />
-      <Box>
-        {showAddressBox(
-          order?.addresses?.find((value) => value.isBillingAddress)
-        )}
-      </Box>
-    </Flex>
+    <VStack align={"start"}>
+      {showAddressBox(
+        order?.addresses?.find((value) => value.isShippingAddress)
+      )}
+      {showAddressBox(
+        order?.addresses?.find((value) => value.isBillingAddress)
+      )}
+    </VStack>
   );
 
   const showAddressBox = (address?: OrderAddressRes) => (
-    <VStack spacing={2} padding={1}>
-      <Text fontSize={"xl"}>
-        {address?.isShippingAddress ? "Shipping" : "Billing"} Address
+    <HStack align={"start"} spacing={2} padding={0}>
+      <Text fontWeight={"semibold"}>
+        {address?.isShippingAddress ? "Shipping" : "Billing"} Address:
       </Text>
-      <Box boxShadow={"md"} padding={4}>
-        {address?.firstName + " " + address?.lastName} <br />
-        {address?.phoneNumber}
-        <br />
-        {address?.line1}
-        <br />
-        {address?.line2}
-        {address?.line2 ? <br /> : ""}
+      <Text padding={0}>
+        {address?.firstName + " " + address?.lastName},{address?.phoneNumber}, ,
+        {address?.line1},{address?.line2},{address?.line2 ? "," : ""}
         {address?.city?.name +
           ", " +
           address?.city?.state?.name +
           ", " +
           address?.city?.state?.country?.name}
-      </Box>
-    </VStack>
+      </Text>
+    </HStack>
   );
 
   return (

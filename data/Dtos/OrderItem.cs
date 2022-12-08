@@ -19,7 +19,7 @@ namespace data.Dtos
         public int ProductId { get; set; }
         public Product? Product { get; set; }
         public decimal Quantity { get; set; }
-
+        public decimal ShippedQuantity { get; set; }
         public decimal Rate { get; set; }
 
         public decimal BasePrice { get; set; }
@@ -31,6 +31,7 @@ namespace data.Dtos
     public class OrderItemReqSearch : PagedRequestDto
     {
         public int OrderId { get; set; }
+        public bool UnshippedItems { get; set; } = false;
     }
 
     public class OrderItemReqEdit

@@ -30,6 +30,12 @@ namespace data.Repository
                 //);
             }
 
+            if (searchParams.UnshippedItems)
+            {
+                itemsToReturn = itemsToReturn.Where(
+                    x => x.Quantity > x.ShippedQuantity);
+            }
+
             return itemsToReturn;
         }
 

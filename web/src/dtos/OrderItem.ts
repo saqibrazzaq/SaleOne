@@ -9,6 +9,7 @@ export interface OrderItemRes {
   productId?: number;
   product?: ProductRes;
   quantity?: number;
+  shippedQuantity?: number;
   rate?: number;
   basePrice?: number;
   unitId?: number;
@@ -26,6 +27,7 @@ export class OrderItemReqEdit {
 
 export class OrderItemReqSearch extends PagedReq {
   orderId?: number;
+  unshippedItems?: boolean;
 
   constructor(
     {
@@ -34,7 +36,7 @@ export class OrderItemReqSearch extends PagedReq {
       orderBy,
       searchText = "",
     }: PagedReq,
-    { orderId = 0 }
+    { orderId = 0, unshippedItems = false, }
   ) {
     super({
       pageNumber: pageNumber,
@@ -43,5 +45,6 @@ export class OrderItemReqSearch extends PagedReq {
       searchText: searchText,
     });
     this.orderId = orderId;
+    this.unshippedItems = unshippedItems;
   }
 }
