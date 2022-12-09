@@ -212,13 +212,14 @@ const OrderEdit = () => {
 
   const showOrderItems = () => (
     <TableContainer>
-      <Table variant="simple">
+      <Table variant="simple" size={"sm"}>
         <Thead>
           <Tr>
             <Th></Th>
             <Th>Product</Th>
             <Th>Rate</Th>
             <Th>Quantity</Th>
+            <Th>Shipped</Th>
             <Th>Price</Th>
             <Th></Th>
           </Tr>
@@ -234,8 +235,16 @@ const OrderEdit = () => {
                 />
               </Td>
               <Td>{item.product?.name}</Td>
-              <Td>{item.rate}</Td>
+              <Td>
+              <NumericFormat
+                  value={item.rate}
+                  prefix="Rs. "
+                  thousandSeparator=","
+                  displayType="text"
+                />
+              </Td>
               <Td>{item.quantity}</Td>
+              <Td>{item.shippedQuantity}</Td>
               <Td>
                 <NumericFormat
                   value={item.basePrice}

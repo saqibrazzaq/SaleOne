@@ -1,6 +1,7 @@
 ﻿using data.Dtos;
 using data.Entities;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace data.Repository
             ShipmentReqSearch searchParams)
         {
             var itemsToReturn = items
-                //.Include(x => x.States)
+                .Include(x => x.ShipmentAddress.City.State.Country)
                 .AsQueryable();
 
             if (searchParams.OrderId != 0)

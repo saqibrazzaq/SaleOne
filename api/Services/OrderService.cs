@@ -285,6 +285,7 @@ namespace api.Services
             var order = FindOrderIfExists(orderId, true);
             decimal baseSubTotal = 0;
             decimal quantity = 0;
+            decimal shippedQuantity = 0;
             var orderItems = _repositoryManager.OrderItemRepository.FindByCondition(
                 x => x.OrderId == orderId, true);
             foreach(var orderItem in orderItems)
@@ -293,10 +294,12 @@ namespace api.Services
 
                 quantity += orderItem.Quantity;
                 baseSubTotal += orderItem.BasePrice;
+                shippedQuantity += orderItem.ShippedQuantity;
             }
 
             order.BaseSubTotal = baseSubTotal;
             order.Quantity = quantity;
+            order.ShippedQuantity = shippedQuantity;
 
             _repositoryManager.Save();
         }

@@ -4,6 +4,7 @@ using data.Dtos;
 using data.Entities;
 using data.Repository;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Services
 {
@@ -49,7 +50,8 @@ namespace api.Services
         private Shipment FindShipmentIfExists(int shipmentId, bool trackChanges)
         {
             var entity = _repositoryManager.ShipmentRepository.FindByCondition(
-                x => x.ShipmentId == shipmentId, trackChanges)
+                x => x.ShipmentId == shipmentId, trackChanges,
+                include: i => i.Include(x => x.ShipmentAddress))
                 .FirstOrDefault();
             if (entity == null) throw new NotFoundException("No shipment found with id " + shipmentId);
 

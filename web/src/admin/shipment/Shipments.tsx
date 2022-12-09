@@ -88,10 +88,10 @@ const Shipments = () => {
 
   const showShipments = () => (
     <TableContainer>
-      <Table variant="simple">
+      <Table variant="simple" size={"sm"}>
         <Thead>
           <Tr>
-            <Th>Name</Th>
+            <Th>Delivery Address</Th>
             <Th>Shipment #</Th>
             <Th>Order #</Th>
             <Th>Tracking #</Th>
@@ -102,8 +102,21 @@ const Shipments = () => {
           {pagedRes?.pagedList?.map((item) => (
             <Tr key={item.shipmentId}>
               <Td>
-                {item.shipmentAddress?.firstName}{" "}
-                {item.shipmentAddress?.lastName}
+                {item?.shipmentAddress?.firstName +
+                  " " +
+                  item?.shipmentAddress?.lastName +
+                  " - "}
+                {item?.shipmentAddress?.phoneNumber}
+                <br />
+                {item?.shipmentAddress?.line1}
+                <br />
+                {item?.shipmentAddress?.line2}
+                {item?.shipmentAddress?.line2 ? <br /> : ""}
+                {item?.shipmentAddress?.city?.name +
+                  ", " +
+                  item?.shipmentAddress?.city?.state?.name +
+                  ", " +
+                  item?.shipmentAddress?.city?.state?.country?.name}
               </Td>
               <Td>{item.shipmentId}</Td>
               <Td>{item.orderId}</Td>
