@@ -50,6 +50,10 @@ namespace data
                 .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<CartItem>().HasOne(e => e.Unit).WithMany(e => e.CartItems)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderItem>().HasOne(e => e.Unit).WithMany(e => e.OrderItems)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderItem>().HasOne(e => e.Product).WithMany(e => e.OrderItems)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

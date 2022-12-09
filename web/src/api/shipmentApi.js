@@ -34,6 +34,16 @@ export const ShipmentApi = {
 
     return response.data
   },
+  createFromOrder: async function (orderId, cancel = false) {
+    const response = await api.request({
+      url: `/shipments/createFromOrder/` + orderId,
+      method: "POST",
+      data: null,
+      signal: cancel ? cancelApiObject[this.createFromOrder.name].handleRequestCancellation().signal : undefined,
+    })
+
+    return response.data
+  },
   delete: async function (shipmentId, cancel = false) {
     const response = await api.request({
       url: `/shipments/` + shipmentId,

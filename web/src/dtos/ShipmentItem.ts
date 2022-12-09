@@ -1,4 +1,5 @@
 import Common from "../utility/Common";
+import { OrderItemRes } from "./OrderItem";
 import { PagedReq } from "./PagedReq";
 import { ProductRes } from "./Product";
 import { ShipmentRes } from "./Shipment";
@@ -8,18 +9,20 @@ export interface ShipmentItemRes {
   shipmentItemId?: number;
   shipmentId?: number;
   shipment?: ShipmentRes;
-  productId?: number;
-  product?: ProductRes;
+  orderItemId?: OrderItemRes;
   quantity?: number;
-  unitId?: number;
-  unit?: UnitRes;
 }
 
 export class ShipmentItemReqEdit {
   shipmentId?: number = 0;
-  productId?: number = 0;
+  orderItemId?: number = 0;
   quantity?: number = 0;
-  unitId?: number = 0;
+
+  constructor(shipmentId?: number, orderItemId?: number, quantity?: number) {
+    this.shipmentId = shipmentId;
+    this.orderItemId = orderItemId;
+    this.quantity = quantity;
+  }
 }
 
 export class ShipmentItemReqSearch extends PagedReq {

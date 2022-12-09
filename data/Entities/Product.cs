@@ -40,5 +40,6 @@ namespace data.Entities
         // Child tables
         public IEnumerable<ProductImage>? ProductImages { get; set; }
         public IEnumerable<CartItem>? CartItems { get; set; }
+        public IEnumerable<OrderItem>? OrderItems { get; set; }
     }
 }

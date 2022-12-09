@@ -142,7 +142,7 @@ namespace api.Services
             return entity;
         }
 
-        private Order FindOrderIfExists(int orderId, bool trackChanges)
+        public Order FindOrderIfExists(int orderId, bool trackChanges)
         {
             var entity = _repositoryManager.OrderRepository.FindByCondition(
                 x => x.OrderId == orderId, trackChanges,

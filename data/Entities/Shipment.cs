@@ -18,8 +18,7 @@ namespace data.Entities
         [ForeignKey("OrderId")]
         public Order? Order { get; set; }
         public string? TrackingNumber { get; set; }
-        [Required]
-        public int DeliveryPlanId { get; set; }
+        public int? DeliveryPlanId { get; set; }
         [ForeignKey("DeliveryPlanId")]
         public DeliveryPlan? DeliveryPlan { get; set; }
         public DateTime BookingDate { get; set; } = DateTime.UtcNow;

@@ -16,11 +16,9 @@ namespace data.Dtos
         public int ShipmentItemId { get; set; }
         public int ShipmentId { get; set; }
         public Shipment? Shipment { get; set; }
-        public int ProductId { get; set; }
-        public Product? Product { get; set; }
+        public int OrderItemId { get; set; }
+        public OrderItem? OrderItem { get; set; }
         public decimal Quantity { get; set; }
-        public int? UnitId { get; set; }
-        public Unit? Unit { get; set; }
     }
 
     public class ShipmentItemReqEdit
@@ -28,10 +26,9 @@ namespace data.Dtos
         [Required]
         public int ShipmentId { get; set; }
         [Required]
-        public int ProductId { get; set; }
+        public int OrderItemId { get; set; }
+        [Required, Range(0.01f, double.MaxValue)]
         public decimal Quantity { get; set; }
-        [Required]
-        public int? UnitId { get; set; }
         
     }
 

@@ -56,6 +56,13 @@ namespace api.Controllers
             return Ok(res);
         }
 
+        [HttpPost("createFromOrder/{orderId}")]
+        public IActionResult CreateFromOrder(int orderId)
+        {
+            var res = _shipmentService.CreateFromOrder(orderId);
+            return Ok(res);
+        }
+
         [HttpPut("{shipmentId}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public IActionResult Update(int shipmentId, ShipmentReqEdit dto)

@@ -3,7 +3,7 @@ import { DeliveryPlanRes } from "./DeliveryPlan";
 import { OrderRes } from "./Order";
 import { PagedReq } from "./PagedReq";
 import { ShipmentAddressRes } from "./ShipmentAddress";
-import { ShipmentItemRes } from "./ShipmentItem";
+import { ShipmentItemReqEdit, ShipmentItemRes } from "./ShipmentItem";
 
 export interface ShipmentRes {
   shipmentId?: number;
@@ -24,6 +24,7 @@ export class ShipmentReqCreate {
   orderId?: number = 0;
   trackingNumber?: string = "";
   deliveryPlanId?: number = 0;
+  shipmentItems?: ShipmentItemReqEdit[];
 }
 
 export class ShipmentReqEdit {

@@ -21,6 +21,7 @@ namespace data.Entities
         // Child tables
         public IEnumerable<Product>? Products { get; set; }
         public IEnumerable<CartItem>? CartItems { get; set; }
+        public IEnumerable<OrderItem>? OrderItems { get; set; }
 
     }
 }

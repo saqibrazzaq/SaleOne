@@ -15,5 +15,6 @@ namespace api.Services
         ShipmentItemRes CreateShipmentItem(ShipmentItemReqEdit dto);
         ShipmentItemRes UpdateShipmentItem(int shipmentItemId, ShipmentItemReqEdit dto);
         void DeleteShipmentItem(int shipmentItemId);
+        ShipmentRes CreateFromOrder(int orderId);
     }
 }

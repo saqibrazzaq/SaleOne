@@ -17,15 +17,10 @@ namespace data.Entities
         public int ShipmentId { get; set; }
         [ForeignKey("ShipmentId")]
         public Shipment? Shipment { get; set; }
-        [Required]
-        public int ProductId { get; set; }
-        [ForeignKey("ProductId")]
-        public Product? Product { get; set; }
+        public int? OrderItemId { get; set; }
+        [ForeignKey("OrderItemId")]
+        public OrderItem? OrderItem { get; set; }
         [Column(TypeName = "decimal(12, 2)")]
         public decimal Quantity { get; set; }
-        [Required]
-        public int? UnitId { get; set; }
-        [ForeignKey("UnitId")]
-        public Unit? Unit { get; set; }
     }
 }

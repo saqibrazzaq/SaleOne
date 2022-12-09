@@ -433,6 +433,7 @@ const OrderEdit = () => {
     <Flex>
       <Box>
         <Text fontSize={"xl"}>Order # {order?.orderId}</Text>
+        <Text>Quantity: {order?.quantity}, Shipped: {order?.shippedQuantity}</Text>
       </Box>
       <Box ml={6}></Box>
       <Spacer />

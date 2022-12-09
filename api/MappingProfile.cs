@@ -91,6 +91,7 @@ namespace api
 
             CreateMap<ShipmentAddress, ShipmentAddressRes>();
             CreateMap<ShipmentAddressReqEdit, ShipmentAddress>();
+            CreateMap<OrderAddressRes, ShipmentAddress>();
         }
     }
 }

@@ -30,8 +30,8 @@ namespace data.Dtos
         [Required]
         public int OrderId { get; set; }
         public string? TrackingNumber { get; set; }
-        [Required]
         public int DeliveryPlanId { get; set; }
+        public ICollection<ShipmentItemReqEdit>? ShipmentItems { get; set; }
     }
 
     public class ShipmentReqEdit

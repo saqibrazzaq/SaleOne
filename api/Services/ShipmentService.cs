@@ -118,5 +118,41 @@ namespace api.Services
             _repositoryManager.Save();
             return _mapper.Map<ShipmentItemRes>(entity);
         }
+
+        public ShipmentRes CreateFromOrder(int orderId)
+        {
+            var order = _orderService.FindOrderIfExists(orderId, true);
+            var unshippedItems = GetUnshippedOrderItems(orderId);
+            if (unshippedItems.Count() == 0) throw new BadRequestException("No items to ship from order " + orderId);
+            var address = _mapper.Map<ShipmentAddress>(_orderService.GetShippingAddress(orderId));
+            var shipment = new Shipment()
+            {
+                OrderId = orderId,
+                ShipmentAddress = address
+            };
+            var shipmentItems = new List<ShipmentItem>();
+            foreach(var orderItem in unshippedItems)
+            {
+                shipmentItems.Add(new ShipmentItem()
+                {
+                    OrderItemId = orderItem.OrderItemId,
+                    Quantity = orderItem.Quantity - orderItem.ShippedQuantity
+                });
+                orderItem.ShippedQuantity = orderItem.Quantity;
+            }
+            shipment.ShipmentItems= shipmentItems;
+            _repositoryManager.ShipmentRepository.Create(shipment);
+            order.ShippedQuantity = order.Quantity;
+            _repositoryManager.Save();
+            return _mapper.Map<ShipmentRes>(shipment);
+
+        }
+
+        private IEnumerable<OrderItem> GetUnshippedOrderItems(int orderId)
+        {
+            var items = _repositoryManager.OrderItemRepository.FindByCondition(
+                x => x.OrderId == orderId && x.Quantity > x.ShippedQuantity, true);
+            return items;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using data.Dtos;
+using data.Entities;
 using data.Utility.Paging;
 
 namespace api.Services
@@ -26,5 +27,6 @@ namespace api.Services
         OrderItemRes UpdateOrderItem(int orderItemId, OrderItemReqEdit dto);
         void DeleteOrderItem(int orderItemId);
         void RecalculateOrderTotals(int orderId);
+        Order FindOrderIfExists(int orderId, bool trackChanges);
     }
 }

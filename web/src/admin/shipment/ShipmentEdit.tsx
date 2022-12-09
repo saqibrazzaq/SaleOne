@@ -34,6 +34,9 @@ import { OrderApi } from "../../api/orderApi";
 import { NumericFormat } from "react-number-format";
 import { OrderItemReqSearch, OrderItemRes } from "../../dtos/OrderItem";
 import PagedRes from "../../dtos/PagedRes";
+import { ShipmentReqCreate } from "../../dtos/Shipment";
+import { ShipmentItemReqEdit } from "../../dtos/ShipmentItem";
+import { ShipmentApi } from "../../api/shipmentApi";
 
 const ShipmentEdit = () => {
   const toast = useToast();
@@ -44,7 +47,9 @@ const ShipmentEdit = () => {
   const shipmentId = params.shipmentId;
   const updateText = shipmentId ? "Update Shipment" : "Add Shipment";
 
-  const [importOrderId, setImportOrderId] = useState<number>(parseInt(urlParams.get('orderId') || "0"));
+  const [importOrderId, setImportOrderId] = useState<number>(
+    parseInt(urlParams.get("orderId") || "0")
+  );
   const [importedOrder, setImportedOrder] = useState<OrderRes>();
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderItemRes>>();
 
@@ -57,52 +62,71 @@ const ShipmentEdit = () => {
 
   const importOrderItems = () => {
     OrderApi.orderItems(
-      new OrderItemReqSearch({}, { orderId: importOrderId, unshippedItems: true })
+      new OrderItemReqSearch(
+        {},
+        { orderId: importOrderId, unshippedItems: true }
+      )
     ).then((res) => {
       // console.log(res);
       setPagedRes(res);
     });
   };
 
+  const saveShipment = () => {
+    ShipmentApi.createFromOrder(importOrderId).then(res => {
+      navigate("/admin/shipments");
+      toast({
+        title: "Success",
+        description: "Shipment created successfully.",
+        status: "success",
+        position: "bottom-right",
+      });
+    })
+  };
+
   const showImportedOrderitems = () => (
     <VStack>
       <Text fontSize={"xl"}>Import from Order</Text>
+      <Button onClick={saveShipment} colorScheme={"blue"}>
+        Save Shipment
+      </Button>
       <TableContainer>
-      <Table variant="simple" size={"sm"}>
-        <Thead>
-          <Tr>
-            <Th></Th>
-            <Th>Product</Th>
-            <Th>Quantity</Th>
-            <Th>Shipped</Th>
-            <Th>SubTotal</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {pagedRes?.pagedList?.map((item) => (
-            <Tr key={item.orderItemId}>
-              <Td>{item.orderItemId}</Td>
-              <Td>{item.product?.name}</Td>
-              <Td>{item.quantity}</Td>
-              <Td>
-                {item.shippedQuantity}
-              </Td>
-              <Td>
-                {item.basePrice}
-              </Td>
+        <Table variant="simple" size={"sm"}>
+          <Thead>
+            <Tr>
+              <Th></Th>
+              <Th>Product</Th>
+              <Th>Quantity</Th>
+              <Th>Shipped</Th>
+              <Th>SubTotal</Th>
+              <Th></Th>
             </Tr>
-          ))}
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            
-          </Tr>
-        </Tfoot>
-      </Table>
-    </TableContainer>
+          </Thead>
+          <Tbody>
+            {pagedRes?.pagedList?.map((item) => (
+              <Tr key={item.orderItemId}>
+                <Td>{item.orderItemId}</Td>
+                <Td>{item.product?.name}</Td>
+                <Td>{item.quantity}</Td>
+                <Td>{item.shippedQuantity}</Td>
+                <Td>
+                  <NumericFormat
+                    value={item.basePrice}
+                    prefix="Rs. "
+                    thousandSeparator=","
+                    displayType="text"
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+          <Tfoot>
+            <Tr></Tr>
+          </Tfoot>
+        </Table>
+      </TableContainer>
     </VStack>
-  )
+  );
 
   const displayHeading = () => (
     <Flex>
@@ -111,15 +135,10 @@ const ShipmentEdit = () => {
       </Box>
       <Spacer />
       <Box>
-        {importOrderId ? (
-          <Button onClick={importOrderItems} colorScheme={"blue"}>
-            Import Order Items
-          </Button>
-        ) : (
-          <></>
-        )}
         {/* <Link ml={2} as={RouteLink} to={"/admin/shipments"}> */}
-          <Button ml={2} onClick={() => navigate(-1)} colorScheme={"gray"}>Back</Button>
+        <Button ml={2} onClick={() => navigate(-1)} colorScheme={"gray"}>
+          Back
+        </Button>
         {/* </Link> */}
       </Box>
     </Flex>
