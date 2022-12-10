@@ -4,6 +4,9 @@ import {
   Center,
   Container,
   Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Heading,
   HStack,
   Input,
@@ -34,9 +37,14 @@ import { OrderApi } from "../../api/orderApi";
 import { NumericFormat } from "react-number-format";
 import { OrderItemReqSearch, OrderItemRes } from "../../dtos/OrderItem";
 import PagedRes from "../../dtos/PagedRes";
-import { ShipmentReqCreate } from "../../dtos/Shipment";
+import { ShipmentReqCreate, ShipmentReqEdit } from "../../dtos/Shipment";
 import { ShipmentItemReqEdit } from "../../dtos/ShipmentItem";
 import { ShipmentApi } from "../../api/shipmentApi";
+import * as Yup from "yup";
+import { Field, Formik } from "formik";
+import DeliveryPlanSearchBox from "../../searchboxes/DeliveryPlanSearchBox";
+import { DeliveryPlanRes } from "../../dtos/DeliveryPlan";
+import { CourierApi } from "../../api/courierApi";
 
 const ShipmentEdit = () => {
   const toast = useToast();
@@ -52,11 +60,132 @@ const ShipmentEdit = () => {
   );
   const [importedOrder, setImportedOrder] = useState<OrderRes>();
   const [pagedRes, setPagedRes] = useState<PagedRes<OrderItemRes>>();
+  const [shipment, setShipment] = useState<ShipmentReqEdit>(
+    new ShipmentReqEdit()
+  );
+  const [selectedDeliveryPlan, setSelectedDeliveryPlan] =
+    useState<DeliveryPlanRes>();
 
   useEffect(() => {
     loadOrder();
     importOrderItems();
   }, [importOrderId]);
+
+  useEffect(() => {
+    loadShipment();
+  }, [shipmentId]);
+
+  useEffect(() => {
+    if (shipment.deliveryPlanId) {
+      CourierApi.getDeliveryPlan(shipment.deliveryPlanId).then((res) =>
+        setSelectedDeliveryPlan(res)
+      );
+    }
+  }, [shipment.deliveryPlanId]);
+
+  const loadShipment = () => {
+    if (shipmentId) {
+      ShipmentApi.get(shipmentId).then((res) => {
+        setShipment(res);
+        console.log(res);
+      });
+    }
+  };
+
+  // Formik validation schema
+  const validationSchema = Yup.object({
+    trackingNumber: Yup.string().nullable(),
+    deliveryPlanId: Yup.number().nullable(),
+    deliveryDate: Yup.date().nullable(),
+  });
+
+  const submitForm = (values: ShipmentReqEdit) => {
+    console.log(values);
+    if (shipmentId) {
+      updateShipment(values);
+    }
+  };
+
+  const updateShipment = (values: ShipmentReqEdit) => {
+    ShipmentApi.update(shipmentId, values).then((res) => {
+      toast({
+        title: "Success",
+        description: "Shipment updated successfully.",
+        status: "success",
+        position: "top-right",
+      });
+      navigate("/admin/shipments");
+    });
+  };
+
+  const showUpdateForm = () => (
+    <Box p={0}>
+      <Formik
+        initialValues={shipment}
+        onSubmit={(values) => {
+          submitForm(values);
+        }}
+        validationSchema={validationSchema}
+        enableReinitialize={true}
+      >
+        {({ handleSubmit, errors, touched, setFieldValue }) => (
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={4} as={Container} maxW={"3xl"}>
+              <FormControl
+                isInvalid={!!errors.deliveryPlanId && touched.deliveryPlanId}
+              >
+                <FormLabel htmlFor="deliveryPlanId">Courier and Delivery Plan</FormLabel>
+                <Field
+                  as={Input}
+                  id="deliveryPlanId"
+                  name="deliveryPlanId"
+                  type="hidden"
+                />
+                <DeliveryPlanSearchBox
+                  selectedDeliveryPlan={selectedDeliveryPlan}
+                  handleChange={(newValue?: DeliveryPlanRes) => {
+                    setSelectedDeliveryPlan(newValue);
+                    setFieldValue("deliveryPlanId", newValue?.deliveryPlanId || 0);
+                    // console.log(newValue)
+                  }}
+                />
+                <FormErrorMessage>{errors.deliveryPlanId}</FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isInvalid={!!errors.trackingNumber && touched.trackingNumber}
+              >
+                <FormLabel htmlFor="trackingNumber">Tracking Number</FormLabel>
+                <Field
+                  as={Input}
+                  id="trackingNumber"
+                  name="trackingNumber"
+                  type="text"
+                />
+                <FormErrorMessage>{errors.trackingNumber}</FormErrorMessage>
+              </FormControl>
+              <FormControl
+                isInvalid={!!errors.deliveryDate && touched.deliveryDate}
+              >
+                <FormLabel htmlFor="deliveryDate">Delivery Date</FormLabel>
+                <Field
+                  as={Input}
+                  id="deliveryDate"
+                  name="deliveryDate"
+                  type="datetime-local"
+                />
+                <FormErrorMessage>{errors.deliveryDate}</FormErrorMessage>
+              </FormControl>
+              <Stack direction={"row"} spacing={6}>
+                <Button type="submit" colorScheme={"blue"}>
+                  {updateText}
+                </Button>
+              </Stack>
+            </Stack>
+          </form>
+        )}
+      </Formik>
+    </Box>
+  );
 
   // console.log("Shipment id: " + shipmentId)
 
@@ -73,7 +202,7 @@ const ShipmentEdit = () => {
   };
 
   const saveShipment = () => {
-    ShipmentApi.createFromOrder(importOrderId).then(res => {
+    ShipmentApi.createFromOrder(importOrderId).then((res) => {
       navigate("/admin/shipments");
       toast({
         title: "Success",
@@ -81,7 +210,7 @@ const ShipmentEdit = () => {
         status: "success",
         position: "bottom-right",
       });
-    })
+    });
   };
 
   const showImportedOrderitems = () => (
@@ -216,6 +345,7 @@ const ShipmentEdit = () => {
         {importOrderId && displayOrderSummary()}
         {importOrderId && showAddressesInfo()}
         {importOrderId && showImportedOrderitems()}
+        {shipmentId && showUpdateForm()}
       </Stack>
     </Box>
   );

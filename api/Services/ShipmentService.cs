@@ -78,6 +78,7 @@ namespace api.Services
         public ShipmentRes Get(int shipmentId)
         {
             var entity = FindShipmentIfExists (shipmentId, false);
+            if (entity.DeliveryPlanId == null) entity.DeliveryPlanId = 0;
             return _mapper.Map<ShipmentRes>(entity);
         }
 
@@ -109,6 +110,7 @@ namespace api.Services
         {
             var entity = FindShipmentIfExists(shipmentId, true);
             _mapper.Map(dto, entity);
+            if (entity.DeliveryPlanId == 0) entity.DeliveryPlanId = null;
             _repositoryManager.Save();
             return _mapper.Map<ShipmentRes>(entity);
         }

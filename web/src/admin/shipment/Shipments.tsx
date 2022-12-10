@@ -125,14 +125,14 @@ const Shipments = () => {
                 <Link
                   mr={2}
                   as={RouteLink}
-                  to={"/admin/shipments/" + item.shipmentId}
+                  to={"/admin/shipments/edit/" + item.shipmentId}
                 >
                   <UpdateIconButton />
                 </Link>
                 <Link
                   mr={2}
                   as={RouteLink}
-                  to={"/admin/shipments/" + item.shipmentId}
+                  to={"/admin/shipments/delete/" + item.shipmentId}
                 >
                   <DeleteIconButton />
                 </Link>

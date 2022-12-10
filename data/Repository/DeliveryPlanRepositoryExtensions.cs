@@ -1,6 +1,7 @@
 ﻿using data.Dtos;
 using data.Entities;
 using data.Utility.Paging;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,14 @@ namespace data.Repository
             DeliveryPlanReqSearch searchParams)
         {
             var itemsToReturn = items
-                //.Include(x => x.States)
+                .Include(x => x.Courier)
                 .AsQueryable();
 
-            itemsToReturn = itemsToReturn.Where(
+            if (searchParams.CourierId > 0)
+            {
+                itemsToReturn = itemsToReturn.Where(
                 x => x.CourierId == searchParams.CourierId);
+            }
 
             if (string.IsNullOrWhiteSpace(searchParams.SearchText) == false)
             {

@@ -13,4 +13,8 @@ export default class Common {
     OrderStatus.Complete,
     OrderStatus.Cancelled,
   ];
+
+  static formatDate(date: Date) {
+    return date.toISOString().substring(0, 16);
+  }
 }

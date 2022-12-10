@@ -44,6 +44,14 @@ export const ShipmentApi = {
 
     return response.data
   },
+  update: async function (shipmentId, shipment, cancel = false) {
+    await api.request({
+      url: `/shipments/` + shipmentId,
+      method: "PUT",
+      data: shipment,
+      signal: cancel ? cancelApiObject[this.update.name].handleRequestCancellation().signal : undefined,
+    })
+  },
   delete: async function (shipmentId, cancel = false) {
     const response = await api.request({
       url: `/shipments/` + shipmentId,

@@ -16,7 +16,7 @@ namespace data.Dtos
         public int OrderId { get; set; }
         public Order? Order { get; set; }
         public string? TrackingNumber { get; set; }
-        public int DeliveryPlanId { get; set; }
+        public int? DeliveryPlanId { get; set; }
         public DeliveryPlan? DeliveryPlan { get; set; }
         public DateTime BookingDate { get; set; } = DateTime.UtcNow;
         public DateTime? DeliveryDate { get; set; }
@@ -30,17 +30,14 @@ namespace data.Dtos
         [Required]
         public int OrderId { get; set; }
         public string? TrackingNumber { get; set; }
-        public int DeliveryPlanId { get; set; }
+        public int? DeliveryPlanId { get; set; }
         public ICollection<ShipmentItemReqEdit>? ShipmentItems { get; set; }
     }
 
     public class ShipmentReqEdit
     {
-        [Required]
-        public int OrderId { get; set; }
         public string? TrackingNumber { get; set; }
-        [Required]
-        public int DeliveryPlanId { get; set; }
+        public int? DeliveryPlanId { get; set; }
         public DateTime? DeliveryDate { get; set; }
         
     }

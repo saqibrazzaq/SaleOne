@@ -28,10 +28,9 @@ export class ShipmentReqCreate {
 }
 
 export class ShipmentReqEdit {
-  orderId?: number = 0;
   trackingNumber?: string = "";
   deliveryPlanId?: number = 0;
-  deliveryDate?: Date = new Date();
+  deliveryDate?: string = Common.formatDate(new Date());
 }
 
 export class ShipmentReqSearch extends PagedReq {
